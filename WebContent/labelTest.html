@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Custom PreView</title>
+<style>
+ html, body  {
+    width : 900px;
+    height: 700px;
+    margin : 0px;
+    padding : 0px;
+}
+#chartArea {
+    height: 400px;
+    margin : 0px;
+    padding : 0px;
+}
+</style>
+</head>
+<body>
+
+<div id="chartArea" ></div>
+
+</body>
+<script src="./dist/echarts.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+var myChart = echarts.init(document.getElementById('chartArea'));
+$.get('../data/budget_list.json', function (obama_budget_2012) {
+	// console.info(obama_budget_2012);
+	
+	var dataList	= [];
+	var orgDataList = obama_budget_2012.budget2011List;
+	for( var idx = 0, nMax = orgDataList.length; idx < nMax; idx++ ) {
+		var nData = orgDataList[ idx ];
+		dataList.push(
+			{
+				name 	: nData,
+				value 	: nData,
+				label	: {
+					normal : {
+						show : true,
+						position : 'top',
+						textStyle: {
+							color: '#00f',
+							fontStyle: 'normal',
+							fontWeight: 'normal',
+							fontFamily: 'sans-serif',
+							fontSize: 12
+						}
+					}
+				}
+			}
+		);
+	}
+	
+	var xAxisLabels  = obama_budget_2012.names;
+	var nMaxLabelLen = 0;
+	for( var idx = 0, nMax = xAxisLabels.length; idx < nMax; idx++ ) {
+		if( nMaxLabelLen < xAxisLabels[ idx ].length ) {
+			nMaxLabelLen = xAxisLabels[ idx ].length;
+		}
+	}	// for - xAxisLabels
+	
+	( nMaxLabelLen > 12 ) && ( nMaxLabelLen = 12 );
+	
+    myChart.setOption(
+		{
+		    brush: {
+		        brushLink: 'all',
+		        xAxisIndex: [],
+		        yAxisIndex: [],
+		        inBrush: {
+		            opacity: 1
+		        }
+		    },    				
+	        tooltip : {
+	            trigger: 'item'
+	        },
+	        toolbox: {
+	            show : true,
+	            feature : {
+	                mark : {show: true},
+	                dataView : {show: true, readOnly: false},
+	                magicType: {show: true, type: ['line', 'bar']},
+	                restore : {show: true},
+	                saveAsImage : {show: true}
+	            }
+	        },
+	        calculable : true,
+	        legend: {
+	            data	:[ 'Budget 2011' ],
+	            itemGap	: 10,
+	           	pageItems:2,
+	           	left 	: 0
+	        },
+	        grid: {
+	            top: '15%',
+	            left: '1%',
+	            right: '10%',
+	            bottom: nMaxLabelLen * 8,
+	            containLabel: true
+	        },
+	        xAxis: [
+	            {
+	                type : 'category',
+	                data : obama_budget_2012.names,
+	                axisLabel:{
+	                    rotate : 90
+	                }	
+	            }
+	        ],
+	        yAxis: [
+	            {
+	                type : 'value',
+	                name : 'Budget (million USD)',
+	                axisLabel: {
+	                    formatter: function (a) {
+	                        a = +a;
+	                        return isFinite(a)
+	                            ? echarts.format.addCommas(+a / 1000)
+	                            : '';
+	                    }
+	                }
+	            }
+	        ],
+	        dataZoom: [
+	            {
+	                show: true,
+	                start: 98,
+	                end: 100
+	            },
+	            {
+	                type: 'inside',
+	                start: 94,
+	                end: 100
+	            },
+	            {
+	                show: true,
+	                yAxisIndex: 0,
+	                filterMode: 'empty',
+	                width: 30,
+	                height: '80%',
+	                showDataShadow: false,
+	                left: '93%'
+	            }
+	        ],
+	        series : [
+	            {
+	                name: 'Budget 2011',
+	                type: 'bar',
+	                // data: obama_budget_2012.budget2011List
+	               	data : dataList,
+					markLine : { 
+						silent: true, 
+						data: [
+							{ 
+								yAxis: 900000000,
+								label: { 
+									normal : { 
+										show: true, 
+										fill : '#00F',
+										position: 'start'/*,
+										formatter :  function() {
+											console.info( arguments );
+											// return '<div style="color:#0F0;border:1px solid #F00;" >aaaa</div>';
+											return arguments;
+										}
+										*/
+									} 
+								}
+							}
+						]
+					}
+	            }
+	        ]
+	    }
+    );
+    
+});
+
+function echartTest(flag){
+	//myChart.resize();
+	myChart.setShowDataZoom(flag);
+}
+</script>
+
+<br>
+<a href="javascript:myChart.tooltip.hide();">hide</a>
+</html>

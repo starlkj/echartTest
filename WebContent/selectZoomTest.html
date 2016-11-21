@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Custom PreView</title>
+<style>
+ html, body  {
+    width : 100%;
+    height: 100%;
+    margin : 0px;
+    padding : 0px;
+}
+#chartArea {
+    height: 400px;
+    margin : 0px;
+    padding : 0px;
+}
+</style>
+</head>
+<body>
+<div id="chartArea" ></div>
+</body>
+<script src="../dist/echarts.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+var myChart = echarts.init(document.getElementById('chartArea'));
+$.get('../data/dummy.json', function (data) {
+	console.info(data);
+/*	
+    myChart.setOption(option = {
+        title: {
+            text: 'Beijing AQI'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            data: data.map(function (item) {
+                return item[0];
+            })
+        },
+        yAxis: {
+            splitLine: {
+                show: false
+            }
+        },
+        grid: {
+            top: '8%',
+            left: '1%',
+            right: '10%',
+            containLabel: true
+        },
+        toolbox: {
+        	show : true,
+            left: 'center',
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        dataZoom: [ { startValue: '2014-06-01' } ],
+        visualMap: {
+            top: 10,
+            right: 10,
+            pieces: [{
+                gt: 0,
+                lte: 50,
+                color: '#096'
+            }, {
+                gt: 50,
+                lte: 100,
+                color: '#ffde33'
+            }, {
+                gt: 100,
+                lte: 150,
+                color: '#ff9933'
+            }, {
+                gt: 150,
+                lte: 200,
+                color: '#cc0033'
+            }, {
+                gt: 200,
+                lte: 300,
+                color: '#660099'
+            }, {
+                gt: 300,
+                color: '#7e0023'
+            }],
+            outOfRange: {
+                color: '#999'
+            }
+        },
+        series: {
+            name: 'Beijing AQI',
+            type: 'line',
+            data: data.map(function (item) {
+                return item[1];
+            }),
+            markLine: {
+                silent: true,
+                data: [{
+                    yAxis: 50
+                }, {
+                    yAxis: 100
+                }, {
+                    yAxis: 150
+                }, {
+                    yAxis: 200
+                }, {
+                    yAxis: 300
+                }]
+            }
+        }
+    });
+*/
+	myChart.setOption(
+		{
+			title: {
+				show: true,
+				text: '',
+				textStyle: {
+					fontSize: 13,
+					fontWeight: 'bold'
+				}
+			},
+			toolbox: {
+				show: false,
+				orient: 'horizontal',
+				feature: {
+					dataZoom: {
+						title: {
+							zoom: '확대',
+							back: '이전'
+						},
+						yAxisIndex: 'none'
+					},
+					restore: {
+						title: '전체보기'
+					}
+				}
+			},
+			brush: {
+				brushLink: 'all',
+				transformable: false,
+				xAxisIndex: [],
+				yAxisIndex: [],
+				inBrush: {
+					opacity: 1
+				}
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'shadow',
+					shadowStyle: {
+						opacity: 0.3
+					}
+				}
+			},
+			grid: {
+				left: 10,
+				right: 10,
+				bottom: 65,
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				nameLocation: 'middle',
+				nameGap: 25,
+				nameTextStyle: {
+					fontSize: 13,
+					fontWeight: 'bold'
+				},
+				axisLabel: {},
+				axisTick: {},
+				axisLine: {},
+				data: []
+			},
+			yAxis: {
+				type: 'value',
+				axisLabel: {},
+				axisTick: {},
+				axisLine: {}
+			},
+			dataZoom: [
+				{
+					type: 'slider',
+					show: true,
+					orient: 'horizontal'
+				},
+				{
+					type: 'inside',
+					orient: 'horizontal'
+				}
+			],
+	        series: {
+	            name : 'Beijing AQI',
+	            type : "bar",
+	            data: [ 60.8, 77.6, 59.6, 566.4, 47.94, 105, 11, 20.4, 17.6, 132.4, 25, 35.2, 102.6, 137.4, 63.2, 14.6,83.35 ]
+	        }
+		}
+	);
+    
+    myChart.on( 'brushDragEnd', function( param1 ) {
+		// 콜백 실행
+		console.info( '==== brushDragEnd ===' );
+		console.info( param1 );
+	});
+    
+    myChart.on( 'dataZoom', function( param1 ) {
+		// 콜백 실행
+		console.info( '==== dataZoom ===' );
+		console.info( param1 );
+	});
+    
+    myChart.on( 'click', function( param1 ) {
+		// 콜백 실행
+		console.info( '==== click ===' );
+		console.info( param1 );
+	});    
+    
+    $( '#toggleZoom' ).on( 'click', function() {
+    	myChart.toggleSelectZoom();
+    });
+    
+    $( '#backZoom' ).on( 'click', function() {
+    	myChart.backSelectZoom();
+    });
+
+});
+</script>
+
+<br>
+<input type="button" id="toggleZoom" value="toggleZoom" />
+<input type="button" id="backZoom" value="backZoom" />
+
+</html>
