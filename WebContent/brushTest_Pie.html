@@ -31,7 +31,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
 var myChart = echarts.init(document.getElementById('chartArea'));
-$.get('../data/budget_list.json', function (obama_budget_2012) {
+$.get('./data/budget_list.json', function (obama_budget_2012) {
 	console.info(obama_budget_2012);
     myChart.setOption(
     		
@@ -105,6 +105,17 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
 		// 콜백 실행
 		console.info( '==== brushDragEnd ===' );
 		console.info( param1 );
+
+        var range1 = params.areas[0].range[0];
+        var range2 = params.areas[0].range[1];
+
+        myChart.dispatchAction({
+            type: 'brush',
+            areas: [{
+                brushType: 'rect',
+                coordRange: [range1[0], range1[1], [range1[0], range1[1]]]
+            }]
+        });
 	});
     
     

@@ -36,13 +36,16 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     myChart.setOption(
     		option = {
     			    brush: {
-    			        brushLink: 'all',
     			        xAxisIndex: [],
     			        yAxisIndex: [],
+                        transformable : false,
     			        inBrush: {
     			            opacity: 1
-    			        }
-    			    },    				
+    			        },
+                        outOfBrush: {
+                            opacity: 0.2
+                        }
+    			    },
     		        tooltip : {
     		            trigger: 'item'
     		        },
@@ -58,8 +61,11 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     		        },
     		        calculable : true,
     		        legend: {
-    		            data:['Growth', 'Budget 2011', 'Budget 2012'],
-    		            itemGap: 5
+    		            //data:['Growth', 'emptyLegend', 'State', 'City', 'Budget 2011', 'Budget 2012'],
+                        data:['Budget 2011', 'Budget 2012'],
+    		            itemGap: 5,
+                        //seriesSync : true,
+                        //color: ["#ff8a00", "#217bbf", "#dd3c04", "#1ca093", "#af1010", "#1fb65c", "#0b3148", "#88ce2b", "#12496f", "#fcd208", "#1a6398", "#ffad03"]
     		        },
     		        grid: {
     		            top: '12%',
@@ -91,7 +97,7 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     		            {
     		                show: true,
     		                start: 94,
-    		                end: 100
+    		                end: 100,
     		            },
     		            {
     		                type: 'inside',
@@ -120,17 +126,17 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     		                data: obama_budget_2012.budget2012List
     		            }
     		        ]
-    		    } 
-    );    
-    
+    		    }
+    );
+
     $( '#btnBrush-rect' ).on( 'click', function() {
-    	myChart.toggleRectBrush();
+        myChart.setBrush('rect');
     });
     $( '#btnBrush-poly' ).on( 'click', function() {
-    	myChart.togglePolyBrush();
+        myChart.setBrush('polygon');
     });    
     $( '#btnBrush-multi' ).on( 'click', function() {
-    	myChart.toggleMultiBrush();
+    	myChart.setMultipleBrush();
     });
     $( '#btnBrush-clear' ).on( 'click', function() {
     	myChart.clearBrush();
@@ -140,6 +146,27 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
 		// 콜백 실행
 		console.info( '==== brushDragEnd ===' );
 		console.info( param1 );
+
+        var areas = param1.brushSelectData[0].areas.map(function(area){
+            var obj = {};
+            obj.brushType = 'rect';
+            obj.range = area.range;
+            obj.brushStyle = {
+                opacity: 0
+            };
+
+            return obj;
+        });
+
+
+        console.info(areas);
+        //myChart.setSelectedBrush(areas);
+
+        this.dispatchAction({
+            type: 'brush',
+            areas: areas
+        });
+
 	});
     
     
