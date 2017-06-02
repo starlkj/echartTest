@@ -57,7 +57,13 @@
 
         this._running = false;
 
-        this._time = 0;
+        this._time;
+
+        this._pausedTime;
+
+        this._pauseStart;
+
+        this._paused = false;
 
         Dispatcher.call(this);
     };
@@ -108,7 +114,7 @@
 
         _update: function() {
 
-            var time = new Date().getTime();
+            var time = new Date().getTime() - this._pausedTime;
             var delta = time - this._time;
             var clips = this._clips;
             var len = clips.length;
@@ -117,7 +123,7 @@
             var deferredClips = [];
             for (var i = 0; i < len; i++) {
                 var clip = clips[i];
-                var e = clip.step(time);
+                var e = clip.step(time, delta);
                 // Throw out the events need to be called after
                 // stage.update, like destroy
                 if (e) {
@@ -153,10 +159,8 @@
                 this.stage.update();
             }
         },
-        /**
-         * 开始运行动画
-         */
-        start: function () {
+
+        _startLoop: function () {
             var self = this;
 
             this._running = true;
@@ -166,12 +170,22 @@
 
                     requestAnimationFrame(step);
 
-                    self._update();
+                    !self._paused && self._update();
                 }
             }
 
-            this._time = new Date().getTime();
             requestAnimationFrame(step);
+        },
+
+        /**
+         * 开始运行动画
+         */
+        start: function () {
+
+            this._time = new Date().getTime();
+            this._pausedTime = 0;
+
+            this._startLoop();
         },
         /**
          * 停止运行动画
@@ -179,6 +193,27 @@
         stop: function () {
             this._running = false;
         },
+
+        /**
+         * Pause
+         */
+        pause: function () {
+            if (!this._paused) {
+                this._pauseStart = new Date().getTime();
+                this._paused = true;
+            }
+        },
+
+        /**
+         * Resume
+         */
+        resume: function () {
+            if (this._paused) {
+                this._pausedTime += (new Date().getTime()) - this._pauseStart;
+                this._paused = false;
+            }
+        },
+
         /**
          * 清除所有动画片段
          */
@@ -196,14 +231,18 @@
          *         如果指定setter函数，会通过setter函数设置属性值
          * @return {module:zrender/animation/Animation~Animator}
          */
+        // TODO Gap
         animate: function (target, options) {
             options = options || {};
+
             var animator = new Animator(
                 target,
                 options.loop,
                 options.getter,
                 options.setter
             );
+
+            this.addAnimator(animator);
 
             return animator;
         }

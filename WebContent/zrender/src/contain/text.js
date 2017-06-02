@@ -82,7 +82,8 @@ define(function (require) {
 
         var textHeight = textRect.height;
 
-        var halfHeight = height / 2 - textHeight / 2;
+        var lineHeight = textRect.lineHeight;
+        var halfHeight = height / 2 - textHeight / 2 + lineHeight;
 
         var textAlign = 'left';
 
@@ -99,12 +100,12 @@ define(function (require) {
                 break;
             case 'top':
                 x += width / 2;
-                y -= distance + textHeight;
+                y -= distance + textHeight - lineHeight;
                 textAlign = 'center';
                 break;
             case 'bottom':
                 x += width / 2;
-                y += height + distance;
+                y += height + distance + lineHeight;
                 textAlign = 'center';
                 break;
             case 'inside':
@@ -124,31 +125,31 @@ define(function (require) {
                 break;
             case 'insideTop':
                 x += width / 2;
-                y += distance;
+                y += distance + lineHeight;
                 textAlign = 'center';
                 break;
             case 'insideBottom':
                 x += width / 2;
-                y += height - textHeight - distance;
+                y += height - textHeight - distance + lineHeight;
                 textAlign = 'center';
                 break;
             case 'insideTopLeft':
                 x += distance;
-                y += distance;
+                y += distance + lineHeight;
                 textAlign = 'left';
                 break;
             case 'insideTopRight':
                 x += width - distance;
-                y += distance;
+                y += distance + lineHeight;
                 textAlign = 'right';
                 break;
             case 'insideBottomLeft':
                 x += distance;
-                y += height - textHeight - distance;
+                y += height - textHeight - distance + lineHeight;
                 break;
             case 'insideBottomRight':
                 x += width - distance;
-                y += height - textHeight - distance;
+                y += height - textHeight - distance + lineHeight;
                 textAlign = 'right';
                 break;
         }
@@ -157,7 +158,7 @@ define(function (require) {
             x: x,
             y: y,
             textAlign: textAlign,
-            textBaseline: 'top'
+            textBaseline: 'alphabetic'
         };
     }
 

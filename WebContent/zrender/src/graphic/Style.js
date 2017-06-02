@@ -16,11 +16,10 @@ define(function (require) {
     };
 
     function createLinearGradient(ctx, obj, rect) {
-        // var size =
-        var x = obj.x;
-        var x2 = obj.x2;
-        var y = obj.y;
-        var y2 = obj.y2;
+        var x = obj.x == null ? 0 : obj.x;
+        var x2 = obj.x2 == null ? 1 : obj.x2;
+        var y = obj.y == null ? 0 : obj.y;
+        var y2 = obj.y2 == null ? 0 : obj.y2;
 
         if (!obj.global) {
             x = x * rect.width + rect.x;
@@ -39,9 +38,9 @@ define(function (require) {
         var height = rect.height;
         var min = Math.min(width, height);
 
-        var x = obj.x;
-        var y = obj.y;
-        var r = obj.r;
+        var x = obj.x == null ? 0.5 : obj.x;
+        var y = obj.y == null ? 0.5 : obj.y;
+        var r = obj.r == null ? 0.5 : obj.r;
         if (!obj.global) {
             x = x * width + rect.x;
             y = y * height + rect.y;
@@ -135,6 +134,12 @@ define(function (require) {
         textPosition: 'inside',
 
         /**
+         * [x, y]
+         * @type {Array.<number>}
+         */
+        textOffset: null,
+
+        /**
          * @type {string}
          */
         textBaseline: null,
@@ -150,24 +155,41 @@ define(function (require) {
         textVerticalAlign: null,
 
         /**
+         * Only useful in Path and Image element
          * @type {number}
          */
         textDistance: 5,
 
         /**
+         * Only useful in Path and Image element
          * @type {number}
          */
         textShadowBlur: 0,
 
         /**
+         * Only useful in Path and Image element
          * @type {number}
          */
         textShadowOffsetX: 0,
 
         /**
+         * Only useful in Path and Image element
          * @type {number}
          */
         textShadowOffsetY: 0,
+
+        /**
+         * If transform text
+         * Only useful in Path and Image element
+         * @type {boolean}
+         */
+        textTransform: false,
+
+        /**
+         * Text rotate around position of Path or Image
+         * Only useful in Path and Image element and textTransform is false.
+         */
+        textRotation: 0,
 
         /**
          * @type {string}

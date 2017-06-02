@@ -111,8 +111,10 @@
         var optsStates = opts.states;
         if (optsStates) {
             for (var name in optsStates) {
-                var state = optsStates[name];
-                this._addState(name, state);
+                if (optsStates.hasOwnProperty(name)) {
+                    var state = optsStates[name];
+                    this._addState(name, state);
+                }
             }
         }
 
@@ -165,7 +167,9 @@
                 }
 
                 for (var name in this._states) {
-                    this._extendFromInitial(this._states[name]);
+                    if (this._states.hasOwnProperty(name)) {
+                        this._extendFromInitial(this._states[name]);
+                    }
                 }
             }
         },
@@ -291,6 +295,9 @@
                         if (propName === 'style' || propName === 'shape') {
                             if (state[propName]) {
                                 for (var key in state[propName]) {
+                                    if (!state[propName].hasOwnProperty(key)) {
+                                        continue;
+                                    }
                                     var path = propName + '.' + key;
                                     if (propPathMap[path]) {
                                         continue;

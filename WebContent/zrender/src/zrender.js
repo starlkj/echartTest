@@ -11,6 +11,7 @@
 define(function(require) {
     var guid = require('./core/guid');
     var env = require('./core/env');
+    var zrUtil = require('./core/util');
 
     var Handler = require('./Handler');
     var Storage = require('./Storage');
@@ -26,10 +27,11 @@ define(function(require) {
     var instances = {};    // ZRender实例map索引
 
     var zrender = {};
+
     /**
      * @type {string}
      */
-    zrender.version = '3.1.2';
+    zrender.version = '3.5.1';
 
     /**
      * Initializing a zrender instance
@@ -37,6 +39,8 @@ define(function(require) {
      * @param {Object} opts
      * @param {string} [opts.renderer='canvas'] 'canvas' or 'svg'
      * @param {number} [opts.devicePixelRatio]
+     * @param {number|string} [opts.width] Can be 'auto' (the same as null/undefined)
+     * @param {number|string} [opts.height] Can be 'auto' (the same as null/undefined)
      * @return {module:zrender/ZRender}
      */
     zrender.init = function(dom, opts) {
@@ -55,7 +59,9 @@ define(function(require) {
         }
         else {
             for (var key in instances) {
-                instances[key].dispose();
+                if (instances.hasOwnProperty(key)) {
+                    instances[key].dispose();
+                }
             }
             instances = {};
         }
@@ -91,6 +97,8 @@ define(function(require) {
      * @param {Object} opts
      * @param {string} [opts.renderer='canvas'] 'canvas' or 'svg'
      * @param {number} [opts.devicePixelRatio]
+     * @param {number} [opts.width] Can be 'auto' (the same as null/undefined)
+     * @param {number} [opts.height] Can be 'auto' (the same as null/undefined)
      */
     var ZRender = function(id, dom, opts) {
 
@@ -110,6 +118,7 @@ define(function(require) {
         var storage = new Storage();
 
         var rendererType = opts.renderer;
+        // TODO WebGL
         if (useVML) {
             if (!painterCtors.vml) {
                 throw new Error('You need to require \'zrender/vml/vml\' to support IE8');
@@ -125,21 +134,14 @@ define(function(require) {
         this.painter = painter;
 
         var handerProxy = !env.node ? new HandlerProxy(painter.getViewportRoot()) : null;
-        this.handler = new Handler(storage, painter, handerProxy);
+        this.handler = new Handler(storage, painter, handerProxy, painter.root);
 
         /**
          * @type {module:zrender/animation/Animation}
          */
         this.animation = new Animation({
             stage: {
-                update: function () {
-                    if (self._needsRefresh) {
-                        self.refreshImmediately();
-                    }
-                    if (self._needsRefreshHover) {
-                        self.refreshHoverImmediately();
-                    }
-                }
+                update: zrUtil.bind(this.flush, this)
             }
         });
         this.animation.start();
@@ -150,21 +152,19 @@ define(function(require) {
          */
         this._needsRefresh;
 
-        // 修改 storage.delFromMap, 每次删除元素之前删除动画
+        // 修改 storage.delFromStorage, 每次删除元素之前删除动画
         // FIXME 有点ugly
-        var oldDelFromMap = storage.delFromMap;
-        var oldAddToMap = storage.addToMap;
+        var oldDelFromStorage = storage.delFromStorage;
+        var oldAddToStorage = storage.addToStorage;
 
-        storage.delFromMap = function (elId) {
-            var el = storage.get(elId);
-
-            oldDelFromMap.call(storage, elId);
+        storage.delFromStorage = function (el) {
+            oldDelFromStorage.call(storage, el);
 
             el && el.removeSelfFromZr(self);
         };
 
-        storage.addToMap = function (el) {
-            oldAddToMap.call(storage, el);
+        storage.addToStorage = function (el) {
+            oldAddToStorage.call(storage, el);
 
             el.addSelfToZr(self);
         };
@@ -234,6 +234,18 @@ define(function(require) {
         },
 
         /**
+         * Perform all refresh
+         */
+        flush: function () {
+            if (this._needsRefresh) {
+                this.refreshImmediately();
+            }
+            if (this._needsRefreshHover) {
+                this.refreshHoverImmediately();
+            }
+        },
+
+        /**
          * Add element to hover layer
          * @param  {module:zrender/Element} el
          * @param {Object} style
@@ -285,9 +297,13 @@ define(function(require) {
         /**
          * Resize the canvas.
          * Should be invoked when container size is changed
+         * @param {Object} [opts]
+         * @param {number|string} [opts.width] Can be 'auto' (the same as null/undefined)
+         * @param {number|string} [opts.height] Can be 'auto' (the same as null/undefined)
          */
-        resize: function() {
-            this.painter.resize();
+        resize: function(opts) {
+            opts = opts || {};
+            this.painter.resize(opts.width, opts.height);
             this.handler.resize();
         },
 
@@ -331,9 +347,8 @@ define(function(require) {
          * @param {number} width
          * @param {number} height
          */
-        pathToImage: function(e, width, height) {
-            var id = guid();
-            return this.painter.pathToImage(id, e, width, height);
+        pathToImage: function(e, dpr) {
+            return this.painter.pathToImage(e, dpr);
         },
 
         /**
@@ -342,6 +357,16 @@ define(function(require) {
          */
         setCursorStyle: function (cursorStyle) {
             this.handler.setCursorStyle(cursorStyle);
+        },
+
+        /**
+         * Find hovered element
+         * @param {number} x
+         * @param {number} y
+         * @return {Object} {target, topTarget}
+         */
+        findHover: function (x, y) {
+            return this.handler.findHover(x, y);
         },
 
         /**

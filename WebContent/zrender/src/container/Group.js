@@ -35,7 +35,9 @@ define(function (require) {
         Element.call(this, opts);
 
         for (var key in opts) {
-            this[key] = opts[key];
+            if (opts.hasOwnProperty(key)) {
+                this[key] = opts[key];
+            }
         }
 
         this._children = [];
@@ -148,7 +150,7 @@ define(function (require) {
             var zr = this.__zr;
             if (storage && storage !== child.__storage) {
 
-                storage.addToMap(child);
+                storage.addToStorage(child);
 
                 if (child instanceof Group) {
                     child.addChildrenToStorage(storage);
@@ -177,7 +179,7 @@ define(function (require) {
 
             if (storage) {
 
-                storage.delFromMap(child.id);
+                storage.delFromStorage(child);
 
                 if (child instanceof Group) {
                     child.delChildrenFromStorage(storage);
@@ -200,7 +202,7 @@ define(function (require) {
             for (i = 0; i < children.length; i++) {
                 child = children[i];
                 if (storage) {
-                    storage.delFromMap(child.id);
+                    storage.delFromStorage(child);
                     if (child instanceof Group) {
                         child.delChildrenFromStorage(storage);
                     }
@@ -246,7 +248,7 @@ define(function (require) {
         addChildrenToStorage: function (storage) {
             for (var i = 0; i < this._children.length; i++) {
                 var child = this._children[i];
-                storage.addToMap(child);
+                storage.addToStorage(child);
                 if (child instanceof Group) {
                     child.addChildrenToStorage(storage);
                 }
@@ -256,7 +258,7 @@ define(function (require) {
         delChildrenFromStorage: function (storage) {
             for (var i = 0; i < this._children.length; i++) {
                 var child = this._children[i];
-                storage.delFromMap(child.id);
+                storage.delFromStorage(child);
                 if (child instanceof Group) {
                     child.delChildrenFromStorage(storage);
                 }
@@ -274,7 +276,6 @@ define(function (require) {
          */
         getBoundingRect: function (includeChildren) {
             // TODO Caching
-            // TODO Transform
             var rect = null;
             var tmpRect = new BoundingRect(0, 0, 0, 0);
             var children = includeChildren || this._children;
@@ -288,6 +289,13 @@ define(function (require) {
 
                 var childRect = child.getBoundingRect();
                 var transform = child.getLocalTransform(tmpMat);
+                // TODO
+                // The boundingRect cacluated by transforming original
+                // rect may be bigger than the actual bundingRect when rotation
+                // is used. (Consider a circle rotated aginst its center, where
+                // the actual boundingRect should be the same as that not be
+                // rotated.) But we can not find better approach to calculate
+                // actual boundingRect yet, considering performance.
                 if (transform) {
                     tmpRect.copy(childRect);
                     tmpRect.applyTransform(transform);

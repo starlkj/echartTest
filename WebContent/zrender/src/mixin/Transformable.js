@@ -108,51 +108,28 @@ define(function (require) {
     };
 
     transformableProto.getLocalTransform = function (m) {
-        m = m || [];
-        mIdentity(m);
-
-        var origin = this.origin;
-
-        var scale = this.scale;
-        var rotation = this.rotation;
-        var position = this.position;
-        if (origin) {
-            // Translate to origin
-            m[4] -= origin[0];
-            m[5] -= origin[1];
-        }
-        matrix.scale(m, m, scale);
-        if (rotation) {
-            matrix.rotate(m, m, rotation);
-        }
-        if (origin) {
-            // Translate back from origin
-            m[4] += origin[0];
-            m[5] += origin[1];
-        }
-
-        m[4] += position[0];
-        m[5] += position[1];
-
-        return m;
+        return Transformable.getLocalTransform(this, m);
     };
+
     /**
      * 将自己的transform应用到context上
      * @param {Context2D} ctx
      */
     transformableProto.setTransform = function (ctx) {
         var m = this.transform;
+        var dpr = ctx.dpr || 1;
         if (m) {
-            ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            ctx.setTransform(dpr * m[0], dpr * m[1], dpr * m[2], dpr * m[3], dpr * m[4], dpr * m[5]);
+        }
+        else {
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
     };
 
     transformableProto.restoreTransform = function (ctx) {
-        var m = this.invTransform;
-        if (m) {
-            ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-        }
-    }
+        var dpr = ctx.dpr || 1;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
 
     var tmpTransform = [];
 
@@ -242,6 +219,44 @@ define(function (require) {
             vector.applyTransform(v2, v2, transform);
         }
         return v2;
+    };
+
+    /**
+     * @static
+     * @param {Object} target
+     * @param {Array.<number>} target.origin
+     * @param {number} target.rotation
+     * @param {Array.<number>} target.position
+     * @param {Array.<number>} [m]
+     */
+    Transformable.getLocalTransform = function (target, m) {
+        m = m || [];
+        mIdentity(m);
+
+        var origin = target.origin;
+        var scale = target.scale || [1, 1];
+        var rotation = target.rotation || 0;
+        var position = target.position || [0, 0];
+
+        if (origin) {
+            // Translate to origin
+            m[4] -= origin[0];
+            m[5] -= origin[1];
+        }
+        matrix.scale(m, m, scale);
+        if (rotation) {
+            matrix.rotate(m, m, rotation);
+        }
+        if (origin) {
+            // Translate back from origin
+            m[4] += origin[0];
+            m[5] += origin[1];
+        }
+
+        m[4] += position[0];
+        m[5] += position[1];
+
+        return m;
     };
 
     return Transformable;

@@ -25,7 +25,7 @@
         return function(mes) {
             document.getElementById('wrong-message').innerHTML =
                 mes + ' ' + (new Date() - 0)
-                + '<br/>' 
+                + '<br/>'
                 + document.getElementById('wrong-message').innerHTML;
         };
         */

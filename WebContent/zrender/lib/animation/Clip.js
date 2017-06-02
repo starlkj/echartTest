@@ -38,21 +38,29 @@
         this.onframe = options.onframe;
         this.ondestroy = options.ondestroy;
         this.onrestart = options.onrestart;
+
+        this._pausedTime = 0;
+        this._paused = false;
     }
 
     Clip.prototype = {
 
         constructor: Clip,
 
-        step: function (time) {
+        step: function (globalTime, deltaTime) {
             // Set startTime on first step, or _startTime may has milleseconds different between clips
             // PENDING
             if (!this._initialized) {
-                this._startTime = new Date().getTime() + this._delay;
+                this._startTime = globalTime + this._delay;
                 this._initialized = true;
             }
 
-            var percent = (time - this._startTime) / this._life;
+            if (this._paused) {
+                this._pausedTime += deltaTime;
+                return;
+            }
+
+            var percent = (globalTime - this._startTime - this._pausedTime) / this._life;
 
             // 还没开始
             if (percent < 0) {
@@ -72,7 +80,7 @@
             // 结束
             if (percent == 1) {
                 if (this.loop) {
-                    this.restart();
+                    this.restart (globalTime);
                     // 重新开始周期
                     // 抛出而不是直接调用事件直到 stage.update 后再统一调用这些事件
                     return 'restart';
@@ -87,19 +95,27 @@
             return null;
         },
 
-        restart: function() {
-            var time = new Date().getTime();
-            var remainder = (time - this._startTime) % this._life;
-            this._startTime = new Date().getTime() - remainder + this.gap;
+        restart: function (globalTime) {
+            var remainder = (globalTime - this._startTime - this._pausedTime) % this._life;
+            this._startTime = globalTime - remainder + this.gap;
+            this._pausedTime = 0;
 
             this._needsRemove = false;
         },
 
-        fire: function(eventType, arg) {
+        fire: function (eventType, arg) {
             eventType = 'on' + eventType;
             if (this[eventType]) {
                 this[eventType](this._target, arg);
             }
+        },
+
+        pause: function () {
+            this._paused = true;
+        },
+
+        resume: function () {
+            this._paused = false;
         }
     };
 

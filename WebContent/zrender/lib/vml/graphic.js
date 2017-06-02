@@ -13,6 +13,7 @@ if (!require('../core/env').canvasSupported) {
     var ZImage = require('../graphic/Image');
     var Text = require('../graphic/Text');
     var Path = require('../graphic/Path');
+    var PathProxy = require('../core/PathProxy');
 
     var Gradient = require('../graphic/Gradient');
 
@@ -356,7 +357,7 @@ if (!require('../core/env').canvasSupported) {
                     var y1 = cy + sin(endAngle) * ry;
 
                     var type = clockwise ? ' wa ' : ' at ';
-                    if (Math.abs(x0 - x1) < 1e-10) {
+                    if (Math.abs(x0 - x1) < 1e-4) {
                         // IE won't render arches drawn counter clockwise if x0 == x1.
                         if (Math.abs(endAngle - startAngle) > 1e-2) {
                             // Offset x0 by 1/80 of a pixel. Use something
@@ -367,7 +368,7 @@ if (!require('../core/env').canvasSupported) {
                         }
                         else {
                             // Avoid case draw full circle
-                            if (Math.abs(y0 - cy) < 1e-10) {
+                            if (Math.abs(y0 - cy) < 1e-4) {
                                 if ((clockwise && x0 < cx) || (!clockwise && x0 > cx)) {
                                     y1 -= 270 / Z;
                                 }
@@ -482,7 +483,7 @@ if (!require('../core/env').canvasSupported) {
             strokeEl.weight = lineWidth + 'px';
         }
 
-        var path = this.path;
+        var path = this.path || (this.path = new PathProxy());
         if (this.__dirtyPath) {
             path.beginPath();
             this.buildPath(path, this.shape);
@@ -498,7 +499,7 @@ if (!require('../core/env').canvasSupported) {
         append(vmlRoot, vmlEl);
 
         // Text
-        if (style.text) {
+        if (style.text != null) {
             this.drawRectText(vmlRoot, this.getBoundingRect());
         }
         else {
@@ -727,7 +728,7 @@ if (!require('../core/env').canvasSupported) {
         append(vmlRoot, vmlEl);
 
         // Text
-        if (style.text) {
+        if (style.text != null) {
             this.drawRectText(vmlRoot, this.getBoundingRect());
         }
     };
@@ -821,6 +822,8 @@ if (!require('../core/env').canvasSupported) {
 
         var style = this.style;
         var text = style.text;
+        // Convert to string
+        text != null && (text += '');
         if (!text) {
             return;
         }
@@ -1031,7 +1034,7 @@ if (!require('../core/env').canvasSupported) {
 
     Text.prototype.brushVML = function (vmlRoot) {
         var style = this.style;
-        if (style.text) {
+        if (style.text != null) {
             this.drawRectText(vmlRoot, {
                 x: style.x || 0, y: style.y || 0,
                 width: 0, height: 0

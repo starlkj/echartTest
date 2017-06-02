@@ -1,18 +1,85 @@
 {
-  "name": "zrender",
-  "version": "3.1.2",
-  "description": "A lightweight canvas library.",
-  "keywords": [
-    "canvas",
-    "2d"
+  "_args": [
+    [
+      {
+        "raw": "zrender@^3.5.1",
+        "scope": null,
+        "escapedName": "zrender",
+        "name": "zrender",
+        "rawSpec": "^3.5.1",
+        "spec": ">=3.5.1 <4.0.0",
+        "type": "range"
+      },
+      "/Users/hanjunghee/dev/echarts-origin"
+    ]
   ],
+  "_from": "zrender@>=3.5.1 <4.0.0",
+  "_id": "zrender@3.5.1",
+  "_inCache": true,
+  "_location": "/zrender",
+  "_nodeVersion": "6.10.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/zrender-3.5.1.tgz_1495851930091_0.7041672468185425"
+  },
+  "_npmUser": {
+    "name": "ecomfe",
+    "email": "ecomfe@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "zrender@^3.5.1",
+    "scope": null,
+    "escapedName": "zrender",
+    "name": "zrender",
+    "rawSpec": "^3.5.1",
+    "spec": ">=3.5.1 <4.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/zrender/-/zrender-3.5.1.tgz",
+  "_shasum": "70494096f017684c714ddd8bfa24cda6feecec34",
+  "_shrinkwrap": null,
+  "_spec": "zrender@^3.5.1",
+  "_where": "/Users/hanjunghee/dev/echarts-origin",
   "author": "",
+  "bugs": {
+    "url": "https://github.com/ecomfe/zrender/issues"
+  },
   "contributors": [
     {
       "name": "erik",
       "email": "errorrik@gmail.com"
     }
   ],
+  "dependencies": {},
+  "description": "A lightweight canvas library.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "70494096f017684c714ddd8bfa24cda6feecec34",
+    "tarball": "https://registry.npmjs.org/zrender/-/zrender-3.5.1.tgz"
+  },
+  "gitHead": "4de8ebcd1d9e9bd4b4e33b7021b6afe33fc23b93",
+  "homepage": "https://github.com/ecomfe/zrender#readme",
+  "keywords": [
+    "canvas",
+    "2d"
+  ],
+  "license": "BSD",
+  "main": "lib/zrender.js",
+  "maintainers": [
+    {
+      "name": "ecomfe",
+      "email": "ecomfe@gmail.com"
+    }
+  ],
+  "name": "zrender",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecomfe/zrender.git"
@@ -20,37 +87,5 @@
   "scripts": {
     "prepublish": "node build/amd2common.bundle.js"
   },
-  "license": "BSD",
-  "main": "lib/zrender.js",
-  "gitHead": "f3890c8c09dc6adc5d5f1110d1328ccdfe8e468a",
-  "bugs": {
-    "url": "https://github.com/ecomfe/zrender/issues"
-  },
-  "_id": "zrender@3.1.2",
-  "_shasum": "5d3bb0a317de4d35d9c3bab8dcadbf807d0e716b",
-  "_from": "zrender@>=3.1.2 <4.0.0",
-  "_npmVersion": "3.10.3",
-  "_nodeVersion": "6.3.0",
-  "_npmUser": {
-    "name": "ecomfe",
-    "email": "ecomfe@gmail.com"
-  },
-  "maintainers": [
-    {
-      "name": "ecomfe",
-      "email": "ecomfe@gmail.com"
-    }
-  ],
-  "dist": {
-    "shasum": "5d3bb0a317de4d35d9c3bab8dcadbf807d0e716b",
-    "tarball": "https://registry.npmjs.org/zrender/-/zrender-3.1.2.tgz"
-  },
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/zrender-3.1.2.tgz_1468326258386_0.9510606604162604"
-  },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/zrender/-/zrender-3.1.2.tgz",
-  "readme": "ERROR: No README data found!",
-  "homepage": "https://github.com/ecomfe/zrender#readme"
+  "version": "3.5.1"
 }

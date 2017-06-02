@@ -221,6 +221,10 @@
             var objShallow = {};
             var propertyCount = 0;
             for (var name in target) {
+                if (!target.hasOwnProperty(name)) {
+                    continue;
+                }
+
                 if (source[name] != null) {
                     if (isObject(target[name]) && !util.isArrayLike(target[name])) {
                         this._animateToShallow(

@@ -3,7 +3,6 @@
     var Path = require('../graphic/Path');
     var PathProxy = require('../core/PathProxy');
     var transformPath = require('./transformPath');
-    var matrix = require('../core/matrix');
 
     // command chars
     var cc = [
@@ -328,23 +327,26 @@
     // TODO Optimize double memory cost problem
     function createPathOptions(str, opts) {
         var pathProxy = createPathProxyFromString(str);
-        var transform;
         opts = opts || {};
         opts.buildPath = function (path) {
-            path.setData(pathProxy.data);
-            transform && transformPath(path, transform);
-            // Svg and vml renderer don't have context
-            var ctx = path.getContext();
-            if (ctx) {
-                path.rebuildPath(ctx);
+            if (path.setData) {
+                path.setData(pathProxy.data);
+                // Svg and vml renderer don't have context
+                var ctx = path.getContext();
+                if (ctx) {
+                    path.rebuildPath(ctx);
+                }
+            }
+            else {
+                var ctx = path;
+                pathProxy.rebuildPath(ctx);
             }
         };
 
         opts.applyTransform = function (m) {
-            if (!transform) {
-                transform = matrix.create();
-            }
-            matrix.mul(transform, m, transform);
+            transformPath(pathProxy, m);
+
+            this.dirty(true);
         };
 
         return opts;
@@ -380,13 +382,18 @@
             var len = pathEls.length;
             for (var i = 0; i < len; i++) {
                 var pathEl = pathEls[i];
-                if (pathEl.__dirty) {
+                if (!pathEl.path) {
+                    pathEl.createPathProxy();
+                }
+                if (pathEl.__dirtyPath) {
                     pathEl.buildPath(pathEl.path, pathEl.shape, true);
                 }
                 pathList.push(pathEl.path);
             }
 
             var pathBundle = new Path(opts);
+            // Need path proxy.
+            pathBundle.createPathProxy();
             pathBundle.buildPath = function (path) {
                 path.appendPath(pathList);
                 // Svg and vml renderer don't have context

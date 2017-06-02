@@ -2,6 +2,7 @@
 define(function (require) {
 
     var Path = require('./Path');
+
     return Path.extend({
 
         type: 'compound',
@@ -28,6 +29,9 @@ define(function (require) {
             var scale = this.getGlobalScale();
             // Update path scale
             for (var i = 0; i < paths.length; i++) {
+                if (!paths[i].path) {
+                    paths[i].createPathProxy();
+                }
                 paths[i].path.setScale(scale[0], scale[1]);
             }
         },

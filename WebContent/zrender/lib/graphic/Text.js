@@ -70,12 +70,14 @@
                     textBaseline = style.textBaseline;
                 }
 
-                ctx.font = font;
+                // TODO Invalid font
+                ctx.font = font || '12px sans-serif';
                 ctx.textAlign = textAlign || 'left';
                 // Use canvas default left textAlign. Giving invalid value will cause state not change
                 if (ctx.textAlign !== textAlign) {
                     ctx.textAlign = 'left';
                 }
+                // FIXME in text contain default is top
                 ctx.textBaseline = textBaseline || 'alphabetic';
                 // Use canvas default alphabetic baseline
                 if (ctx.textBaseline !== textBaseline) {
@@ -86,8 +88,9 @@
 
                 var textLines = text.split('\n');
                 for (var i = 0; i < textLines.length; i++) {
-                    style.hasFill() && ctx.fillText(textLines[i], x, y);
+                    // Fill after stroke so the outline will not cover the main part.
                     style.hasStroke() && ctx.strokeText(textLines[i], x, y);
+                    style.hasFill() && ctx.fillText(textLines[i], x, y);
                     y += lineHeight;
                 }
 
@@ -96,8 +99,8 @@
         },
 
         getBoundingRect: function () {
+            var style = this.style;
             if (!this._rect) {
-                var style = this.style;
                 var textVerticalAlign = style.textVerticalAlign;
                 var rect = textContain.getBoundingRect(
                     style.text + '', style.textFont || style.font, style.textAlign,
@@ -113,8 +116,16 @@
                 }
                 rect.x += style.x || 0;
                 rect.y += style.y || 0;
+                if (style.hasStroke()) {
+                    var w = style.lineWidth;
+                    rect.x -= w / 2;
+                    rect.y -= w / 2;
+                    rect.width += w;
+                    rect.height += w;
+                }
                 this._rect = rect;
             }
+
             return this._rect;
         }
     };

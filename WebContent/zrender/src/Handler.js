@@ -14,11 +14,16 @@ define(function (require) {
 
     var Eventful = require('./mixin/Eventful');
 
-    function makeEventPacket(eveType, target, event) {
+    var SILENT = 'silent';
+
+    function makeEventPacket(eveType, targetInfo, event) {
         return {
             type: eveType,
             event: event,
-            target: target,
+            // target can only be an element that is not silent.
+            target: targetInfo.target,
+            // topTarget can be a silent element.
+            topTarget: targetInfo.topTarget,
             cancelBubble: false,
             offsetX: event.zrX,
             offsetY: event.zrY,
@@ -26,7 +31,8 @@ define(function (require) {
             pinchX: event.pinchX,
             pinchY: event.pinchY,
             pinchScale: event.pinchScale,
-            wheelDelta: event.zrDelta
+            wheelDelta: event.zrDelta,
+            zrByTouch: event.zrByTouch
         };
     }
 
@@ -35,24 +41,28 @@ define(function (require) {
 
     var handlerNames = [
         'click', 'dblclick', 'mousewheel', 'mouseout',
-        'mouseup', 'mousedown', 'mousemove'
+        'mouseup', 'mousedown', 'mousemove', 'contextmenu'
     ];
     /**
      * @alias module:zrender/Handler
      * @constructor
      * @extends module:zrender/mixin/Eventful
-     * @param {HTMLElement} root Main HTML element for painting.
      * @param {module:zrender/Storage} storage Storage instance.
      * @param {module:zrender/Painter} painter Painter instance.
+     * @param {module:zrender/dom/HandlerProxy} proxy HandlerProxy instance.
+     * @param {HTMLElement} painterRoot painter.root (not painter.getViewportRoot()).
      */
-    var Handler = function(storage, painter, proxy) {
+    var Handler = function(storage, painter, proxy, painterRoot) {
         Eventful.call(this);
 
         this.storage = storage;
 
         this.painter = painter;
 
+        this.painterRoot = painterRoot;
+
         proxy = proxy || new EmptyProxy();
+
         /**
          * Proxy of event. can be Dom, WebGLSurface, etc.
          */
@@ -62,10 +72,11 @@ define(function (require) {
         proxy.handler = this;
 
         /**
+         * {target, topTarget}
          * @private
-         * @type {boolean}
+         * @type {Object}
          */
-        this._hovered;
+        this._hovered = {};
 
         /**
          * @private
@@ -101,16 +112,16 @@ define(function (require) {
             var x = event.zrX;
             var y = event.zrY;
 
-            var hovered = this.findHover(x, y, null);
             var lastHovered = this._hovered;
+            var hovered = this._hovered = this.findHover(x, y);
+            var hoveredTarget = hovered.target;
+            var lastHoveredTarget = lastHovered.target;
+
             var proxy = this.proxy;
-
-            this._hovered = hovered;
-
-            proxy.setCursor && proxy.setCursor(hovered ? hovered.cursor : 'default');
+            proxy.setCursor && proxy.setCursor(hoveredTarget ? hoveredTarget.cursor : 'default');
 
             // Mouse out on previous hovered element
-            if (lastHovered && hovered !== lastHovered && lastHovered.__zr) {
+            if (lastHoveredTarget && hoveredTarget !== lastHoveredTarget && lastHoveredTarget.__zr) {
                 this.dispatchToElement(lastHovered, 'mouseout', event);
             }
 
@@ -118,29 +129,36 @@ define(function (require) {
             this.dispatchToElement(hovered, 'mousemove', event);
 
             // Mouse over on a new element
-            if (hovered && hovered !== lastHovered) {
+            if (hoveredTarget && hoveredTarget !== lastHoveredTarget) {
                 this.dispatchToElement(hovered, 'mouseover', event);
             }
         },
 
         mouseout: function (event) {
-        	try{
-        		this.dispatchToElement(hovered, 'mousemove', event);
-        	}catch(e){
-        		console.warn("dispatchtoElement mousemove - exntu")
-        	}
             this.dispatchToElement(this._hovered, 'mouseout', event);
 
-            this.trigger('globalout', {
-                event: event
-            });
+            // There might be some doms created by upper layer application
+            // at the same level of painter.getViewportRoot() (e.g., tooltip
+            // dom created by echarts), where 'globalout' event should not
+            // be triggered when mouse enters these doms. (But 'mouseout'
+            // should be triggered at the original hovered element as usual).
+            var element = event.toElement || event.relatedTarget;
+            var innerDom;
+            do {
+                element = element && element.parentNode;
+            }
+            while (element && element.nodeType != 9 && !(
+                innerDom = element === this.painterRoot
+            ));
+
+            !innerDom && this.trigger('globalout', {event: event});
         },
 
         /**
          * Resize
          */
         resize: function (event) {
-            this._hovered = null;
+            this._hovered = {};
         },
 
         /**
@@ -178,16 +196,16 @@ define(function (require) {
          * 事件分发代理
          *
          * @private
-         * @param {Object} targetEl 目标图形元素
+         * @param {Object} targetInfo {target, topTarget} 目标图形元素
          * @param {string} eventName 事件名称
          * @param {Object} event 事件对象
          */
-        dispatchToElement: function (targetEl, eventName, event) {
+        dispatchToElement: function (targetInfo, eventName, event) {
+            targetInfo = targetInfo || {};
             var eventHandler = 'on' + eventName;
-            var eventPacket = makeEventPacket(eventName, targetEl, event);
+            var eventPacket = makeEventPacket(eventName, targetInfo, event);
 
-            var el = targetEl;
-
+            var el = targetInfo.target;
             while (el) {
                 el[eventHandler]
                     && (eventPacket.cancelBubble = el[eventHandler].call(el, eventPacket));
@@ -222,35 +240,46 @@ define(function (require) {
          * @param {number} x
          * @param {number} y
          * @param {module:zrender/graphic/Displayable} exclude
+         * @return {model:zrender/Element}
          * @method
          */
         findHover: function(x, y, exclude) {
             var list = this.storage.getDisplayList();
+            var out = {};
+
             for (var i = list.length - 1; i >= 0 ; i--) {
-                if (!list[i].silent
-                 && list[i] !== exclude
-                 // getDisplayList may include ignored item in VML mode
-                 && !list[i].ignore
-                 && isHover(list[i], x, y)) {
-                    return list[i];
+                var hoverCheckResult;
+                if (list[i] !== exclude
+                    // getDisplayList may include ignored item in VML mode
+                    && !list[i].ignore
+                    && (hoverCheckResult = isHover(list[i], x, y))
+                ) {
+                    !out.topTarget && (out.topTarget = list[i]);
+                    if (hoverCheckResult !== SILENT) {
+                        out.target = list[i];
+                        break;
+                    }
                 }
             }
+
+            return out;
         }
     };
 
     // Common handlers
-    util.each(['click', 'mousedown', 'mouseup', 'mousewheel', 'dblclick'], function (name) {
+    util.each(['click', 'mousedown', 'mouseup', 'mousewheel', 'dblclick', 'contextmenu'], function (name) {
         Handler.prototype[name] = function (event) {
             // Find hover again to avoid click event is dispatched manually. Or click is triggered without mouseover
-            var hovered = this.findHover(event.zrX, event.zrY, null);
+            var hovered = this.findHover(event.zrX, event.zrY);
+            var hoveredTarget = hovered.target;
 
             if (name === 'mousedown') {
-                this._downel = hovered;
+                this._downel = hoveredTarget;
                 // In case click triggered before mouseup
-                this._upel = hovered;
+                this._upel = hoveredTarget;
             }
             else if (name === 'mosueup') {
-                this._upel = hovered;
+                this._upel = hoveredTarget;
             }
             else if (name === 'click') {
                 if (this._downel !== this._upel) {
@@ -265,14 +294,20 @@ define(function (require) {
     function isHover(displayable, x, y) {
         if (displayable[displayable.rectHover ? 'rectContain' : 'contain'](x, y)) {
             var el = displayable;
+            var isSilent;
             while (el) {
-                // If ancestor is silent or clipped by ancestor
-                if (el.silent || (el.clipPath && !el.clipPath.contain(x, y)))  {
+                // If clipped by ancestor.
+                // FIXME: If clipPath has neither stroke nor fill,
+                // el.clipPath.contain(x, y) will always return false.
+                if (el.clipPath && !el.clipPath.contain(x, y))  {
                     return false;
+                }
+                if (el.silent) {
+                    isSilent = true;
                 }
                 el = el.parent;
             }
-            return true;
+            return isSilent ? SILENT : true;
         }
 
         return false;

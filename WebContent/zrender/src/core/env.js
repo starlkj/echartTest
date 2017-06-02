@@ -52,6 +52,8 @@ define(function () {
             || ua.match(/Trident\/.+?rv:(([\d.]+))/);
         var edge = ua.match(/Edge\/([\d.]+)/); // IE 12 and 12+
 
+        var weChat = (/micromessenger/i).test(ua);
+
         // Todo: clean this up with a better OS/browser seperation:
         // - discern (more) between multiple browsers on android
         // - decide if kindle fire in silk mode is android or not
@@ -74,19 +76,27 @@ define(function () {
         // if (silk) browser.silk = true, browser.version = silk[1];
         // if (!silk && os.android && ua.match(/Kindle Fire/)) browser.silk = true;
         // if (chrome) browser.chrome = true, browser.version = chrome[1];
-        if (firefox) browser.firefox = true, browser.version = firefox[1];
+        if (firefox) {
+            browser.firefox = true;
+            browser.version = firefox[1];
+        }
         // if (safari && (ua.match(/Safari/) || !!os.ios)) browser.safari = true;
         // if (webview) browser.webview = true;
-        if (ie) {
-            browser.ie = true; browser.version = ie[1];
-        }
+
         if (ie) {
             browser.ie = true;
             browser.version = ie[1];
         }
+
         if (edge) {
             browser.edge = true;
             browser.version = edge[1];
+        }
+
+        // It is difficult to detect WeChat in Win Phone precisely, because ua can
+        // not be set on win phone. So we do not consider Win Phone.
+        if (weChat) {
+            browser.weChat = true;
         }
 
         // os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
@@ -109,9 +119,11 @@ define(function () {
             touchEventsSupported: 'ontouchstart' in window && !browser.ie && !browser.edge,
             // <http://caniuse.com/#search=pointer%20event>.
             pointerEventsSupported: 'onpointerdown' in window
-                // Firefox supports pointer but not by default,
-                // only MS browsers are reliable on pointer events currently.
-                && (browser.edge || (browser.ie && browser.version >= 10))
+                // Firefox supports pointer but not by default, only MS browsers are reliable on pointer
+                // events currently. So we dont use that on other browsers unless tested sufficiently.
+                // Although IE 10 supports pointer event, it use old style and is different from the
+                // standard. So we exclude that. (IE 10 is hardly used on touch device)
+                && (browser.edge || (browser.ie && browser.version >= 11))
         };
     }
 });

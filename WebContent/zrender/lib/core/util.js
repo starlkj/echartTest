@@ -11,8 +11,21 @@
         '[object Error]': 1,
         '[object CanvasGradient]': 1,
         '[object CanvasPattern]': 1,
-        // In node-canvas Image can be Canvas.Image
-        '[object Image]': 1
+        // For node-canvas
+        '[object Image]': 1,
+        '[object Canvas]': 1
+    };
+
+    var TYPED_ARRAY = {
+        '[object Int8Array]': 1,
+        '[object Uint8Array]': 1,
+        '[object Uint8ClampedArray]': 1,
+        '[object Int16Array]': 1,
+        '[object Uint16Array]': 1,
+        '[object Int32Array]': 1,
+        '[object Uint32Array]': 1,
+        '[object Float32Array]': 1,
+        '[object Float64Array]': 1
     };
 
     var objToString = Object.prototype.toString;
@@ -25,35 +38,48 @@
     var nativeReduce = arrayProto.reduce;
 
     /**
+     * Those data types can be cloned:
+     *     Plain object, Array, TypedArray, number, string, null, undefined.
+     * Those data types will be assgined using the orginal data:
+     *     BUILTIN_OBJECT
+     * Instance of user defined class will be cloned to a plain object, without
+     * properties in prototype.
+     * Other data types is not supported (not sure what will happen).
+     *
+     * Caution: do not support clone Date, for performance consideration.
+     * (There might be a large number of date in `series.data`).
+     * So date should not be modified in and out of echarts.
+     *
      * @param {*} source
-     * @return {*} 拷贝后的新对象
+     * @return {*} new
      */
     function clone(source) {
-        if (typeof source == 'object' && source !== null) {
-            var result = source;
-            if (source instanceof Array) {
-                result = [];
-                for (var i = 0, len = source.length; i < len; i++) {
-                    result[i] = clone(source[i]);
-                }
-            }
-            else if (
-                !isBuildInObject(source)
-                // 是否为 dom 对象
-                && !isDom(source)
-            ) {
-                result = {};
-                for (var key in source) {
-                    if (source.hasOwnProperty(key)) {
-                        result[key] = clone(source[key]);
-                    }
-                }
-            }
-
-            return result;
+        if (source == null || typeof source != 'object') {
+            return source;
         }
 
-        return source;
+        var result = source;
+        var typeStr = objToString.call(source);
+
+        if (typeStr === '[object Array]') {
+            result = [];
+            for (var i = 0, len = source.length; i < len; i++) {
+                result[i] = clone(source[i]);
+            }
+        }
+        else if (TYPED_ARRAY[typeStr]) {
+            result = source.constructor.from(source);
+        }
+        else if (!BUILTIN_OBJECT[typeStr] && !isPrimitive(source) && !isDom(source)) {
+            result = {};
+            for (var key in source) {
+                if (source.hasOwnProperty(key)) {
+                    result[key] = clone(source[key]);
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -80,8 +106,10 @@
                     && !isArray(targetProp)
                     && !isDom(sourceProp)
                     && !isDom(targetProp)
-                    && !isBuildInObject(sourceProp)
-                    && !isBuildInObject(targetProp)
+                    && !isBuiltInObject(sourceProp)
+                    && !isBuiltInObject(targetProp)
+                    && !isPrimitive(sourceProp)
+                    && !isPrimitive(targetProp)
                 ) {
                     // 如果需要递归覆盖，就递归调用merge
                     merge(targetProp, sourceProp, overwrite);
@@ -207,6 +235,7 @@
     }
 
     /**
+     * Consider typed array.
      * @param {Array|TypedArray} data
      */
     function isArrayLike(data) {
@@ -408,7 +437,7 @@
      * @param {*} value
      * @return {boolean}
      */
-    function isBuildInObject(value) {
+    function isBuiltInObject(value) {
         return !!BUILTIN_OBJECT[objToString.call(value)];
     }
 
@@ -418,8 +447,18 @@
      * @return {boolean}
      */
     function isDom(value) {
-        return value && value.nodeType === 1
-               && typeof(value.nodeName) == 'string';
+        return typeof value === 'object'
+            && typeof value.nodeType === 'number'
+            && typeof value.ownerDocument === 'object';
+    }
+
+    /**
+     * Whether is exactly NaN. Notice isNaN('a') returns true.
+     * @param {*} value
+     * @return {boolean}
+     */
+    function eqNaN(value) {
+        return value !== value;
     }
 
     /**
@@ -457,6 +496,65 @@
         }
     }
 
+    var primitiveKey = '__ec_primitive__';
+    /**
+     * Set an object as primitive to be ignored traversing children in clone or merge
+     */
+    function setAsPrimitive(obj) {
+        obj[primitiveKey] = true;
+    }
+
+    function isPrimitive(obj) {
+        return obj[primitiveKey];
+    }
+
+    /**
+     * @constructor
+     * @param {Object} obj Only apply `ownProperty`.
+     */
+    function HashMap(obj) {
+        obj && each(obj, function (value, key) {
+            this.set(key, value);
+        }, this);
+    }
+
+    // Add prefix to avoid conflict with Object.prototype.
+    var HASH_MAP_PREFIX = '_ec_';
+    var HASH_MAP_PREFIX_LENGTH = 4;
+
+    HashMap.prototype = {
+        constructor: HashMap,
+        // Do not provide `has` method to avoid defining what is `has`.
+        // (We usually treat `null` and `undefined` as the same, different
+        // from ES6 Map).
+        get: function (key) {
+            return this[HASH_MAP_PREFIX + key];
+        },
+        set: function (key, value) {
+            this[HASH_MAP_PREFIX + key] = value;
+            // Comparing with invocation chaining, `return value` is more commonly
+            // used in this case: `var someVal = map.set('a', genVal());`
+            return value;
+        },
+        // Although util.each can be performed on this hashMap directly, user
+        // should not use the exposed keys, who are prefixed.
+        each: function (cb, context) {
+            context !== void 0 && (cb = bind(cb, context));
+            for (var prefixedKey in this) {
+                this.hasOwnProperty(prefixedKey)
+                    && cb(this[prefixedKey], prefixedKey.slice(HASH_MAP_PREFIX_LENGTH));
+            }
+        },
+        // Do not use this method if performance sensitive.
+        removeKey: function (key) {
+            delete this[key];
+        }
+    };
+
+    function createHashMap(obj) {
+        return new HashMap(obj);
+    }
+
     var util = {
         inherits: inherits,
         mixin: mixin,
@@ -481,10 +579,13 @@
         isString: isString,
         isObject: isObject,
         isFunction: isFunction,
-        isBuildInObject: isBuildInObject,
+        isBuiltInObject: isBuiltInObject,
         isDom: isDom,
+        eqNaN: eqNaN,
         retrieve: retrieve,
         assert: assert,
+        setAsPrimitive: setAsPrimitive,
+        createHashMap: createHashMap,
         noop: function () {}
     };
     module.exports = util;

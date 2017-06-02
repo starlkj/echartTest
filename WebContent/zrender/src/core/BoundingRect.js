@@ -9,12 +9,21 @@ define(function(require) {
 
     var v2ApplyTransform = vec2.applyTransform;
     var mathMin = Math.min;
-    var mathAbs = Math.abs;
     var mathMax = Math.max;
     /**
      * @alias module:echarts/core/BoundingRect
      */
     function BoundingRect(x, y, width, height) {
+
+        if (width < 0) {
+            x = x + width;
+            width = -width;
+        }
+        if (height < 0) {
+            y = y + height;
+            height = -height;
+        }
+
         /**
          * @type {number}
          */
@@ -61,8 +70,10 @@ define(function(require) {
          * @methods
          */
         applyTransform: (function () {
-            var min = [];
-            var max = [];
+            var lt = [];
+            var rb = [];
+            var lb = [];
+            var rt = [];
             return function (m) {
                 // In case usage like this
                 // el.getBoundingRect().applyTransform(el.transform)
@@ -70,18 +81,22 @@ define(function(require) {
                 if (!m) {
                     return;
                 }
-                min[0] = this.x;
-                min[1] = this.y;
-                max[0] = this.x + this.width;
-                max[1] = this.y + this.height;
+                lt[0] = lb[0] = this.x;
+                lt[1] = rt[1] = this.y;
+                rb[0] = rt[0] = this.x + this.width;
+                rb[1] = lb[1] = this.y + this.height;
 
-                v2ApplyTransform(min, min, m);
-                v2ApplyTransform(max, max, m);
+                v2ApplyTransform(lt, lt, m);
+                v2ApplyTransform(rb, rb, m);
+                v2ApplyTransform(lb, lb, m);
+                v2ApplyTransform(rt, rt, m);
 
-                this.x = mathMin(min[0], max[0]);
-                this.y = mathMin(min[1], max[1]);
-                this.width = mathAbs(max[0] - min[0]);
-                this.height = mathAbs(max[1] - min[1]);
+                this.x = mathMin(lt[0], rb[0], lb[0], rt[0]);
+                this.y = mathMin(lt[1], rb[1], lb[1], rt[1]);
+                var maxX = mathMax(lt[0], rb[0], lb[0], rt[0]);
+                var maxY = mathMax(lt[1], rb[1], lb[1], rt[1]);
+                this.width = maxX - this.x;
+                this.height = maxY - this.y;
             };
         })(),
 
@@ -110,6 +125,15 @@ define(function(require) {
          * @return {boolean}
          */
         intersect: function (b) {
+            if (!b) {
+                return false;
+            }
+
+            if (!(b instanceof BoundingRect)) {
+                // Normalize negative width/height.
+                b = BoundingRect.create(b);
+            }
+
             var a = this;
             var ax0 = a.x;
             var ax1 = a.x + a.width;
@@ -147,7 +171,28 @@ define(function(require) {
             this.y = other.y;
             this.width = other.width;
             this.height = other.height;
+        },
+
+        plain: function () {
+            return {
+                x: this.x,
+                y: this.y,
+                width: this.width,
+                height: this.height
+            };
         }
+    };
+
+    /**
+     * @param {Object|module:zrender/core/BoundingRect} rect
+     * @param {number} rect.x
+     * @param {number} rect.y
+     * @param {number} rect.width
+     * @param {number} rect.height
+     * @return {module:zrender/core/BoundingRect}
+     */
+    BoundingRect.create = function (rect) {
+        return new BoundingRect(rect.x, rect.y, rect.width, rect.height);
     };
 
     return BoundingRect;

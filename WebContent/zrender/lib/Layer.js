@@ -71,6 +71,9 @@
             domStyle['user-select'] = 'none';
             domStyle['-webkit-touch-callout'] = 'none';
             domStyle['-webkit-tap-highlight-color'] = 'rgba(0,0,0,0)';
+            domStyle['padding'] = 0;
+            domStyle['margin'] = 0;
+            domStyle['border-width'] = 0;
         }
 
         this.domBack = null;
@@ -118,10 +121,7 @@
         initContext: function () {
             this.ctx = this.dom.getContext('2d');
 
-            var dpr = this.dpr;
-            if (dpr != 1) {
-                this.ctx.scale(dpr, dpr);
-            }
+            this.ctx.dpr = this.dpr;
         },
 
         createBackBuffer: function () {
@@ -151,10 +151,6 @@
 
             dom.width = width * dpr;
             dom.height = height * dpr;
-
-            if (dpr != 1) {
-                this.ctx.scale(dpr, dpr);
-            }
 
             if (domBack) {
                 domBack.width = width * dpr;
@@ -195,7 +191,7 @@
                 );
             }
 
-            ctx.clearRect(0, 0, width / dpr, height / dpr);
+            ctx.clearRect(0, 0, width, height);
             if (clearColor) {
                 var clearColorGradientOrPattern;
                 // Gradient
@@ -204,8 +200,8 @@
                     clearColorGradientOrPattern = clearColor.__canvasGradient || Style.getGradient(ctx, clearColor, {
                         x: 0,
                         y: 0,
-                        width: width / dpr,
-                        height: height / dpr
+                        width: width,
+                        height: height
                     });
 
                     clearColor.__canvasGradient = clearColorGradientOrPattern;
@@ -216,7 +212,7 @@
                 }
                 ctx.save();
                 ctx.fillStyle = clearColorGradientOrPattern || clearColor;
-                ctx.fillRect(0, 0, width / dpr, height / dpr);
+                ctx.fillRect(0, 0, width, height);
                 ctx.restore();
             }
 
@@ -224,7 +220,7 @@
                 var domBack = this.domBack;
                 ctx.save();
                 ctx.globalAlpha = lastFrameAlpha;
-                ctx.drawImage(domBack, 0, 0, width / dpr, height / dpr);
+                ctx.drawImage(domBack, 0, 0, width, height);
                 ctx.restore();
             }
         }

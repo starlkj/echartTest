@@ -247,7 +247,7 @@
     }
 
     var notSupportedMethods = [
-        'getLayer', 'insertLayer', 'eachLayer', 'eachBuildinLayer', 'eachOtherLayer', 'getLayers',
+        'getLayer', 'insertLayer', 'eachLayer', 'eachBuiltinLayer', 'eachOtherLayer', 'getLayers',
         'modLayer', 'delLayer', 'clearLayer', 'toDataURL', 'pathToImage'
     ];
 

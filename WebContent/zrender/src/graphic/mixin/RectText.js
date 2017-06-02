@@ -22,10 +22,6 @@ define(function (require) {
         return value;
     }
 
-    function setTransform(ctx, m) {
-        ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-    }
-
     RectText.prototype = {
 
         constructor: RectText,
@@ -51,6 +47,7 @@ define(function (require) {
             var x;
             var y;
             var textPosition = style.textPosition;
+            var textOffset = style.textOffset;
             var distance = style.textDistance;
             var align = style.textAlign;
             var font = style.textFont || style.font;
@@ -61,10 +58,15 @@ define(function (require) {
 
             // Transform rect to view space
             var transform = this.transform;
-            if (transform) {
-                tmpRect.copy(rect);
-                tmpRect.applyTransform(transform);
-                rect = tmpRect;
+            if (!style.textTransform) {
+                if (transform) {
+                    tmpRect.copy(rect);
+                    tmpRect.applyTransform(transform);
+                    rect = tmpRect;
+                }
+            }
+            else {
+                this.setTransform(ctx);
             }
 
             // Text position represented by coord
@@ -101,6 +103,11 @@ define(function (require) {
                 baseline = baseline || res.textBaseline;
             }
 
+            if (textOffset) {
+                x += textOffset[0];
+                y += textOffset[1];
+            }
+
             // Use canvas default left textAlign. Giving invalid value will cause state not change
             ctx.textAlign = align || 'left';
             // Use canvas default alphabetic baseline
@@ -110,7 +117,9 @@ define(function (require) {
             var textStroke = style.textStroke;
             textFill && (ctx.fillStyle = textFill);
             textStroke && (ctx.strokeStyle = textStroke);
-            ctx.font = font;
+
+            // TODO Invalid font
+            ctx.font = font || '12px sans-serif';
 
             // Text shadow
             // Always set shadowBlur and shadowOffset to avoid leak from displayable
@@ -120,9 +129,17 @@ define(function (require) {
             ctx.shadowOffsetY = style.textShadowOffsetY;
 
             var textLines = text.split('\n');
+
+            if (style.textRotation) {
+                transform && ctx.translate(transform[4], transform[5]);
+                ctx.rotate(style.textRotation);
+                transform && ctx.translate(-transform[4], -transform[5]);
+            }
+
             for (var i = 0; i < textLines.length; i++) {
-                textFill && ctx.fillText(textLines[i], x, y);
+                    // Fill after stroke so the outline will not cover the main part.
                 textStroke && ctx.strokeText(textLines[i], x, y);
+                textFill && ctx.fillText(textLines[i], x, y);
                 y += textRect.lineHeight;
             }
 

@@ -177,7 +177,7 @@
         bindStyle(svgEl, style);
         setTransform(svgEl, el.transform);
 
-        if (style.text) {
+        if (style.text != null) {
             svgTextDrawRectText(el, el.getBoundingRect());
         }
     };
@@ -225,7 +225,7 @@
 
         setTransform(svgEl, el.transform);
 
-        if (style.text) {
+        if (style.text != null) {
             svgTextDrawRectText(el, el.getBoundingRect());
         }
     };
@@ -238,7 +238,8 @@
     var svgTextDrawRectText = function (el, rect, textRect) {
         var style = el.style;
         var text = style.text;
-
+        // Convert to string
+        text != null && (text += '');
         if (!text) {
             return;
         }
@@ -332,7 +333,7 @@
 
     svgText.brush = function (el) {
         var style = el.style;
-        if (style.text) {
+        if (style.text != null) {
             // 强制设置 textPosition
             style.textPosition = [0, 0];
             svgTextDrawRectText(el, {

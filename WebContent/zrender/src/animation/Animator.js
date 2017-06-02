@@ -53,7 +53,7 @@ define(function (require) {
             }
         }
         else {
-            var len2 = p0[0].length;
+            var len2 = len && p0[0].length;
             for (var i = 0; i < len; i++) {
                 for (var j = 0; j < len2; j++) {
                     out[i][j] = interpolateNumber(
@@ -217,6 +217,11 @@ define(function (require) {
         return 'rgba(' + rgba.join(',') + ')';
     }
 
+    function getArrayDim(keyframes) {
+        var lastValue = keyframes[keyframes.length - 1].value;
+        return isArrayLike(lastValue && lastValue[0]) ? 2 : 1;
+    }
+
     function createTrackClip (animator, easing, oneTrackDone, keyframes, propName) {
         var getter = animator._getter;
         var setter = animator._setter;
@@ -233,11 +238,8 @@ define(function (require) {
         var isValueString = false;
 
         // For vertices morphing
-        var arrDim = (
-                isValueArray
-                && isArrayLike(firstVal[0])
-            )
-            ? 2 : 1;
+        var arrDim = isValueArray ? getArrayDim(keyframes) : 0;
+
         var trackMaxTime;
         // Sort keyframe as ascending
         keyframes.sort(function(a, b) {
@@ -314,7 +316,11 @@ define(function (require) {
             // kf1-----kf2---------current--------kf3
             // find kf2 and kf3 and do interpolation
             var frame;
-            if (percent < lastFramePercent) {
+            // In the easing function like elasticOut, percent may less than 0
+            if (percent < 0) {
+                frame = 0;
+            }
+            else if (percent < lastFramePercent) {
                 // Start from next key
                 // PENDING start from lastFrame ?
                 start = Math.min(lastFrame + 1, trackLen - 1);
@@ -468,6 +474,10 @@ define(function (require) {
         when: function(time /* ms */, props) {
             var tracks = this._tracks;
             for (var propName in props) {
+                if (!props.hasOwnProperty(propName)) {
+                    continue;
+                }
+
                 if (!tracks[propName]) {
                     tracks[propName] = [];
                     // Invalid value
@@ -504,6 +514,24 @@ define(function (require) {
             return this;
         },
 
+        pause: function () {
+            for (var i = 0; i < this._clipList.length; i++) {
+                this._clipList[i].pause();
+            }
+            this._paused = true;
+        },
+
+        resume: function () {
+            for (var i = 0; i < this._clipList.length; i++) {
+                this._clipList[i].resume();
+            }
+            this._paused = false;
+        },
+
+        isPaused: function () {
+            return !!this._paused;
+        },
+
         _doneCallback: function () {
             // Clear all tracks
             this._tracks = {};
@@ -536,6 +564,9 @@ define(function (require) {
 
             var lastClip;
             for (var propName in this._tracks) {
+                if (!this._tracks.hasOwnProperty(propName)) {
+                    continue;
+                }
                 var clip = createTrackClip(
                     this, easing, oneTrackDone,
                     this._tracks[propName], propName

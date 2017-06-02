@@ -33,7 +33,7 @@
             return false;
         }
 
-        if (layer.isBuildin) {
+        if (layer.__builtin__) {
             return true;
         }
 
@@ -86,40 +86,30 @@
     function doClip(clipPaths, ctx) {
         for (var i = 0; i < clipPaths.length; i++) {
             var clipPath = clipPaths[i];
-            var m;
-            if (clipPath.transform) {
-                m = clipPath.transform;
-                ctx.transform(
-                    m[0], m[1],
-                    m[2], m[3],
-                    m[4], m[5]
-                );
-            }
-            var path = clipPath.path;
-            path.beginPath(ctx);
-            clipPath.buildPath(path, clipPath.shape);
+
+            clipPath.setTransform(ctx);
+            ctx.beginPath();
+            clipPath.buildPath(ctx, clipPath.shape);
             ctx.clip();
             // Transform back
-            if (clipPath.transform) {
-                m = clipPath.invTransform;
-                ctx.transform(
-                    m[0], m[1],
-                    m[2], m[3],
-                    m[4], m[5]
-                );
-            }
+            clipPath.restoreTransform(ctx);
         }
     }
 
     function createRoot(width, height) {
         var domRoot = document.createElement('div');
-        var domRootStyle = domRoot.style;
 
         // domRoot.onselectstart = returnFalse; // 避免页面选中的尴尬
-        domRootStyle.position = 'relative';
-        domRootStyle.overflow = 'hidden';
-        domRootStyle.width = width + 'px';
-        domRootStyle.height = height + 'px';
+        domRoot.style.cssText = [
+            'position:relative',
+            'overflow:hidden',
+            'width:' + width + 'px',
+            'height:' + height + 'px',
+            'padding:0',
+            'margin:0',
+            'border-width:0'
+        ].join(';') + ';';
+
         return domRoot;
     }
 
@@ -135,7 +125,7 @@
         var singleCanvas = !root.nodeName // In node ?
             || root.nodeName.toUpperCase() === 'CANVAS';
 
-        opts = opts || {};
+        this._opts = opts = util.extend({}, opts || {});
 
         /**
          * @type {number}
@@ -187,8 +177,8 @@
         this._layerConfig = {};
 
         if (!singleCanvas) {
-            this._width = this._getWidth();
-            this._height = this._getHeight();
+            this._width = this._getSize(0);
+            this._height = this._getSize(1);
 
             var domRoot = this._domRoot = createRoot(
                 this._width, this._height
@@ -196,6 +186,12 @@
             root.appendChild(domRoot);
         }
         else {
+            if (opts.width != null) {
+                root.width = opts.width;
+            }
+            if (opts.height != null) {
+                root.height = opts.height;
+            }
             // Use canvas width and height directly
             var width = root.width;
             var height = root.height;
@@ -210,9 +206,9 @@
             // mainLayer.resize(width, height);
             layers[0] = mainLayer;
             zlevelList.push(0);
-        }
 
-        this.pathToImage = this._createPathToImage();
+            this._domRoot = root;
+        }
 
         // Layers for progressive rendering
         this._progressiveLayers = [];
@@ -241,7 +237,7 @@
          * @return {HTMLDivElement}
          */
         getViewportRoot: function () {
-            return this._singleCanvas ? this._layers[0].dom : this._domRoot;
+            return this._domRoot;
         },
 
         /**
@@ -260,7 +256,7 @@
             for (var i = 0; i < zlevelList.length; i++) {
                 var z = zlevelList[i];
                 var layer = this._layers[z];
-                if (!layer.isBuildin && layer.refresh) {
+                if (!layer.__builtin__ && layer.refresh) {
                     layer.refresh();
                 }
             }
@@ -403,11 +399,11 @@
 
             this._clearProgressive();
 
-            this.eachBuildinLayer(preProcessLayer);
+            this.eachBuiltinLayer(preProcessLayer);
 
             this._doPaintList(list, paintAll);
 
-            this.eachBuildinLayer(postProcessLayer);
+            this.eachBuiltinLayer(postProcessLayer);
         },
 
         _doPaintList: function (list, paintAll) {
@@ -426,15 +422,15 @@
             var layerProgress;
             var frame = this._progress;
             function flushProgressiveLayer(layer) {
+                var dpr = ctx.dpr || 1;
                 ctx.save();
                 ctx.globalAlpha = 1;
                 ctx.shadowBlur = 0;
                 // Avoid layer don't clear in next progressive frame
                 currentLayer.__dirty = true;
-                ctx.drawImage(layer.dom, 0, 0, width, height);
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.drawImage(layer.dom, 0, 0, width * dpr, height * dpr);
                 ctx.restore();
-
-                currentLayer.ctx.restore();
             }
 
             for (var i = 0, l = list.length; i < l; i++) {
@@ -463,7 +459,7 @@
                     currentZLevel = elZLevel;
                     currentLayer = this.getLayer(currentZLevel);
 
-                    if (!currentLayer.isBuildin) {
+                    if (!currentLayer.__builtin__) {
                         log(
                             'ZLevel ' + currentZLevel
                             + ' has been used by unkown layer ' + currentLayer.id
@@ -484,6 +480,7 @@
                 if (!(currentLayer.__dirty || paintAll)) {
                     continue;
                 }
+
                 if (elFrame >= 0) {
                     // Progressive layer changed
                     if (!currentProgressiveLayer) {
@@ -547,7 +544,7 @@
 
         _doPaintEl: function (el, currentLayer, forcePaint, scope) {
             var ctx = currentLayer.ctx;
-
+            var m = el.transform;
             if (
                 (currentLayer.__dirty || forcePaint)
                 // Ignore invisible element
@@ -556,7 +553,8 @@
                 && el.style.opacity !== 0
                 // Ignore scale 0 element, in some environment like node-canvas
                 // Draw a scale 0 element can cause all following draw wrong
-                && el.scale[0] && el.scale[1]
+                // And setTransform with scale 0 will cause set back transform failed.
+                && !(m && !m[0] && !m[3])
                 // Ignore culled element
                 && !(el.culling && isDisplayableCulled(el, this._width, this._height))
             ) {
@@ -606,7 +604,7 @@
             if (!layer) {
                 // Create a new layer
                 layer = new Layer('zr_' + zlevel, this, this.dpr);
-                layer.isBuildin = true;
+                layer.__builtin__ = true;
 
                 if (this._layerConfig[zlevel]) {
                     util.merge(layer, this._layerConfig[zlevel], true);
@@ -654,28 +652,33 @@
             }
             zlevelList.splice(i + 1, 0, zlevel);
 
-            if (prevLayer) {
-                var prevDom = prevLayer.dom;
-                if (prevDom.nextSibling) {
-                    domRoot.insertBefore(
-                        layer.dom,
-                        prevDom.nextSibling
-                    );
-                }
-                else {
-                    domRoot.appendChild(layer.dom);
-                }
-            }
-            else {
-                if (domRoot.firstChild) {
-                    domRoot.insertBefore(layer.dom, domRoot.firstChild);
-                }
-                else {
-                    domRoot.appendChild(layer.dom);
-                }
-            }
-
             layersMap[zlevel] = layer;
+
+            // Vitual layer will not directly show on the screen.
+            // (It can be a WebGL layer and assigned to a ZImage element)
+            // But it still under management of zrender.
+            if (!layer.virtual) {
+                if (prevLayer) {
+                    var prevDom = prevLayer.dom;
+                    if (prevDom.nextSibling) {
+                        domRoot.insertBefore(
+                            layer.dom,
+                            prevDom.nextSibling
+                        );
+                    }
+                    else {
+                        domRoot.appendChild(layer.dom);
+                    }
+                }
+                else {
+                    if (domRoot.firstChild) {
+                        domRoot.insertBefore(layer.dom, domRoot.firstChild);
+                    }
+                    else {
+                        domRoot.appendChild(layer.dom);
+                    }
+                }
+            }
         },
 
         // Iterate each layer
@@ -690,7 +693,7 @@
         },
 
         // Iterate each buildin layer
-        eachBuildinLayer: function (cb, context) {
+        eachBuiltinLayer: function (cb, context) {
             var zlevelList = this._zlevelList;
             var layer;
             var z;
@@ -698,7 +701,7 @@
             for (i = 0; i < zlevelList.length; i++) {
                 z = zlevelList[i];
                 layer = this._layers[z];
-                if (layer.isBuildin) {
+                if (layer.__builtin__) {
                     cb.call(context, layer, z);
                 }
             }
@@ -713,7 +716,7 @@
             for (i = 0; i < zlevelList.length; i++) {
                 z = zlevelList[i];
                 layer = this._layers[z];
-                if (! layer.isBuildin) {
+                if (!layer.__builtin__) {
                     cb.call(context, layer, z);
                 }
             }
@@ -735,7 +738,7 @@
             var elCountsLastFrame = {};
             var progressiveElCountsLastFrame = {};
 
-            this.eachBuildinLayer(function (layer, z) {
+            this.eachBuiltinLayer(function (layer, z) {
                 elCountsLastFrame[z] = layer.elCount;
                 layer.elCount = 0;
                 layer.__dirty = false;
@@ -809,7 +812,7 @@
             }
 
             // 层中的元素数量有发生变化
-            this.eachBuildinLayer(function (layer, z) {
+            this.eachBuiltinLayer(function (layer, z) {
                 if (elCountsLastFrame[z] !== layer.elCount) {
                     layer.__dirty = true;
                 }
@@ -830,7 +833,7 @@
          * 清除hover层外所有内容
          */
         clear: function () {
-            this.eachBuildinLayer(this._clearLayer);
+            this.eachBuiltinLayer(this._clearLayer);
             return this;
         },
 
@@ -891,8 +894,13 @@
             // FIXME Why ?
             domRoot.style.display = 'none';
 
-            width = width || this._getWidth();
-            height = height || this._getHeight();
+            // Save input w/h
+            var opts = this._opts;
+            width != null && (opts.width = width);
+            height != null && (opts.height = height);
+
+            width = this._getSize(0);
+            height = this._getSize(1);
 
             domRoot.style.display = '';
 
@@ -902,8 +910,13 @@
                 domRoot.style.height = height + 'px';
 
                 for (var id in this._layers) {
-                    this._layers[id].resize(width, height);
+                    if (this._layers.hasOwnProperty(id)) {
+                        this._layers[id].resize(width, height);
+                    }
                 }
+                util.each(this._progressiveLayers, function (layer) {
+                    layer.resize(width, height);
+                });
 
                 this.refresh(true);
             }
@@ -958,10 +971,40 @@
             var displayList = this.storage.getDisplayList(true);
 
             var scope = {};
+            var zlevel;
+
+            var self = this;
+            function findAndDrawOtherLayer(smaller, larger) {
+                var zlevelList = self._zlevelList;
+                if (smaller == null) {
+                    smaller = -Infinity;
+                }
+                var intermediateLayer;
+                for (var i = 0; i < zlevelList.length; i++) {
+                    var z = zlevelList[i];
+                    var layer = self._layers[z];
+                    if (!layer.__builtin__ && z > smaller && z < larger) {
+                        intermediateLayer = layer;
+                        break;
+                    }
+                }
+                if (intermediateLayer && intermediateLayer.renderToCanvas) {
+                    imageLayer.ctx.save();
+                    intermediateLayer.renderToCanvas(imageLayer.ctx);
+                    imageLayer.ctx.restore();
+                }
+            }
             for (var i = 0; i < displayList.length; i++) {
                 var el = displayList[i];
+
+                if (el.zlevel !== zlevel) {
+                    findAndDrawOtherLayer(zlevel, el.zlevel);
+                    zlevel = el.zlevel;
+                }
                 this._doPaintEl(el, imageLayer, true, scope);
             }
+
+            findAndDrawOtherLayer(zlevel, Infinity);
 
             return imageLayer.dom;
         },
@@ -979,49 +1022,68 @@
             return this._height;
         },
 
-        _getWidth: function () {
+        _getSize: function (whIdx) {
+            var opts = this._opts;
+            var wh = ['width', 'height'][whIdx];
+            var cwh = ['clientWidth', 'clientHeight'][whIdx];
+            var plt = ['paddingLeft', 'paddingTop'][whIdx];
+            var prb = ['paddingRight', 'paddingBottom'][whIdx];
+
+            if (opts[wh] != null && opts[wh] !== 'auto') {
+                return parseFloat(opts[wh]);
+            }
+
             var root = this.root;
             var stl = document.defaultView.getComputedStyle(root);
 
-            // FIXME Better way to get the width and height when element has not been append to the document
-            return ((root.clientWidth || parseInt10(stl.width) || parseInt10(root.style.width))
-                    - (parseInt10(stl.paddingLeft) || 0)
-                    - (parseInt10(stl.paddingRight) || 0)) | 0;
+            return (
+                (root[cwh] || parseInt10(stl[wh]) || parseInt10(root.style[wh]))
+                - (parseInt10(stl[plt]) || 0)
+                - (parseInt10(stl[prb]) || 0)
+            ) | 0;
         },
 
-        _getHeight: function () {
-            var root = this.root;
-            var stl = document.defaultView.getComputedStyle(root);
+        pathToImage: function (path, dpr) {
+            dpr = dpr || this.dpr;
 
-            return ((root.clientHeight || parseInt10(stl.height) || parseInt10(root.style.height))
-                    - (parseInt10(stl.paddingTop) || 0)
-                    - (parseInt10(stl.paddingBottom) || 0)) | 0;
-        },
-
-        _pathToImage: function (id, path, width, height, dpr) {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
+            var rect = path.getBoundingRect();
+            var style = path.style;
+            var shadowBlurSize = style.shadowBlur;
+            var shadowOffsetX = style.shadowOffsetX;
+            var shadowOffsetY = style.shadowOffsetY;
+            var lineWidth = style.hasStroke() ? style.lineWidth : 0;
+
+            var leftMargin = Math.max(lineWidth / 2, -shadowOffsetX + shadowBlurSize);
+            var rightMargin = Math.max(lineWidth / 2, shadowOffsetX + shadowBlurSize);
+            var topMargin = Math.max(lineWidth / 2, -shadowOffsetY + shadowBlurSize);
+            var bottomMargin = Math.max(lineWidth / 2, shadowOffsetY + shadowBlurSize);
+            var width = rect.width + leftMargin + rightMargin;
+            var height = rect.height + topMargin + bottomMargin;
 
             canvas.width = width * dpr;
             canvas.height = height * dpr;
 
-            ctx.clearRect(0, 0, width * dpr, height * dpr);
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+            ctx.dpr = dpr;
 
             var pathTransform = {
                 position: path.position,
                 rotation: path.rotation,
                 scale: path.scale
             };
-            path.position = [0, 0, 0];
+            path.position = [leftMargin - rect.x, topMargin - rect.y];
             path.rotation = 0;
             path.scale = [1, 1];
+            path.updateTransform();
             if (path) {
                 path.brush(ctx);
             }
 
             var ImageShape = require('./graphic/Image');
             var imgShape = new ImageShape({
-                id: id,
                 style: {
                     x: 0,
                     y: 0,
@@ -1042,16 +1104,6 @@
             }
 
             return imgShape;
-        },
-
-        _createPathToImage: function () {
-            var me = this;
-
-            return function (id, e, width, height) {
-                return me._pathToImage(
-                    id, e, width, height, me.dpr
-                );
-            };
         }
     };
 

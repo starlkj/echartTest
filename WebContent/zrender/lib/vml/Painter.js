@@ -40,23 +40,21 @@
         this.resize();
 
         // Modify storage
-        var oldDelFromMap = storage.delFromMap;
-        var oldAddToMap = storage.addToMap;
-        storage.delFromMap = function (elId) {
-            var el = storage.get(elId);
-
-            oldDelFromMap.call(storage, elId);
+        var oldDelFromStorage = storage.delFromStorage;
+        var oldAddToStorage = storage.addToStorage;
+        storage.delFromStorage = function (el) {
+            oldDelFromStorage.call(storage, el);
 
             if (el) {
                 el.onRemove && el.onRemove(vmlRoot);
             }
         };
 
-        storage.addToMap = function (el) {
+        storage.addToStorage = function (el) {
             // Displayable already has a vml node
             el.onAdd && el.onAdd(vmlRoot);
 
-            oldAddToMap.call(storage, el);
+            oldAddToStorage.call(storage, el);
         };
 
         this._firstPaint = true;
@@ -118,11 +116,11 @@
             }
         },
 
-        resize: function () {
-            var width = this._getWidth();
-            var height = this._getHeight();
+        resize: function (width, height) {
+            var width = width == null ? this._getWidth() : width;
+            var height = height == null ? this._getHeight() : height;
 
-            if (this._width != width && this._height != height) {
+            if (this._width != width || this._height != height) {
                 this._width = width;
                 this._height = height;
 
@@ -149,7 +147,9 @@
         },
 
         clear: function () {
-            this.root.removeChild(this.vmlViewport);
+            if (this._vmlViewport) {
+                this.root.removeChild(this._vmlViewport);
+            }
         },
 
         _getWidth: function () {
@@ -179,7 +179,7 @@
     }
 
     var notSupportedMethods = [
-        'getLayer', 'insertLayer', 'eachLayer', 'eachBuildinLayer', 'eachOtherLayer', 'getLayers',
+        'getLayer', 'insertLayer', 'eachLayer', 'eachBuiltinLayer', 'eachOtherLayer', 'getLayers',
         'modLayer', 'delLayer', 'clearLayer', 'toDataURL', 'pathToImage'
     ];
 
