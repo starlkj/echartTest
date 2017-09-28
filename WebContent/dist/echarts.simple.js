@@ -780,7 +780,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            areas: []
 	        });
 
-	    };	// func - toggleDisableTip
+	    };	// func - clearBrush
 
 	    /**
 	     * @DEPRECATED

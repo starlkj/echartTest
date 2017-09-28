@@ -795,7 +795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            areas: []
 	        });
 
-	    };	// func - toggleDisableTip
+	    };	// func - clearBrush
 
 	    /**
 	     * @DEPRECATED
@@ -34434,6 +34434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.add(line);
 
 	        // add by eltriny - #20161015-02 : MarkLine Label Rectangle --- Start
+
 	        var itemOpts = lineData.getItemModel( idx ).option;
 
 	        if( itemOpts && itemOpts.label && itemOpts.label.normal && itemOpts.label.normal.fill ) {
@@ -34453,6 +34454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	            this.add( labelContainer );
 	        }	// end if - normalLabelFill
+
 	        // add by eltriny - #20161015-02 : MarkLine Label Rectangle --- End
 
 	        var label = new graphic.Text({
@@ -34856,14 +34858,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        removeOnClick: false
 	    };
 
+	    var baseUID = 0;
+
 	    // add by eltriny
 	    // BrushController Type
 	    var BRUSH_TYPE = {
 	        SELECT : 'SELECT_BRUSH',
 	        ZOOM   : 'ZOOM_BRUSH'
 	    };
-
-	    var baseUID = 0;
 
 	    /**
 	     * @alias module:echarts/component/helper/BrushController
@@ -34910,6 +34912,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Only for drawing (after enabledBrush).
+	         *     'line', 'rect', 'polygon' or false
+	         *     If passing false/null/undefined, disable brush.
+	         *     If passing 'auto', determined by panel.defaultBrushType
 	         * @private
 	         * @type {string}
 	         */
@@ -34917,6 +34922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Only for drawing (after enabledBrush).
+	         *
 	         * @private
 	         * @type {Object}
 	         */
@@ -34953,7 +34959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._creatingCover;
 
 	        /**
-	         * true means global panel
+	         * `true` means global panel
 	         * @private
 	         * @type {module:zrender/container/Group|boolean}
 	         */
@@ -34997,7 +35003,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * If set to null/undefined/false, select disabled.
 	         * @param {Object} brushOption
 	         * @param {string|boolean} brushOption.brushType 'line', 'rect', 'polygon' or false
-	         *                          If pass false/null/undefined, disable brush.
+	         *                          If passing false/null/undefined, disable brush.
+	         *                          If passing 'auto', determined by panel.defaultBrushType.
+	         *                              ('auto' can not be used in global panel)
 	         * @param {number} [brushOption.brushMode='single'] 'single' or 'multiple'
 	         * @param {boolean} [brushOption.transformable=true]
 	         * @param {boolean} [brushOption.removeOnClick=false]
@@ -35006,6 +35014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {number} [brushOption.brushStyle.lineWidth]
 	         * @param {string} [brushOption.brushStyle.stroke]
 	         * @param {string} [brushOption.brushStyle.fill]
+	         * @param {number} [brushOption.z]
 	         */
 	        enableBrush: function (brushOption) {
 	            if (true) {
@@ -35020,42 +35029,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * @param {Array.<Object>} panelOpts If not pass, it is global brush.
-	         *        Each items: {panelId, rect}
+	         *        Each items: {
+	         *            panelId, // mandatory.
+	         *            clipPath, // mandatory. function.
+	         *            isTargetByCursor, // mandatory. function.
+	         *            defaultBrushType, // optional, only used when brushType is 'auto'.
+	         *            getLinearBrushOtherExtent, // optional. function.
+	         *        }
 	         */
 	        setPanels: function (panelOpts) {
-	            var oldPanels = this._panels || {};
-	            var newPanels = this._panels = panelOpts && panelOpts.length && {};
-	            var thisGroup = this.group;
-
-	            newPanels && each(panelOpts, function (panelOpt) {
-	                var panelId = panelOpt.panelId;
-	                var panel = oldPanels[panelId];
-	                if (!panel) {
-	                    panel = new graphic.Rect({
-	                        silent: true,
-	                        invisible: true
-	                    });
-	                    thisGroup.add(panel);
-	                }
-	                panel.attr('shape', panelOpt.rect);
-	                panel.__brushPanelId = panelId;
-	                newPanels[panelId] = panel;
-	                oldPanels[panelId] = null;
-	            });
-
-	            each(oldPanels, function (panel) {
-	                panel && thisGroup.remove(panel);
-	            });
-
+	            if (panelOpts && panelOpts.length) {
+	                var panels = this._panels = {};
+	                zrUtil.each(panelOpts, function (panelOpts) {
+	                    panels[panelOpts.panelId] = zrUtil.clone(panelOpts);
+	                });
+	            }
+	            else {
+	                this._panels = null;
+	            }
 	            return this;
 	        },
 
 	        /**
 	         * @param {Object} [opt]
 	         * @return {boolean} [opt.enableGlobalPan=false]
-	         * @return {boolean} [opt.position=[0, 0]]
-	         * @return {boolean} [opt.rotation=0]
-	         * @return {boolean} [opt.scale=[1, 1]]
 	         */
 	        mount: function (opt) {
 	            opt = opt || {};
@@ -35074,6 +35071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                rotation: opt.rotation || 0,
 	                scale: opt.scale || [1, 1]
 	            });
+	            this._transform = thisGroup.getLocalTransform();
 
 	            return this;
 	        },
@@ -35090,7 +35088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *            {id: 'yy', brushType: 'rect', range: [[23, 44], [23, 54]]},
 	         *            ...
 	         *        ]
-	         *        `brushType` is required in each cover info.
+	         *        `brushType` is required in each cover info. (can not be 'auto')
 	         *        `id` is not mandatory.
 	         *        `brushStyle`, `transformable` is not mandatory, use DEFAULT_BRUSH_OPT by default.
 	         *        If brushOptionList is null/undefined, all covers removed.
@@ -35138,7 +35136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var cover = newCovers[newIndex] = oldIndex != null
 	                        ? (
 	                            oldCovers[oldIndex].__brushOption = newBrushOption,
-	                                oldCovers[oldIndex]
+	                            oldCovers[oldIndex]
 	                        )
 	                        : endCreating(controller, createCover(controller, newBrushOption));
 	                    updateCoverAfterCreation(controller, cover);
@@ -35153,6 +35151,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        unmount: function () {
+	            if (true) {
+	                if (!this._mounted) {
+	                    return;
+	                }
+	            }
+
 	            this.enableBrush(false);
 
 	            // container may 'removeAll' outside.
@@ -35173,7 +35177,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    zrUtil.mixin(BrushController, Eventful);
-
 
 	    function doEnableBrush(controller, brushOption) {
 	        var zr = controller._zr;
@@ -35205,8 +35208,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    function createCover(controller, brushOption) {
 	        var cover = coverRenderers[brushOption.brushType].createCover(controller, brushOption);
-	        updateZ(cover);
 	        cover.__brushOption = brushOption;
+	        updateZ(cover, brushOption);
 	        controller.group.add(cover);
 	        return cover;
 	    }
@@ -35215,7 +35218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var coverRenderer = getCoverRenderer(creatingCover);
 	        if (coverRenderer.endCreating) {
 	            coverRenderer.endCreating(controller, creatingCover);
-	            updateZ(creatingCover);
+	            updateZ(creatingCover, creatingCover.__brushOption);
 	        }
 	        return creatingCover;
 	    }
@@ -35227,10 +35230,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        );
 	    }
 
-	    function updateZ(group) {
-	        group.traverse(function (el) {
-	            el.z = COVER_Z;
-	            el.z2 = COVER_Z; // Consider in given container.
+	    function updateZ(cover, brushOption) {
+	        var z = brushOption.z;
+	        z == null && (z = COVER_Z);
+	        cover.traverse(function (el) {
+	            el.z = z;
+	            el.z2 = z; // Consider in given container.
 	        });
 	    }
 
@@ -35243,18 +35248,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return coverRenderers[cover.__brushOption.brushType];
 	    }
 
-	    function getPanelByPoint(controller, x, y) {
+	    // return target panel or `true` (means global panel)
+	    function getPanelByPoint(controller, e, localCursorPoint) {
 	        var panels = controller._panels;
 	        if (!panels) {
 	            return true; // Global panel
 	        }
 	        var panel;
+	        var transform = controller._transform;
 	        each(panels, function (pn) {
-	            pn.contain(x, y) && (panel = pn);
+	            pn.isTargetByCursor(e, localCursorPoint, transform) && (panel = pn);
 	        });
 	        return panel;
 	    }
 
+	    // Return a panel or true
 	    function getPanelByCover(controller, cover) {
 	        var panels = controller._panels;
 	        if (!panels) {
@@ -35281,7 +35289,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var areas = map(controller._covers, function (cover) {
 	            var brushOption = cover.__brushOption;
 	            var range = zrUtil.clone(brushOption.range);
-
 	            return {
 	                brushType: brushOption.brushType,
 	                panelId: brushOption.panelId,
@@ -35493,21 +35500,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    function clipByPanel(controller, cover, data) {
 	        var panel = getPanelByCover(controller, cover);
-	        if (panel === true) { // Global panel
-	            return zrUtil.clone(data);
-	        }
 
-	        var panelRect = panel.getBoundingRect();
-
-	        return zrUtil.map(data, function (point) {
-	            var x = point[0];
-	            x = mathMax(x, panelRect.x);
-	            x = mathMin(x, panelRect.x + panelRect.width);
-	            var y = point[1];
-	            y = mathMax(y, panelRect.y);
-	            y = mathMin(y, panelRect.y + panelRect.height);
-	            return [x, y];
-	        });
+	        return (panel && panel !== true)
+	            ? panel.clipPath(data, controller._transform)
+	            : zrUtil.clone(data);
 	    }
 
 	    function pointsToRect(points) {
@@ -35524,34 +35520,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	    }
 
-	    function resetCursor(controller, e) {
-	        var x = e.offsetX;
-	        var y = e.offsetY;
+	    function resetCursor(controller, e, localCursorPoint) {
+	        // Check active
+	        if (!controller._brushType) {
+	            return;
+	        }
+
 	        var zr = controller._zr;
+	        var covers = controller._covers;
+	        var currPanel = getPanelByPoint(controller, e, localCursorPoint);
 
-	        if (controller._brushType) { // If active
-	            var panels = controller._panels;
-	            var covers = controller._covers;
-	            var inCover;
-
+	        // Check whether in covers.
+	        if (!controller._dragging) {
 	            for (var i = 0; i < covers.length; i++) {
-	                if (coverRenderers[covers[i].__brushOption.brushType].contain(covers[i], x, y)) {
-	                    inCover = true;
-	                    break;
-	                }
-	            }
-
-	            if (!inCover) {
-	                if (panels) { // Brush on panels
-	                    each(panels, function (panel) {
-	                        panel.contain(x, y) && zr.setCursorStyle('crosshair');
-	                    });
-	                }
-	                else { // Global brush
-	                    zr.setCursorStyle('crosshair');
+	                var brushOption = covers[i].__brushOption;
+	                if (currPanel
+	                    && (currPanel === true || brushOption.panelId === currPanel.panelId)
+	                    && coverRenderers[brushOption.brushType].contain(
+	                        covers[i], localCursorPoint[0], localCursorPoint[1]
+	                    )
+	                ) {
+	                    // Use cursor style set on cover.
+	                    return;
 	                }
 	            }
 	        }
+
+	        currPanel && zr.setCursorStyle('crosshair');
 	    }
 
 	    function preventDefault(e) {
@@ -35563,28 +35558,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return cover.childOfName('main').contain(x, y);
 	    }
 
-	    function updateCoverByMouse(controller, evt, isEnd) {
-	        var x = evt.offsetX;
-	        var y = evt.offsetY;
+	    function updateCoverByMouse(controller, e, localCursorPoint, isEnd) {
 	        var creatingCover = controller._creatingCover;
 	        var panel = controller._creatingPanel;
 	        var thisBrushOption = controller._brushOption;
 	        var eventParams;
 
-	        controller._track.push(controller.group.transformCoordToLocal(x, y));
+	        controller._track.push(localCursorPoint.slice());
 
 	        if (shouldShowCover(controller) || creatingCover) {
 
 	            if (panel && !creatingCover) {
 	                thisBrushOption.brushMode === 'single' && clearCovers(controller);
 	                var brushOption = zrUtil.clone(thisBrushOption);
-	                brushOption.panelId = panel === true ? null : panel.__brushPanelId;
+	                brushOption.brushType = determineBrushType(brushOption.brushType, panel);
+	                brushOption.panelId = panel === true ? null : panel.panelId;
 	                creatingCover = controller._creatingCover = createCover(controller, brushOption);
 	                controller._covers.push(creatingCover);
 	            }
 
 	            if (creatingCover) {
-	                var coverRenderer = coverRenderers[controller._brushType];
+	                var coverRenderer = coverRenderers[determineBrushType(controller._brushType, panel)];
 	                var coverBrushOption = creatingCover.__brushOption;
 
 	                coverBrushOption.range = coverRenderer.getCreatingRange(
@@ -35611,12 +35605,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // clicks (for example, click on other component and do not expect covers
 	            // disappear).
 	            // Only some cover removed, trigger action, but not every click trigger action.
-	            if (getPanelByPoint(controller, x, y) && clearCovers(controller)) {
+	            if (getPanelByPoint(controller, e, localCursorPoint) && clearCovers(controller)) {
 	                eventParams = {isEnd: isEnd, removeOnClick: true};
 	            }
 	        }
 
 	        return eventParams;
+	    }
+
+	    function determineBrushType(brushType, panel) {
+	        if (brushType === 'auto') {
+	            if (true) {
+	                zrUtil.assert(
+	                    panel && panel.defaultBrushType,
+	                    'MUST have defaultBrushType when brushType is "atuo"'
+	                );
+	            }
+	            return panel.defaultBrushType;
+	        }
+	        return brushType;
 	    }
 
 	    var mouseHandlers = {
@@ -35631,30 +35638,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                preventDefault(e);
 
-	                var x = e.offsetX;
-	                var y = e.offsetY;
+	                var localCursorPoint = this.group.transformCoordToLocal(e.offsetX, e.offsetY);
 
 	                this._creatingCover = null;
-	                var panel = this._creatingPanel = getPanelByPoint(this, x, y);
+	                var panel = this._creatingPanel = getPanelByPoint(this, e, localCursorPoint);
 
 	                if (panel) {
 	                    this._dragging = true;
-	                    this._track = [this.group.transformCoordToLocal(x, y)];
+	                    this._track = [localCursorPoint.slice()];
 	                }
 	            }
 	        },
 
 	        mousemove: function (e) {
-	            // set Cursor
-	            resetCursor(this, e);
+	            var localCursorPoint = this.group.transformCoordToLocal(e.offsetX, e.offsetY);
+
+	            resetCursor(this, e, localCursorPoint);
 
 	            if (this._dragging) {
 
+	                // add by eltriny
 	                this._isMouseMove = true;
 
 	                preventDefault(e);
 
-	                var eventParams = updateCoverByMouse(this, e, false);
+	                var eventParams = updateCoverByMouse(this, e, localCursorPoint, false);
 
 	                eventParams && trigger(this, eventParams);
 	            }
@@ -35668,11 +35676,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    // renewal by eltriny
-	    function handleDragEnd(evt) {
-
+	    function handleDragEnd(e) {
 	        if (this._dragging) {
 
-	            preventDefault(evt);
+	            preventDefault(e);
 
 	            var isClick 	= true;
 	            var isDragEnd 	= false;
@@ -35705,13 +35712,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    isDragEnd 	= false;
 
 	                    // event 변경
-	                    evt.offsetX += 300;
-	                    evt.offsetY += 300;
+	                    e.offsetX += 300;
+	                    e.offsetY += 300;
 	                }
 
 	            }
 
-	            var eventParams = updateCoverByMouse(this, evt, true);
+	            var localCursorPoint = this.group.transformCoordToLocal(e.offsetX, e.offsetY);
+	            var eventParams = updateCoverByMouse(this, e, localCursorPoint, true);
 
 	            this._dragging = false;
 	            this._track = [];
@@ -35734,10 +35742,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                && this._brushOption.brushMode === 'single' ) {
 	                clearCovers( this );	// this == controller
 	            }
-
 	        }
-
 	    }
+
 	    /**
 	     * key: brushType
 	     * @type {Object}
@@ -35841,23 +35848,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return [min, max];
 	            },
 	            updateCoverShape: function (controller, cover, localRange, brushOption) {
-	                var brushWidth = brushOption.brushStyle.width;
 	                var otherExtent;
 	                // If brushWidth not specified, fit the panel.
-	                if (brushWidth == null) {
-	                    var panel = getPanelByCover(controller, cover);
-	                    var base = 0;
-	                    if (panel !== true) {
-	                        var rect = panel.getBoundingRect();
-	                        brushWidth = xyIndex ? rect.width : rect.height;
-	                        base = xyIndex ? rect.x : rect.y;
-	                    }
-	                    // FIXME
-	                    // do not support global panel yet.
-	                    otherExtent = [base, base + (brushWidth || 0)];
+	                var panel = getPanelByCover(controller, cover);
+	                if (panel !== true && panel.getLinearBrushOtherExtent) {
+	                    otherExtent = panel.getLinearBrushOtherExtent(
+	                        xyIndex, controller._transform
+	                    );
 	                }
 	                else {
-	                    otherExtent = [-brushWidth / 2, brushWidth / 2];
+	                    var zr = controller._zr;
+	                    otherExtent = [0, [zr.getWidth(), zr.getHeight()][1 - xyIndex]];
 	                }
 	                var rectRange = [localRange, otherExtent];
 	                xyIndex && rectRange.reverse();
@@ -38564,8 +38565,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return !((name in selected) && !selected[name])
 	            }
 	            // -- add by dolkkok - #20161213-01 : seriesname과 연동하지 않을때 --- End
-	            else {
-	                return !((name in selected) && !selected[name])
+	            else{
+	                return !(selected.hasOwnProperty(name) && !selected[name])
 	                    && zrUtil.indexOf(this._availableNames, name) >= 0;
 	            }
 	        },
@@ -38777,6 +38778,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Group 설정 -- this 설정 필요
 	    function setGroup() {
+	        // -- add by dolkkok
+	        // #201710804-03 : 페이징처리가 필요없는 경우는 페이지 영역 삭제
+	        if(this.pageList.length <= 1) this.group.removeAll();
 	        var pageItems = this.pageList[ this.page - 1 ];
 	        for( var idx = 0, nMax = pageItems.length; idx < nMax; idx++ ) {
 	            this.group.add( pageItems[ idx ] );
@@ -38853,7 +38857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                // Series legend
-	                // -- add by dolkkok - #20161223-01 : seriesSync checkc추가
+	                // -- add by dolkkok - #20161223-01 : seriesSync check추가
 	                if (seriesModel && legendModel.get('seriesSync')) {
 	                    var data = seriesModel.getData();
 	                    var color = data.getVisual('color');
@@ -38884,6 +38888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                else {
 	                    // -- add by dolkkok - #20161213-01 : seriesname과 연동하지 않을때 --- Start
 	                    if (!legendModel.get('seriesSync')) {
+
 	                        var data = [];
 	                        var legendIdx = legendModel.get('data').indexOf(name);
 	                        var colorList = legendModel.get('color');
@@ -38897,45 +38902,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            itemAlign, color,
 	                            selectMode
 	                        );
-	                        itemGroup.on('click', curry(dispatchSelectAction, name, api))
+	                        itemGroup.on('click', curry(dispatchSelectAction, name, api));
 	                        legendDrawedMap[name] = true;
-
 	                    }
 	                    // -- add by dolkkok - #20161213-01 : seriesname과 연동하지 않을때 --- End
-	                    else {
-	                        // Data legend of pie, funnel
-	                        ecModel.eachRawSeries(function (seriesModel) {
-	                            // In case multiple series has same data name
-	                            if (legendDrawedMap.get(name)) {
+
+	                    // Data legend of pie, funnel
+	                    ecModel.eachRawSeries(function (seriesModel) {
+	                        // In case multiple series has same data name
+	                        if (legendDrawedMap.get(name)) {
+	                            return;
+	                        }
+	                        if (seriesModel.legendDataProvider) {
+	                            // -- add by dolkkok - #20170630-01 : 이미 등록된 범례항목인지 체크(pie) 후 생성 --- start
+	                            if(legendDrawedMap[name]) {
 	                                return;
 	                            }
-	                            if (seriesModel.legendDataProvider) {
-	                                var data = seriesModel.legendDataProvider();
-	                                var idx = data.indexOfName(name);
-	                                if (idx < 0) {
-	                                    return;
-	                                }
-
-	                                var color = data.getItemVisual(idx, 'color');
-
-	                                var legendSymbolType = 'roundRect';
-
-	                                var itemGroup = this._createItem(
-	                                    name, itemModel, legendModel,
-	                                    legendSymbolType, null,
-	                                    itemAlign, color,
-	                                    selectMode
-	                                );
-
-	                                itemGroup.on('click', curry(dispatchSelectAction, name, api))
-	                                // FIXME Should not specify the series name
-	                                    .on('mouseover', curry(dispatchHighlightAction, seriesModel, name, api))
-	                                    .on('mouseout', curry(dispatchDownplayAction, seriesModel, name, api));
-
-	                                legendDrawedMap.set(name, true);
+	                            var data = seriesModel.legendDataProvider();
+	                            var idx = data.indexOfName(name);
+	                            if (idx < 0) {
+	                                return;
 	                            }
-	                        }, this);
-	                    }
+	                            var color = data.getItemVisual(idx, 'color');
+	                            var legendSymbolType = 'circle';
+	                            // var legendIdx = legendModel.get('data').indexOf(name);
+	                            // var colorList = legendModel.get('color');
+	                            // var colorIdx =  legendIdx >= colorList.length ? legendIdx % colorList.length : legendIdx;
+	                            // var color = colorList[colorIdx] || seriesModel.getData().getVisual('color');
+	                            // var legendSymbolType = legendModel.get('symbol');
+	                            // -- add by dolkkok - #20170630-01 : 이미 등록된 범례항목인지 체크(pie) 후 생성 --- end
+
+	                            var itemGroup = this._createItem(
+	                                name, itemModel, legendModel,
+	                                legendSymbolType, null,
+	                                itemAlign, color,
+	                                selectMode
+	                            );
+
+
+	                            itemGroup.on('click', curry(dispatchSelectAction, name, api))
+	                            // FIXME Should not specify the series name
+	                                .on('mouseover', curry(dispatchHighlightAction, seriesModel, name, api))
+	                                .on('mouseout', curry(dispatchDownplayAction, seriesModel, name, api));
+
+	                            legendDrawedMap.set(name, true);
+	                        }
+	                    }, this);
 	                }
 
 	                if (true) {
@@ -39074,9 +39086,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var legendGlobalTooltipModel = tooltipModel.parentModel;
 
 	            // Use user given icon first
+	            // -- add by dolkkok
+	            // #201710804-01 : 범례 영역 중앙에 위치하도록 조정
+	            var legendHeight = legendModel.get('height') || 30;
+	            legendHeight -= legendModel.get('padding') * 2;
+	            var itemY = (legendHeight - itemHeight) / 2;
 	            legendSymbolType = itemIcon || legendSymbolType;
 	            itemGroup.add(symbolCreator.createSymbol(
-	                legendSymbolType, 0, 0, itemWidth, itemHeight, isSelected ? color : inactiveColor
+	                legendSymbolType, 0, itemY, itemWidth, itemHeight, isSelected ? color : inactiveColor
 	            ));
 
 	            // Compose symbols
@@ -39113,13 +39130,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                style: {
 	                    text: content,
 	                    x: textX,
-	                    y: itemHeight / 2,
+	                    y: legendModel.get('padding') + itemY, // -- add by dolkkok
 	                    fill: isSelected ? textStyleModel.getTextColor() : inactiveColor,
 	                    textFont: textStyleModel.getFont(),
 	                    textAlign: textAlign,
 	                    textVerticalAlign: 'middle'
 	                }
 	            });
+	            // -- add by dolkkok
+	            // #201710804-01 : 범례 영역 중앙에 위치하도록 조정
+	            text.style.y += (itemHeight - text.getBoundingRect().height);
 	            itemGroup.add(text);
 
 	            // Add a invisible rect to increase the area of mouse hover
@@ -39154,15 +39174,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var itemWidth = itemGroup.getBoundingRect().width + legendModel.option.itemGap;
 	                // -- add by dolkkok
 	                // #201710413-02 : 차트화면과 현재까지 추가된 범례사이즈의 너비를 비교후 페이지 지정
-	                if( 0 == nPages ||  this.currentLegnedWidth + itemWidth > this.chartWidth) {
-	                    var currentPage = [];
-	                    currentPage.push( itemGroup );
-	                    this.pageList.push( currentPage );
+	                if( 0 == nPages || this.currentLegnedWidth + itemWidth > this.chartWidth) {
+	                    var newPage = [];
+	                    newPage.push( itemGroup );
+	                    this.pageList.push( newPage );
 	                    if (nPages != 0) this.currentLegnedWidth = 0;
 	                }
 	                else {
 	                    var currentPage = this.pageList[ nPages - 1 ];
-	                    currentPage.push( itemGroup );
+	                    // -- add by dolkkok
+	                    // #201710804-02 : 페이지당 범례 개수를 초과하면 다음페이지에 생성
+	                    if(legendModel.get('pageItems') <= currentPage.length) {
+	                        var newPage = [];
+	                        newPage.push( itemGroup );
+	                        this.pageList.push( newPage );
+	                        if (nPages != 0) this.currentLegnedWidth = 0;
+	                    } else {
+	                        currentPage.push( itemGroup );
+	                    }
 	                }
 	                // -- add by dolkkok
 	                this.currentLegnedWidth += itemWidth;
@@ -42490,37 +42519,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	            bottom: null, // Default align to grid rect.
 
 	            // add by starlkj
-	            //backgroundColor: 'rgba(41,123,184,0.2)',    // Background of slider zoom component. - 원본
 	            backgroundColor: '#f9f9f9',    // Background of slider zoom component.
+	            //backgroundColor: 'rgba(41,123,184,0.2)',    // Background of slider zoom component. - 원본
 	            // dataBackgroundColor: '#ddd',         // Background coor of data shadow and border of box,
 	                                                    // highest priority, remain for compatibility of
-	                                                    // previous version, but not recommended any more.4
-
-	            // add by starlkj
+	                                                    // previous version, but not recommended any more.
 	            dataBackground: {
 	                lineStyle: {
-	                    //color: '#2f4554', 원본
+	                    // add by starlkj
 	                    color: '#dcdedf',
+	                    //color: '#2f4554',
 	                    width: 0.5,
-	                    //opacity: 0.3 원본
+	                    // add by starlkj
 	                    opacity: 1
+	                    //opacity: 0.3
 	                },
 	                areaStyle: {
-	                    //color: 'rgba(47,69,84,0.3)', 원본
+	                    // add by starlkj
+	                    //color: 'rgba(47,69,84,0.3)',
 	                    color: '#ebeff1',
 	                    opacity: 1
 	                }
 	            },
-	            borderColor: '##eee',                    // border color of the box. For compatibility,
+	            borderColor: '#eee',                    // border color of the box. For compatibility,
 	                                                    // if dataBackgroundColor is set, borderColor
 	                                                    // is ignored.
 
-	            // add by starlkj
-	            //fillerColor: 'rgba(167,183,204,0.4)',   원본  // Color of selected area.
-	            fillerColor: 'rgba(41,123,184,0.2)',
+	            fillerColor: 'rgba(167,183,204,0.4)',     // Color of selected area.
 	            // handleColor: 'rgba(89,170,216,0.95)',   원본 // Color of handle.
+	            // add by dolkkok
+	            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
 	            // handleIcon: 'path://M4.9,17.8c0-1.4,4.5-10.5,5.5-12.4c0-0.1,0.6-1.1,0.9-1.1c0.4,0,0.9,1,0.9,1.1c1.1,2.2,5.4,11,5.4,12.4v17.8c0,1.5-0.6,2.1-1.3,2.1H6.1c-0.7,0-1.3-0.6-1.3-2.1V17.8z',
-	            handleIcon: 'M24 295 c0 -165 2 -234 3 -153 2 81 2 216 0 300 -1 84 -3 18 -3 -147z M0 295 c0 -63 1 -65 25 -65 24 0 25 2 25 65 0 63 -1 65 -25 65 -24 0 -25 -2 -25 -65z',
 	            // Percent of the slider height
 	            handleSize: '100%',
 
@@ -42535,7 +42564,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            realtime: true,
 	            zoomLock: false,                        // Whether disable zoom.
 	            textStyle: {
-	                // add by starlkj
 	                color: '#333'
 	            }
 	        }
@@ -45455,9 +45483,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var group = this.group;
 	            group.removeAll();
 
-	            if (!toolboxModel.get('show')) {
-	                return;
-	            }
+	            // if (!toolboxModel.get('show')) {
+	            //     return;
+	            // }
 
 	            var itemSize = +toolboxModel.get('itemSize');
 	            var featureOpts = toolboxModel.get('feature') || {};
@@ -45467,37 +45495,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            zrUtil.each(featureOpts, function (opt, name) {
 	                featureNames.push(name);
 	            });
-
-	            // add by eltriny - BugFix1 : toggleSelectZoom --- Start
-	            /*
-	             if( !toolboxModel.get( 'show' ) ) {
-
-	             // add by eltriny - toolbox 가 hide인 상태에서도 feature 에 접근할 수 있도록 외부 오픈함
-	             for( var idx = 0, nMax = featureNames.length; idx < nMax; idx++ ) {
-	             var featureName = featureNames[ idx ];
-	             var Feature = featureManager.get(featureName);
-	             if (!Feature) {
-	             return;
-	             }
-	             var featureOpt 	 = featureOpts[featureName];
-	             var featureModel = new Model( featureOpt, toolboxModel, toolboxModel.ecModel );
-	             var feature = new Feature( featureModel, ecModel, api );
-	             features[featureName] = feature;
-
-	             // pseudo function
-	             featureModel.setIconStatus = function() {}
-
-	             if( feature.render ) {
-	             feature.render( featureModel, ecModel, api, payload );
-	             }
-	             }
-
-	             this._features = features;
-
-	             return;
-	             }
-	             */
-	            // add by eltriny - BugFix1 : toggleSelectZoom --- End
 
 	            (new DataDiffer(this._featureNames || [], featureNames))
 	                .add(process)
@@ -45548,21 +45545,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return;
 	                }
 
-	                if (!featureModel.get('show') || feature.unusable) {
-	                    feature.remove && feature.remove(ecModel, api);
-	                    return;
+	                // if (!featureModel.get('show') || feature.unusable) {
+	                //     feature.remove && feature.remove(ecModel, api);
+	                //     return;
+	                // }
+
+	                if( toolboxModel.get('show')  ) {
+	                    createIconPaths(featureModel, feature, featureName);
+
+	                    featureModel.setIconStatus = function (iconName, status) {
+	                        var option = this.option;
+	                        var iconPaths = this.iconPaths;
+	                        option.iconStatus = option.iconStatus || {};
+	                        option.iconStatus[iconName] = status;
+	                        // FIXME
+	                        iconPaths[iconName] && iconPaths[iconName].trigger(status);
+	                    };
 	                }
-
-	                createIconPaths(featureModel, feature, featureName);
-
-	                featureModel.setIconStatus = function (iconName, status) {
-	                    var option = this.option;
-	                    var iconPaths = this.iconPaths;
-	                    option.iconStatus = option.iconStatus || {};
-	                    option.iconStatus[iconName] = status;
-	                    // FIXME
-	                    iconPaths[iconName] && iconPaths[iconName].trigger(status);
-	                };
+	                else {
+	                    featureModel.setIconStatus = function() {}
+	                }
 
 	                if (feature.render) {
 	                    feature.render(featureModel, ecModel, api, payload);
@@ -46482,15 +46484,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @private
 	         * @type {module:echarts/component/helper/BrushController}
 	         */
-	        (this._brushController = new BrushController(api.getZr(), 'ZOOM_BRUSH' ) )
+	        (this._brushController = new BrushController(api.getZr()))
 	            .on('brush', zrUtil.bind(this._onBrush, this))
 	            .mount();
-
-	        /**
-	         * @private
-	         * @type {boolean}
-	         */
-	        this._isZoomActive;
 
 	        /**
 	         * @private
@@ -46659,22 +46655,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var dataZoomModel = findDataZoom(dimName, axisModel, ecModel);
 
 	            if (dataZoomModel) {
-	                // add by eltriny - #20161018-03 : dataZoom 이벤트 시 start/end 와 startValue/endValue 모두 필요 - Start
-	                var percentRange 	= dataZoomModel.getPercentRange();
-	                var valueRange 		= dataZoomModel.getValueRange();
 
-	                var rangePercentStart 	= ( percentRange[1] * minMax[0] ) / valueRange[1];
-	                var rangePercentEnd 	= ( percentRange[1] * minMax[1] ) / valueRange[1];
+	                // add by eltriny - #20161018-03 : dataZoom 이벤트 시 start/end 와 startValue/endValue 모두 필요 - Start
+	                var percentRange = dataZoomModel.getPercentRange();
+	                var valueRange = dataZoomModel.getValueRange();
+
+	                var rangePercentStart = ( percentRange[1] * minMax[0] ) / valueRange[1];
+	                var rangePercentEnd = ( percentRange[1] * minMax[1] ) / valueRange[1];
 	                // add by eltriny - #20161018-03 : dataZoom 이벤트 시 start/end 와 startValue/endValue 모두 필요 - End
 
 	                // Restrict range.
-	                var minMaxSpan = dataZoomModel.findRepresentativeAxisProxy(axisModel).getMinMaxSpan();
-	                if (minMaxSpan.minValueSpan != null || minMaxSpan.maxValueSpan != null) {
-	                    minMax = sliderMove(
-	                        0, minMax.slice(), axis.scale.getExtent(), 0,
-	                        minMaxSpan.minValueSpan, minMaxSpan.maxValueSpan
-	                    );
-	                }
+	                // add by dolkkok - #20170614-01 : __dzAxisProxy 정보가 없을때 예외처리
+	                var minMaxSpan = dataZoomModel.findRepresentativeAxisProxy(axisModel);
+	                if(minMaxSpan) {
+	                    minMaxSpan = minMaxSpan.getMinMaxSpan();
+	                    if (minMaxSpan.minValueSpan != null || minMaxSpan.maxValueSpan != null) {
+	                        minMax = sliderMove(
+	                            0, minMax.slice(), axis.scale.getExtent(), 0,
+	                            minMaxSpan.minValueSpan, minMaxSpan.maxValueSpan
+	                        );
+	                    }
+	                };
 
 	                dataZoomModel && (snapshot[dataZoomModel.id] = {
 	                    dataZoomId: dataZoomModel.id,
@@ -46687,8 +46688,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        endValue: minMax[1]			// add by eltriny - #20161018-03
 	                    }
 	                });
-	            }
 
+	            }
 	        }
 
 	        function findDataZoom(dimName, axisModel, ecModel) {
