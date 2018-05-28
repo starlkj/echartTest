@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Custom PreView</title>
+    <style>
+        #chartArea {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chartArea"></div>
+
+</body>
+<script src="./dist/echarts.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    var myChart = echarts.init(document.getElementById('chartArea'));
+
+    myChart.setOption(
+        {
+            "type": "scatter",
+            "grid": [{"top": 40, "bottom": 30, "left": 30, "right": 20, "containLabel": true}],
+            "legend": {
+                "show": true,
+                "seriesSync": false,
+                "left": "left",
+                "symbol": "circle",
+                "width": "100%",
+                "itemGap": 20,
+                "pageItems": 5,
+                "textStyle": {"fontSize": 12, "fontFamily": "SpoqaHanSans"},
+                "data": ["Aberdeen", "Abilene", "Akron", "Albuquerque", "Alexandria", "Allen", "Allentown", "Altoona", "Amarillo", "Anaheim", "Andover", "Ann Arbor", "Antioch", "Apopka", "Apple Valley", "Appleton", "Arlington", "Arlington Heights", "Arvada", "Asheville", "Athens", "Atlanta", "Atlantic City", "Auburn", "Aurora", "Austin", "Avondale", "Bakersfield", "Baltimore", "Bangor", "Bartlett", "Bayonne", "Baytown", "Beaumont", "Bedford", "Belleville", "Bellevue", "Bellingham", "Bethlehem", "Beverly", "Billings", "Bloomington", "Boca Raton", "Boise", "Bolingbrook", "Bossier City", "Bowling Green", "Boynton Beach", "Bozeman", "Brentwood", "Bridgeton", "Bristol", "Broken Arrow", "Broomfield", "Brownsville", "Bryan", "Buffalo", "Buffalo Grove", "Bullhead City", "Burbank", "Burlington", "Caldwell", "Camarillo", "Cambridge", "Canton", "Carlsbad", "Carol Stream", "Carrollton", "Cary", "Cedar Hill", "Cedar Rapids", "Champaign", "Chandler", "Chapel Hill", "Charlotte", "Charlottesville", "Chattanooga", "Chesapeake", "Chester", "Cheyenne", "Chicago", "Chico", "Chula Vista", "Cincinnati", "Citrus Heights", "Clarksville", "Cleveland", "Clifton", "Clinton", "Clovis", "Coachella", "College Station", "Colorado Springs", "Columbia", "Columbus", "Commerce City", "Concord", "Conroe", "Conway", "Coon Rapids", "Coppell", "Coral Gables", "Coral Springs", "Corpus Christi", "Costa Mesa", "Cottage Grove", "Covington", "Cranston", "Cuyahoga Falls", "Dallas", "Danbury", "Danville", "Davis", "Daytona Beach", "Dearborn", "Dearborn Heights", "Decatur", "Deer Park", "Delray Beach", "Deltona", "Denver", "Des Moines", "Des Plaines", "Detroit", "Dover", "Draper", "Dublin", "Dubuque", "Durham", "Eagan", "East Orange", "East Point", "Eau Claire", "Edinburg", "Edmond", "Edmonds", "El Cajon", "El Paso", "Elkhart", "Elmhurst", "Elyria", "Encinitas", "Englewood", "Escondido", "Eugene", "Evanston", "Everett", "Fairfield", "Fargo", "Farmington", "Fayetteville", "Florence", "Fort Collins", "Fort Lauderdale", "Fort Worth", "Frankfort", "Franklin", "Freeport", "Fremont", "Fresno", "Frisco", "Gaithersburg", "Garden City", "Garland", "Gastonia", "Georgetown", "Gilbert", "Gladstone", "Glendale", "Glenview", "Goldsboro", "Grand Island", "Grand Prairie", "Grand Rapids", "Grapevine", "Great Falls", "Greeley", "Green Bay", "Greensboro", "Greenville", "Greenwood", "Gresham", "Grove City", "Gulfport", "Hackensack", "Hagerstown", "Haltom City", "Hamilton", "Hampton", "Harlingen", "Harrisonburg", "Hattiesburg", "Helena", "Hempstead", "Henderson", "Hendersonville", "Hesperia", "Hialeah", "Hickory", "Highland Park", "Hillsboro", "Holland", "Hollywood", "Holyoke", "Homestead", "Hoover", "Hot Springs", "Houston", "Huntington Beach", "Huntsville", "Independence", "Indianapolis", "Inglewood", "Iowa City", "Irving", "Jackson", "Jacksonville", "Jamestown", "Jefferson City", "Johnson City", "Jonesboro", "Jupiter", "Keller", "Kenner", "Kenosha", "Kent", "Kirkwood", "Kissimmee", "Knoxville", "La Crosse", "La Mesa", "La Porte", "La Quinta", "Lafayette", "Laguna Niguel", "Lake Charles", "Lake Elsinore", "Lake Forest", "Lakeland", "Lakeville", "Lakewood", "Lancaster", "Lansing", "Laredo", "Las Cruces", "Las Vegas", "Laurel", "Lawrence", "Lawton", "Layton", "League City", "Lebanon", "Lehi", "Leominster", "Lewiston", "Lincoln Park", "Linden", "Lindenhurst", "Little Rock", "Littleton", "Lodi", "Logan", "Long Beach", "Longmont", "Longview", "Lorain", "Los Angeles", "Louisville", "Loveland", "Lowell", "Lubbock", "Macon", "Madison", "Malden", "Manchester", "Manhattan", "Mansfield", "Manteca", "Maple Grove", "Margate", "Marietta", "Marion", "Marlborough", "Marysville", "Mason", "Mcallen", "Medford", "Medina", "Melbourne", "Memphis", "Mentor", "Meriden", "Meridian", "Mesa", "Mesquite", "Miami", "Middletown", "Midland", "Milford", "Milwaukee", "Minneapolis", "Miramar", "Mishawaka", "Mission Viejo", "Missoula", "Missouri City", "Mobile", "Modesto", "Monroe", "Montebello", "Montgomery", "Moorhead", "Moreno Valley", "Morgan Hill", "Morristown", "Mount Pleasant", "Mount Vernon", "Murfreesboro", "Murray", "Murrieta", "Muskogee", "Naperville", "Nashua", "Nashville", "New Albany", "New Bedford", "New Brunswick", "New Castle", "New Rochelle", "New York City", "Newark", "Newport News", "Niagara Falls", "Noblesville", "Norfolk", "Normal", "Norman", "North Charleston", "North Las Vegas", "North Miami", "Norwich", "Oak Park", "Oakland", "Oceanside", "Odessa", "Oklahoma City", "Olathe", "Olympia", "Omaha", "Ontario", "Orange", "Orem", "Orland Park", "Orlando", "Ormond Beach", "Oswego", "Overland Park", "Owensboro", "Oxnard", "Palatine", "Palm Coast", "Park Ridge", "Parker", "Parma", "Pasadena", "Pasco", "Passaic", "Paterson", "Pearland", "Pembroke Pines", "Pensacola", "Peoria", "Perth Amboy", "Pharr", "Philadelphia", "Phoenix", "Pico Rivera", "Pine Bluff", "Plainfield", "Plano", "Plantation", "Pleasant Grove", "Pocatello", "Pomona", "Pompano Beach", "Port Arthur", "Port Orange", "Port Saint Lucie", "Portage", "Portland", "Providence", "Provo", "Pueblo", "Quincy", "Raleigh", "Rancho Cucamonga", "Rapid City", "Reading", "Redding", "Redlands", "Redmond", "Redondo Beach", "Redwood City", "Reno", "Renton", "Revere", "Richardson", "Richmond", "Rio Rancho", "Riverside", "Rochester", "Rochester Hills", "Rock Hill", "Rockford", "Rockville", "Rogers", "Rome", "Romeoville", "Roseville", "Roswell", "Round Rock", "Royal Oak", "Sacramento", "Saginaw", "Saint Charles", "Saint Cloud", "Saint Louis", "Saint Paul", "Saint Peters", "Saint Petersburg", "Salem", "Salinas", "Salt Lake City", "San Angelo", "San Antonio", "San Bernardino", "San Clemente", "San Diego", "San Francisco", "San Gabriel", "San Jose", "San Luis Obispo", "San Marcos", "San Mateo", "Sandy Springs", "Sanford", "Santa Ana", "Santa Barbara", "Santa Clara", "Santa Fe", "Santa Maria", "Scottsdale", "Seattle", "Sheboygan", "Shelton", "Sierra Vista", "Sioux Falls", "Skokie", "Smyrna", "South Bend", "Southaven", "Sparks", "Spokane", "Springdale", "Springfield", "Sterling Heights", "Stockton", "Suffolk", "Summerville", "Sunnyvale", "Superior", "Tallahassee", "Tamarac", "Tampa", "Taylor", "Temecula", "Tempe", "Texarkana", "Texas City", "The Colony", "Thomasville", "Thornton", "Thousand Oaks", "Tigard", "Tinley Park", "Toledo", "Torrance", "Trenton", "Troy", "Tucson", "Tulsa", "Tuscaloosa", "Twin Falls", "Tyler", "Urbandale", "Utica", "Vacaville", "Vallejo", "Vancouver", "Vineland", "Virginia Beach", "Visalia", "Waco", "Warner Robins", "Warwick", "Washington", "Waterbury", "Waterloo", "Watertown", "Waukesha", "Wausau", "Waynesboro", "West Allis", "West Jordan", "West Palm Beach", "Westfield", "Westland", "Westminster", "Wheeling", "Whittier", "Wichita", "Wilmington", "Wilson", "Woodbury", "Woodland", "Woodstock", "Woonsocket", "Yonkers", "York", "Yucaipa", "Yuma"],
+                "color": ["#ca4819", "#007e79", "#00936f", "#4c95ce", "#9578bb", "#899bd2", "#d7d0a2", "#ffff99", "#66ccff", "#1e6191", "#ff0066", "#cccccc"]
+            },
+            "xAxis": [{
+                "nameLocation": "middle",
+                "nameGap": null,
+                "inverse": false,
+                "type": "log",
+                "nameTextStyle": {"fontSize": 12, "fontWeight": "bold", "fontFamily": "SpoqaHanSans"},
+                "axisLabel": {
+                    "show": true,
+                    "inside": false,
+                    "textStyle": {"fontSize": 11, "fontFamily": "SpoqaHanSans"},
+                    "rotate": 0
+                },
+                "axisTick": {"show": true},
+                "axisLine": {"show": true},
+                "splitLine": {"show": true},
+                "show": true,
+                "name": "SUM(Discount)",
+                "axisName": "SUM(Discount)"
+            }],
+            "yAxis": [{
+                "nameLocation": "middle",
+                "nameGap": null,
+                "inverse": false,
+                "type": "log",
+                "nameTextStyle": {"fontSize": 12, "fontWeight": "bold", "fontFamily": "SpoqaHanSans"},
+                "axisLabel": {
+                    "show": true,
+                    "inside": false,
+                    "textStyle": {"fontSize": 11, "fontFamily": "SpoqaHanSans"},
+                    "rotate": 0
+                },
+                "axisTick": {"show": true},
+                "axisLine": {"show": true},
+                "splitLine": {"show": true},
+                "show": true,
+                "name": "AVG(Discount)",
+                "axisName": "AVG(Discount)"
+            }],
+            "dataZoom": [{
+                "orient": "horizontal",
+                "type": "slider",
+                "bottom": 0,
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 175.50000068545341
+            }, {
+                "orient": "vertical",
+                "type": "slider",
+                "left": 0,
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 0.800000011920929
+            }, {
+                "orient": "vertical",
+                "type": "inside",
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 0.800000011920929
+            }, {
+                "orient": "horizontal",
+                "type": "inside",
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 175.50000068545341
+            }],
+            "tooltip": {"trigger": "item"},
+            "toolbox": {"show": false, "feature": {"dataZoom": {"show": false}}},
+            "brush": {"transformable": false, "inBrush": {"opacity": 1}, "outOfBrush": {"opacity": 0.2}},
+            "series": [{
+                "name": "City",
+                "type": "scatter",
+                "large": true,
+                "largeThreshold": 5000,
+                "data": [{"name": "Aberdeen", "value": [0, 0]}, {
+                    "name": "Abilene",
+                    "value": [0.800000011920929, 0.800000011920929]
+                }, {"name": "Akron", "value": [7.5, 0.35714285714285715]}, {
+                    "name": "Albuquerque",
+                    "value": [0.800000011920929, 0.05714285799435207]
+                }, {"name": "Alexandria", "value": [0, 0]}, {
+                    "name": "Allen",
+                    "value": [1.5000000298023224, 0.3750000074505806]
+                }, {"name": "Allentown", "value": [1.9000000059604645, 0.27142857228006634]}, {
+                    "name": "Altoona",
+                    "value": [0.8999999910593033, 0.44999999552965164]
+                }, {"name": "Amarillo", "value": [2.720000058412552, 0.27200000584125517]}, {
+                    "name": "Anaheim",
+                    "value": [2.2000000327825546, 0.08148148269565017]
+                }, {"name": "Andover", "value": [0, 0]}, {
+                    "name": "Ann Arbor",
+                    "value": [0.10000000149011612, 0.020000000298023225]
+                }, {"name": "Antioch", "value": [0, 0]}, {
+                    "name": "Apopka",
+                    "value": [2.899999976158142, 0.4142857108797346]
+                }, {"name": "Apple Valley", "value": [0.550000011920929, 0.061111112435658775]}, {
+                    "name": "Appleton",
+                    "value": [0, 0]
+                }, {
+                    "name": "Arlington",
+                    "value": [10.70000022649765, 0.17833333710829416]
+                }, {
+                    "name": "Arlington Heights",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Arvada", "value": [0.800000011920929, 0.20000000298023224]}, {
+                    "name": "Asheville",
+                    "value": [1.9000000059604645, 0.27142857228006634]
+                }, {"name": "Athens", "value": [0, 0]}, {"name": "Atlanta", "value": [0, 0]}, {
+                    "name": "Atlantic City",
+                    "value": [0, 0]
+                }, {"name": "Auburn", "value": [0.20000000298023224, 0.008333333457509676]}, {
+                    "name": "Aurora",
+                    "value": [24.00000025331974, 0.35294118019587856]
+                }, {"name": "Austin", "value": [13.400000229477882, 0.34358974947379184]}, {
+                    "name": "Avondale",
+                    "value": [1.2000000178813934, 0.20000000298023224]
+                }, {"name": "Bakersfield", "value": [1.5500000268220901, 0.09687500167638063]}, {
+                    "name": "Baltimore",
+                    "value": [0.30000001192092896, 0.006976744463277417]
+                }, {"name": "Bangor", "value": [0, 0]}, {
+                    "name": "Bartlett",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Bayonne", "value": [0, 0]}, {
+                    "name": "Baytown",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Beaumont", "value": [2.0000000447034836, 0.4000000089406967]}, {
+                    "name": "Bedford",
+                    "value": [1.600000023841858, 0.3200000047683716]
+                }, {"name": "Belleville", "value": [0, 0]}, {
+                    "name": "Bellevue",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Bellingham", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Bethlehem",
+                    "value": [1.9000000059604645, 0.3800000011920929]
+                }, {"name": "Beverly", "value": [0, 0]}, {
+                    "name": "Billings",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Bloomington", "value": [2.900000050663948, 0.19333333671092987]}, {
+                    "name": "Boca Raton",
+                    "value": [1.0999999940395355, 0.36666666467984516]
+                }, {"name": "Boise", "value": [0.4000000059604645, 0.10000000149011612]}, {
+                    "name": "Bolingbrook",
+                    "value": [2.400000035762787, 0.4000000059604645]
+                }, {"name": "Bossier City", "value": [0, 0]}, {
+                    "name": "Bowling Green",
+                    "value": [2.500000014901161, 0.25000000149011614]
+                }, {"name": "Boynton Beach", "value": [2.500000014901161, 0.25000000149011614]}, {
+                    "name": "Bozeman",
+                    "value": [0, 0]
+                }, {"name": "Brentwood", "value": [1.0000000149011612, 0.06250000093132257]}, {
+                    "name": "Bridgeton",
+                    "value": [0, 0]
+                }, {"name": "Bristol", "value": [2.7999999821186066, 0.2153846140091236]}, {
+                    "name": "Broken Arrow",
+                    "value": [0, 0]
+                }, {"name": "Broomfield", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Brownsville",
+                    "value": [1.6200000196695328, 0.2314285742385047]
+                }, {"name": "Bryan", "value": [3.700000062584877, 0.6166666770974795]}, {
+                    "name": "Buffalo",
+                    "value": [0.6000000089406967, 0.06000000089406967]
+                }, {
+                    "name": "Buffalo Grove",
+                    "value": [0.7000000029802322, 0.3500000014901161]
+                }, {"name": "Bullhead City", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Burbank",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Burlington", "value": [3.4000000208616257, 0.13600000083446503]}, {
+                    "name": "Caldwell",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Camarillo", "value": [0.550000011920929, 0.1100000023841858]}, {
+                    "name": "Cambridge",
+                    "value": [0, 0]
+                }, {"name": "Canton", "value": [0, 0]}, {
+                    "name": "Carlsbad",
+                    "value": [0.800000011920929, 0.07272727381099355]
+                }, {"name": "Carol Stream", "value": [1.2000000327825546, 0.24000000655651094]}, {
+                    "name": "Carrollton",
+                    "value": [6.200000122189522, 0.41333334147930145]
+                }, {"name": "Cary", "value": [1.2000000178813934, 0.20000000298023224]}, {
+                    "name": "Cedar Hill",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Cedar Rapids", "value": [0, 0]}, {
+                    "name": "Champaign",
+                    "value": [0.6000000238418579, 0.6000000238418579]
+                }, {"name": "Chandler", "value": [1.7000000178813934, 0.24285714541162765]}, {
+                    "name": "Chapel Hill",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {
+                    "name": "Charlotte",
+                    "value": [15.300000041723251, 0.29423077003313947]
+                }, {"name": "Charlottesville", "value": [0, 0]}, {
+                    "name": "Chattanooga",
+                    "value": [3.2999999970197678, 0.3299999997019768]
+                }, {"name": "Chesapeake", "value": [0, 0]}, {
+                    "name": "Chester",
+                    "value": [5.30000002682209, 0.33125000167638063]
+                }, {"name": "Cheyenne", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Chicago",
+                    "value": [120.50000247359276, 0.3837579696611234]
+                }, {"name": "Chico", "value": [0.800000011920929, 0.07272727381099355]}, {
+                    "name": "Chula Vista",
+                    "value": [0, 0]
+                }, {"name": "Cincinnati", "value": [5.5999999940395355, 0.3294117643552668]}, {
+                    "name": "Citrus Heights",
+                    "value": [0, 0]
+                }, {"name": "Clarksville", "value": [1.9000000059604645, 0.27142857228006634]}, {
+                    "name": "Cleveland",
+                    "value": [12.800000071525574, 0.3047619064648946]
+                }, {"name": "Clifton", "value": [0, 0]}, {
+                    "name": "Clinton",
+                    "value": [0.30000001192092896, 0.010344827997273412]
+                }, {"name": "Clovis", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "Coachella",
+                    "value": [0, 0]
+                }, {
+                    "name": "College Station",
+                    "value": [1.3000000268220901, 0.43333334227403003]
+                }, {"name": "Colorado Springs", "value": [8.299999982118607, 0.3319999992847443]}, {
+                    "name": "Columbia",
+                    "value": [4.80000002682209, 0.05925925959039618]
+                }, {"name": "Columbus", "value": [38.500000178813934, 0.1734234242288916]}, {
+                    "name": "Commerce City",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Concord", "value": [2.7500000447034836, 0.0887096788614027]}, {
+                    "name": "Conroe",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Conway", "value": [0, 0]}, {"name": "Coon Rapids", "value": [0, 0]}, {
+                    "name": "Coppell",
+                    "value": [0.800000011920929, 0.20000000298023224]
+                }, {
+                    "name": "Coral Gables",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {
+                    "name": "Coral Springs",
+                    "value": [1.600000023841858, 0.20000000298023224]
+                }, {
+                    "name": "Corpus Christi",
+                    "value": [3.4000000953674316, 0.42500001192092896]
+                }, {
+                    "name": "Costa Mesa",
+                    "value": [0.6000000089406967, 0.054545455358245155]
+                }, {"name": "Cottage Grove", "value": [0, 0]}, {
+                    "name": "Covington",
+                    "value": [0, 0]
+                }, {"name": "Cranston", "value": [0.9000000357627869, 0.05625000223517418]}, {
+                    "name": "Cuyahoga Falls",
+                    "value": [1.5999999791383743, 0.5333333263794581]
+                }, {"name": "Dallas", "value": [56.30000104010105, 0.35859873273949716]}, {
+                    "name": "Danbury",
+                    "value": [0, 0]
+                }, {"name": "Danville", "value": [1.0000000149011612, 0.14285714498588017]}, {
+                    "name": "Davis",
+                    "value": [0, 0]
+                }, {"name": "Daytona Beach", "value": [1.0499999970197678, 0.26249999925494194]}, {
+                    "name": "Dearborn",
+                    "value": [0.10000000149011612, 0.020000000298023225]
+                }, {"name": "Dearborn Heights", "value": [0, 0]}, {
+                    "name": "Decatur",
+                    "value": [6.60000017285347, 0.18857143351009914]
+                }, {"name": "Deer Park", "value": [0.800000011920929, 0.800000011920929]}, {
+                    "name": "Delray Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Deltona", "value": [1.5, 0.3]}, {
+                    "name": "Denver",
+                    "value": [12.100000038743019, 0.2750000008805232]
+                }, {"name": "Des Moines", "value": [0.6000000089406967, 0.03157894783898404]}, {
+                    "name": "Des Plaines",
+                    "value": [2.6000000536441803, 0.43333334227403003]
+                }, {"name": "Detroit", "value": [0.800000011920929, 0.006956521842790686]}, {
+                    "name": "Dover",
+                    "value": [0.30000001192092896, 0.01578947431162784]
+                }, {"name": "Draper", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Dublin",
+                    "value": [4.700000002980232, 0.33571428592715946]
+                }, {"name": "Dubuque", "value": [0, 0]}, {
+                    "name": "Durham",
+                    "value": [2.300000011920929, 0.25555555688010323]
+                }, {"name": "Eagan", "value": [0, 0]}, {"name": "East Orange", "value": [0, 0]}, {
+                    "name": "East Point",
+                    "value": [0, 0]
+                }, {"name": "Eau Claire", "value": [0, 0]}, {
+                    "name": "Edinburg",
+                    "value": [1.2000000178813934, 0.4000000059604645]
+                }, {"name": "Edmond", "value": [0, 0]}, {
+                    "name": "Edmonds",
+                    "value": [0.6000000089406967, 0.04285714349576405]
+                }, {"name": "El Cajon", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "El Paso",
+                    "value": [5.8000001311302185, 0.3052631647963273]
+                }, {"name": "Elkhart", "value": [0, 0]}, {
+                    "name": "Elmhurst",
+                    "value": [0.9000000208616257, 0.22500000521540642]
+                }, {"name": "Elyria", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Encinitas",
+                    "value": [0.7500000149011612, 0.15000000298023225]
+                }, {"name": "Englewood", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Escondido",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Eugene", "value": [1.2000000178813934, 0.20000000298023224]}, {
+                    "name": "Evanston",
+                    "value": [0.9000000208616257, 0.22500000521540642]
+                }, {"name": "Everett", "value": [0.5000000149011612, 0.022727273404598236]}, {
+                    "name": "Fairfield",
+                    "value": [6.400000035762787, 0.1422222230169508]
+                }, {"name": "Fargo", "value": [0, 0]}, {"name": "Farmington", "value": [0, 0]}, {
+                    "name": "Fayetteville",
+                    "value": [6.900000035762787, 0.16829268379909237]
+                }, {"name": "Florence", "value": [0, 0]}, {
+                    "name": "Fort Collins",
+                    "value": [2.3999999910593033, 0.3428571415799005]
+                }, {
+                    "name": "Fort Lauderdale",
+                    "value": [4.499999985098839, 0.29999999900658925]
+                }, {"name": "Fort Worth", "value": [11.340000182390213, 0.42000000675519306]}, {
+                    "name": "Frankfort",
+                    "value": [1.0000000149011612, 0.5000000074505806]
+                }, {"name": "Franklin", "value": [4.300000041723251, 0.11621621734387166]}, {
+                    "name": "Freeport",
+                    "value": [2.1000000461935997, 0.21000000461935997]
+                }, {"name": "Fremont", "value": [0, 0]}, {
+                    "name": "Fresno",
+                    "value": [2.700000047683716, 0.10384615568014291]
+                }, {"name": "Frisco", "value": [0.8000000268220901, 0.4000000134110451]}, {
+                    "name": "Gaithersburg",
+                    "value": [0, 0]
+                }, {"name": "Garden City", "value": [0, 0]}, {
+                    "name": "Garland",
+                    "value": [1.8000000417232513, 0.45000001043081284]
+                }, {"name": "Gastonia", "value": [1.2999999970197678, 0.32499999925494194]}, {
+                    "name": "Georgetown",
+                    "value": [0, 0]
+                }, {"name": "Gilbert", "value": [3.3000000417232513, 0.2200000027815501]}, {
+                    "name": "Gladstone",
+                    "value": [0, 0]
+                }, {"name": "Glendale", "value": [6.100000023841858, 0.2652173923409503]}, {
+                    "name": "Glenview",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Goldsboro", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Grand Island",
+                    "value": [0, 0]
+                }, {
+                    "name": "Grand Prairie",
+                    "value": [4.800000116229057, 0.36923077817146593]
+                }, {"name": "Grand Rapids", "value": [0, 0]}, {
+                    "name": "Grapevine",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Great Falls", "value": [0.4000000059604645, 0.05000000074505806]}, {
+                    "name": "Greeley",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Green Bay", "value": [0, 0]}, {
+                    "name": "Greensboro",
+                    "value": [4.799999982118607, 0.3692307678552774]
+                }, {"name": "Greenville", "value": [2.6000000089406967, 0.28888888988229966]}, {
+                    "name": "Greenwood",
+                    "value": [0, 0]
+                }, {"name": "Gresham", "value": [1.5, 0.3]}, {
+                    "name": "Grove City",
+                    "value": [1.0999999940395355, 0.5499999970197678]
+                }, {"name": "Gulfport", "value": [0, 0]}, {
+                    "name": "Hackensack",
+                    "value": [0, 0]
+                }, {"name": "Hagerstown", "value": [0, 0]}, {
+                    "name": "Haltom City",
+                    "value": [0.800000011920929, 0.20000000298023224]
+                }, {"name": "Hamilton", "value": [0.800000011920929, 0.20000000298023224]}, {
+                    "name": "Hampton",
+                    "value": [0, 0]
+                }, {"name": "Harlingen", "value": [1.1200000047683716, 0.2240000009536743]}, {
+                    "name": "Harrisonburg",
+                    "value": [0, 0]
+                }, {"name": "Hattiesburg", "value": [0, 0]}, {
+                    "name": "Helena",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Hempstead", "value": [1.0000000149011612, 0.09090909226374193]}, {
+                    "name": "Henderson",
+                    "value": [0.20000000298023224, 0.003921568685886907]
+                }, {"name": "Hendersonville", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Hesperia",
+                    "value": [0.550000011920929, 0.13750000298023224]
+                }, {"name": "Hialeah", "value": [5.200000017881393, 0.28888888988229966]}, {
+                    "name": "Hickory",
+                    "value": [0.8999999910593033, 0.44999999552965164]
+                }, {"name": "Highland Park", "value": [2.9000000655651093, 0.4142857236521585]}, {
+                    "name": "Hillsboro",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Holland", "value": [0, 0]}, {
+                    "name": "Hollywood",
+                    "value": [3.2000000029802322, 0.2909090911800211]
+                }, {"name": "Holyoke", "value": [0, 0]}, {
+                    "name": "Homestead",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Hoover", "value": [0, 0]}, {"name": "Hot Springs", "value": [0, 0]}, {
+                    "name": "Houston",
+                    "value": [143.14000275731087, 0.379681704926554]
+                }, {
+                    "name": "Huntington Beach",
+                    "value": [0.20000000298023224, 0.033333333830038704]
+                }, {"name": "Huntsville", "value": [10.62000022828579, 0.29500000634127194]}, {
+                    "name": "Independence",
+                    "value": [0, 0]
+                }, {"name": "Indianapolis", "value": [0, 0]}, {
+                    "name": "Inglewood",
+                    "value": [0.800000011920929, 0.05000000074505806]
+                }, {"name": "Iowa City", "value": [0, 0]}, {
+                    "name": "Irving",
+                    "value": [2.2000000327825546, 0.27500000409781933]
+                }, {"name": "Jackson", "value": [2.500000037252903, 0.030487805332352475]}, {
+                    "name": "Jacksonville",
+                    "value": [35.85000005364418, 0.28680000042915343]
+                }, {"name": "Jamestown", "value": [0, 0]}, {
+                    "name": "Jefferson City",
+                    "value": [0, 0]
+                }, {"name": "Johnson City", "value": [3.8999999910593033, 0.32499999925494194]}, {
+                    "name": "Jonesboro",
+                    "value": [0, 0]
+                }, {"name": "Jupiter", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Keller",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Kenner", "value": [0, 0]}, {"name": "Kenosha", "value": [0, 0]}, {
+                    "name": "Kent",
+                    "value": [1.8000000268220901, 0.13846154052477616]
+                }, {"name": "Kirkwood", "value": [0, 0]}, {
+                    "name": "Kissimmee",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Knoxville", "value": [6.200000047683716, 0.25833333532015484]}, {
+                    "name": "La Crosse",
+                    "value": [0, 0]
+                }, {"name": "La Mesa", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "La Porte",
+                    "value": [1.4000000357627869, 0.14000000357627868]
+                }, {"name": "La Quinta", "value": [0, 0]}, {
+                    "name": "Lafayette",
+                    "value": [0, 0]
+                }, {
+                    "name": "Laguna Niguel",
+                    "value": [0.3500000089406967, 0.08750000223517418]
+                }, {"name": "Lake Charles", "value": [0, 0]}, {
+                    "name": "Lake Elsinore",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Lake Forest", "value": [0.20000000298023224, 0.033333333830038704]}, {
+                    "name": "Lakeland",
+                    "value": [6.1500000059604645, 0.27954545481638476]
+                }, {"name": "Lakeville", "value": [0, 0]}, {
+                    "name": "Lakewood",
+                    "value": [6.750000014901161, 0.13775510234492166]
+                }, {"name": "Lancaster", "value": [14.500000029802322, 0.3152173919522244]}, {
+                    "name": "Lansing",
+                    "value": [0.10000000149011612, 0.012500000186264515]
+                }, {"name": "Laredo", "value": [4.200000077486038, 0.32307692903738755]}, {
+                    "name": "Las Cruces",
+                    "value": [0, 0]
+                }, {"name": "Las Vegas", "value": [1.0000000149011612, 0.0769230780693201]}, {
+                    "name": "Laurel",
+                    "value": [0, 0]
+                }, {"name": "Lawrence", "value": [0.6000000238418579, 0.013636364178224043]}, {
+                    "name": "Lawton",
+                    "value": [0, 0]
+                }, {"name": "Layton", "value": [0, 0]}, {
+                    "name": "League City",
+                    "value": [1.4000000357627869, 0.23333333929379782]
+                }, {"name": "Lebanon", "value": [0.6000000089406967, 0.20000000298023224]}, {
+                    "name": "Lehi",
+                    "value": [0.20000000298023224, 0.10000000149011612]
+                }, {"name": "Leominster", "value": [0, 0]}, {
+                    "name": "Lewiston",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Lincoln Park", "value": [0.10000000149011612, 0.033333333830038704]}, {
+                    "name": "Linden",
+                    "value": [0, 0]
+                }, {"name": "Lindenhurst", "value": [0, 0]}, {
+                    "name": "Little Rock",
+                    "value": [0, 0]
+                }, {"name": "Littleton", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Lodi",
+                    "value": [0, 0]
+                }, {"name": "Logan", "value": [0.4000000059604645, 0.0800000011920929]}, {
+                    "name": "Long Beach",
+                    "value": [3.500000052154064, 0.05737705003531253]
+                }, {"name": "Longmont", "value": [0.6000000089406967, 0.20000000298023224]}, {
+                    "name": "Longview",
+                    "value": [0, 0]
+                }, {"name": "Lorain", "value": [2.7000000178813934, 0.3000000019868215]}, {
+                    "name": "Los Angeles",
+                    "value": [55.50000087916851, 0.07429718993195249]
+                }, {"name": "Louisville", "value": [8.099999979138374, 0.1421052627919013]}, {
+                    "name": "Loveland",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Lowell", "value": [0, 0]}, {
+                    "name": "Lubbock",
+                    "value": [2.8000000566244125, 0.46666667610406876]
+                }, {"name": "Macon", "value": [0, 0]}, {"name": "Madison", "value": [0, 0]}, {
+                    "name": "Malden",
+                    "value": [0, 0]
+                }, {"name": "Manchester", "value": [0, 0]}, {
+                    "name": "Manhattan",
+                    "value": [0, 0]
+                }, {"name": "Mansfield", "value": [0.5000000149011612, 0.2500000074505806]}, {
+                    "name": "Manteca",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Maple Grove", "value": [0, 0]}, {
+                    "name": "Margate",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Marietta", "value": [0, 0]}, {
+                    "name": "Marion",
+                    "value": [3.5000000596046448, 0.17500000298023224]
+                }, {"name": "Marlborough", "value": [0, 0]}, {"name": "Marysville", "value": [0, 0]}, {
+                    "name": "Mason",
+                    "value": [1.5999999791383743, 0.5333333263794581]
+                }, {"name": "Mcallen", "value": [7.5000001192092896, 0.3947368483794363]}, {
+                    "name": "Medford",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Medina", "value": [3.9000000059604645, 0.43333333399560714]}, {
+                    "name": "Melbourne",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Memphis", "value": [8.400000035762787, 0.2800000011920929]}, {
+                    "name": "Mentor",
+                    "value": [1.5000000298023224, 0.2500000049670537]
+                }, {"name": "Meriden", "value": [0, 0]}, {
+                    "name": "Meridian",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Mesa", "value": [9.199999988079071, 0.32857142814568113]}, {
+                    "name": "Mesquite",
+                    "value": [2.6000000536441803, 0.5200000107288361]
+                }, {"name": "Miami", "value": [18.64999994635582, 0.32719298151501436]}, {
+                    "name": "Middletown",
+                    "value": [0, 0]
+                }, {"name": "Midland", "value": [0.10000000149011612, 0.008333333457509676]}, {
+                    "name": "Milford",
+                    "value": [0, 0]
+                }, {"name": "Milwaukee", "value": [0, 0]}, {"name": "Minneapolis", "value": [0, 0]}, {
+                    "name": "Miramar",
+                    "value": [2.1000000089406967, 0.2625000011175871]
+                }, {"name": "Mishawaka", "value": [0, 0]}, {
+                    "name": "Mission Viejo",
+                    "value": [0.15000000596046448, 0.030000001192092896]
+                }, {"name": "Missoula", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Missouri City",
+                    "value": [0.800000011920929, 0.800000011920929]
+                }, {"name": "Mobile", "value": [0, 0]}, {
+                    "name": "Modesto",
+                    "value": [0.4000000059604645, 0.13333333532015482]
+                }, {"name": "Monroe", "value": [1.8000000268220901, 0.0857142869915281]}, {
+                    "name": "Montebello",
+                    "value": [0, 0]
+                }, {"name": "Montgomery", "value": [0, 0]}, {
+                    "name": "Moorhead",
+                    "value": [0, 0]
+                }, {
+                    "name": "Moreno Valley",
+                    "value": [0.20000000298023224, 0.020000000298023225]
+                }, {"name": "Morgan Hill", "value": [0.3500000089406967, 0.08750000223517418]}, {
+                    "name": "Morristown",
+                    "value": [0, 0]
+                }, {"name": "Mount Pleasant", "value": [0, 0]}, {
+                    "name": "Mount Vernon",
+                    "value": [0.20000000298023224, 0.02500000037252903]
+                }, {"name": "Murfreesboro", "value": [3.699999988079071, 0.33636363527991553]}, {
+                    "name": "Murray",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {"name": "Murrieta", "value": [0, 0]}, {"name": "Muskogee", "value": [0, 0]}, {
+                    "name": "Naperville",
+                    "value": [3.5000000596046448, 0.4375000074505806]
+                }, {"name": "Nashua", "value": [0, 0]}, {
+                    "name": "Nashville",
+                    "value": [7.800000041723251, 0.2689655186801121]
+                }, {"name": "New Albany", "value": [0, 0]}, {
+                    "name": "New Bedford",
+                    "value": [0, 0]
+                }, {"name": "New Brunswick", "value": [0, 0]}, {
+                    "name": "New Castle",
+                    "value": [0, 0]
+                }, {
+                    "name": "New Rochelle",
+                    "value": [0.5000000074505806, 0.05555555638339785]
+                }, {"name": "New York City", "value": [51.400000765919685, 0.05617486422504884]}, {
+                    "name": "Newark",
+                    "value": [9.800000071525574, 0.10315789548974288]
+                }, {"name": "Newport News", "value": [0, 0]}, {
+                    "name": "Niagara Falls",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Noblesville", "value": [0, 0]}, {"name": "Norfolk", "value": [0, 0]}, {
+                    "name": "Normal",
+                    "value": [0.30000001192092896, 0.30000001192092896]
+                }, {"name": "Norman", "value": [0, 0]}, {
+                    "name": "North Charleston",
+                    "value": [0, 0]
+                }, {
+                    "name": "North Las Vegas",
+                    "value": [0.6000000089406967, 0.037500000558793545]
+                }, {"name": "North Miami", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Norwich",
+                    "value": [0, 0]
+                }, {"name": "Oak Park", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Oakland",
+                    "value": [2.0000000298023224, 0.0769230780693201]
+                }, {"name": "Oceanside", "value": [1.8000000268220901, 0.06000000089406967]}, {
+                    "name": "Odessa",
+                    "value": [1.8000000417232513, 0.3600000083446503]
+                }, {"name": "Oklahoma City", "value": [0, 0]}, {"name": "Olathe", "value": [0, 0]}, {
+                    "name": "Olympia",
+                    "value": [0.4000000059604645, 0.0800000011920929]
+                }, {"name": "Omaha", "value": [0, 0]}, {
+                    "name": "Ontario",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Orange", "value": [0, 0]}, {
+                    "name": "Orem",
+                    "value": [0.20000000298023224, 0.022222222553359136]
+                }, {"name": "Orland Park", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Orlando",
+                    "value": [3.2000000029802322, 0.2909090911800211]
+                }, {"name": "Ormond Beach", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Oswego",
+                    "value": [1.8000000268220901, 0.6000000089406967]
+                }, {"name": "Overland Park", "value": [0, 0]}, {
+                    "name": "Owensboro",
+                    "value": [0, 0]
+                }, {"name": "Oxnard", "value": [0.4000000059604645, 0.04444444510671827]}, {
+                    "name": "Palatine",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Palm Coast", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Park Ridge",
+                    "value": [1.0000000298023224, 0.3333333432674408]
+                }, {"name": "Parker", "value": [3.599999964237213, 0.44999999552965164]}, {
+                    "name": "Parma",
+                    "value": [2.4000000655651093, 0.24000000655651094]
+                }, {"name": "Pasadena", "value": [7.400000154972076, 0.17619047988028752]}, {
+                    "name": "Pasco",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Passaic", "value": [0.30000001192092896, 0.050000001986821495]}, {
+                    "name": "Paterson",
+                    "value": [0, 0]
+                }, {"name": "Pearland", "value": [1.2000000178813934, 0.4000000059604645]}, {
+                    "name": "Pembroke Pines",
+                    "value": [4.549999982118607, 0.3249999987227576]
+                }, {"name": "Pensacola", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Peoria",
+                    "value": [8.900000110268593, 0.38695652653341706]
+                }, {"name": "Perth Amboy", "value": [0, 0]}, {
+                    "name": "Pharr",
+                    "value": [1.3000000417232513, 0.32500001043081284]
+                }, {"name": "Philadelphia", "value": [175.50000068545341, 0.32681564373455013]}, {
+                    "name": "Phoenix",
+                    "value": [22.299999922513962, 0.35396825273831684]
+                }, {"name": "Pico Rivera", "value": [0, 0]}, {
+                    "name": "Pine Bluff",
+                    "value": [0, 0]
+                }, {"name": "Plainfield", "value": [0, 0]}, {
+                    "name": "Plano",
+                    "value": [4.120000064373016, 0.2746666709582011]
+                }, {"name": "Plantation", "value": [3.2000000029802322, 0.2909090911800211]}, {
+                    "name": "Pleasant Grove",
+                    "value": [0.6000000089406967, 0.0857142869915281]
+                }, {"name": "Pocatello", "value": [0.6000000089406967, 0.0857142869915281]}, {
+                    "name": "Pomona",
+                    "value": [0.20000000298023224, 0.028571428997176036]
+                }, {
+                    "name": "Pompano Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Port Arthur", "value": [1.3200000077486038, 0.22000000129143396]}, {
+                    "name": "Port Orange",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Port Saint Lucie", "value": [1.0999999940395355, 0.36666666467984516]}, {
+                    "name": "Portage",
+                    "value": [0, 0]
+                }, {"name": "Portland", "value": [7.299999997019768, 0.3041666665424903]}, {
+                    "name": "Providence",
+                    "value": [0.30000001192092896, 0.009677419739384805]
+                }, {"name": "Provo", "value": [0.6000000089406967, 0.06000000089406967]}, {
+                    "name": "Pueblo",
+                    "value": [4.099999949336052, 0.5124999936670065]
+                }, {"name": "Quincy", "value": [3.9000000655651093, 0.19500000327825545]}, {
+                    "name": "Raleigh",
+                    "value": [5.900000020861626, 0.2681818191300739]
+                }, {
+                    "name": "Rancho Cucamonga",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Rapid City", "value": [0, 0]}, {
+                    "name": "Reading",
+                    "value": [1.300000011920929, 0.2600000023841858]
+                }, {"name": "Redding", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Redlands",
+                    "value": [0.7500000149011612, 0.046875000931322575]
+                }, {"name": "Redmond", "value": [3.0999999940395355, 0.2818181812763214]}, {
+                    "name": "Redondo Beach",
+                    "value": [0.9500000178813934, 0.11875000223517418]
+                }, {"name": "Redwood City", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Reno",
+                    "value": [0.4000000059604645, 0.10000000149011612]
+                }, {"name": "Renton", "value": [0.4000000059604645, 0.13333333532015482]}, {
+                    "name": "Revere",
+                    "value": [0, 0]
+                }, {"name": "Richardson", "value": [0.8000000268220901, 0.4000000134110451]}, {
+                    "name": "Richmond",
+                    "value": [0, 0]
+                }, {"name": "Rio Rancho", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Riverside",
+                    "value": [0.6000000089406967, 0.04285714349576405]
+                }, {
+                    "name": "Rochester",
+                    "value": [2.2000000327825546, 0.04150943458080292]
+                }, {"name": "Rochester Hills", "value": [0, 0]}, {
+                    "name": "Rock Hill",
+                    "value": [0, 0]
+                }, {"name": "Rockford", "value": [5.600000083446503, 0.5090909166769548]}, {
+                    "name": "Rockville",
+                    "value": [0, 0]
+                }, {"name": "Rogers", "value": [0, 0]}, {
+                    "name": "Rome",
+                    "value": [0.10000000149011612, 0.016666666915019352]
+                }, {"name": "Romeoville", "value": [0.800000011920929, 0.800000011920929]}, {
+                    "name": "Roseville",
+                    "value": [0.4000000059604645, 0.015384615613864018]
+                }, {"name": "Roswell", "value": [0, 0]}, {
+                    "name": "Round Rock",
+                    "value": [1.9200000315904617, 0.2742857187986374]
+                }, {"name": "Royal Oak", "value": [0, 0]}, {
+                    "name": "Sacramento",
+                    "value": [1.600000023841858, 0.12307692491091214]
+                }, {"name": "Saginaw", "value": [0, 0]}, {
+                    "name": "Saint Charles",
+                    "value": [2.500000089406967, 0.25000000894069674]
+                }, {"name": "Saint Cloud", "value": [0, 0]}, {
+                    "name": "Saint Louis",
+                    "value": [0, 0]
+                }, {"name": "Saint Paul", "value": [0, 0]}, {
+                    "name": "Saint Peters",
+                    "value": [0, 0]
+                }, {"name": "Saint Petersburg", "value": [3.800000011920929, 0.27142857228006634]}, {
+                    "name": "Salem",
+                    "value": [7.200000032782555, 0.18000000081956385]
+                }, {"name": "Salinas", "value": [0.7500000149011612, 0.09375000186264515]}, {
+                    "name": "Salt Lake City",
+                    "value": [0.6000000089406967, 0.07500000111758709]
+                }, {"name": "San Angelo", "value": [1.7000000476837158, 0.42500001192092896]}, {
+                    "name": "San Antonio",
+                    "value": [22.60000044107437, 0.3830508549334639]
+                }, {
+                    "name": "San Bernardino",
+                    "value": [0.9500000178813934, 0.10555555754237705]
+                }, {"name": "San Clemente", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "San Diego",
+                    "value": [13.600000217556953, 0.08000000127974678]
+                }, {
+                    "name": "San Francisco",
+                    "value": [34.000000566244125, 0.06666666777694927]
+                }, {"name": "San Gabriel", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "San Jose",
+                    "value": [3.1000000536441803, 0.07380952508676619]
+                }, {"name": "San Luis Obispo", "value": [0, 0]}, {
+                    "name": "San Marcos",
+                    "value": [1.2000000327825546, 0.30000000819563866]
+                }, {"name": "San Mateo", "value": [0, 0]}, {
+                    "name": "Sandy Springs",
+                    "value": [0, 0]
+                }, {"name": "Sanford", "value": [0.8999999910593033, 0.44999999552965164]}, {
+                    "name": "Santa Ana",
+                    "value": [1.0000000149011612, 0.07142857249294009]
+                }, {
+                    "name": "Santa Barbara",
+                    "value": [0.6000000089406967, 0.07500000111758709]
+                }, {"name": "Santa Clara", "value": [0.4000000059604645, 0.06666666766007741]}, {
+                    "name": "Santa Fe",
+                    "value": [0, 0]
+                }, {"name": "Santa Maria", "value": [0, 0]}, {
+                    "name": "Scottsdale",
+                    "value": [3.8999999910593033, 0.32499999925494194]
+                }, {"name": "Seattle", "value": [27.80000041425228, 0.06495327199591655]}, {
+                    "name": "Sheboygan",
+                    "value": [0, 0]
+                }, {"name": "Shelton", "value": [0, 0]}, {
+                    "name": "Sierra Vista",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Sioux Falls", "value": [0, 0]}, {
+                    "name": "Skokie",
+                    "value": [5.200000122189522, 0.47272728383541107]
+                }, {"name": "Smyrna", "value": [2.3999999910593033, 0.09999999962747097]}, {
+                    "name": "South Bend",
+                    "value": [0, 0]
+                }, {"name": "Southaven", "value": [0, 0]}, {
+                    "name": "Sparks",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Spokane", "value": [0.4000000059604645, 0.05714285799435207]}, {
+                    "name": "Springdale",
+                    "value": [0, 0]
+                }, {
+                    "name": "Springfield",
+                    "value": [23.200000062584877, 0.14233128872751458]
+                }, {"name": "Sterling Heights", "value": [0, 0]}, {
+                    "name": "Stockton",
+                    "value": [0.6000000089406967, 0.10000000149011612]
+                }, {"name": "Suffolk", "value": [0, 0]}, {"name": "Summerville", "value": [0, 0]}, {
+                    "name": "Sunnyvale",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Superior", "value": [0, 0]}, {
+                    "name": "Tallahassee",
+                    "value": [4.700000017881393, 0.2764705892871408]
+                }, {"name": "Tamarac", "value": [1.7999999821186066, 0.44999999552965164]}, {
+                    "name": "Tampa",
+                    "value": [11.999999955296516, 0.3333333320915699]
+                }, {"name": "Taylor", "value": [0, 0]}, {
+                    "name": "Temecula",
+                    "value": [0.4000000059604645, 0.10000000149011612]
+                }, {"name": "Tempe", "value": [3.100000023841858, 0.23846154029552752]}, {
+                    "name": "Texarkana",
+                    "value": [0, 0]
+                }, {"name": "Texas City", "value": [0.9000000357627869, 0.30000001192092896]}, {
+                    "name": "The Colony",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Thomasville", "value": [1.0999999940395355, 0.36666666467984516]}, {
+                    "name": "Thornton",
+                    "value": [2.0000000298023224, 0.20000000298023224]
+                }, {"name": "Thousand Oaks", "value": [0.20000000298023224, 0.04000000059604645]}, {
+                    "name": "Tigard",
+                    "value": [2.1000000089406967, 0.2625000011175871]
+                }, {"name": "Tinley Park", "value": [0.6000000238418579, 0.6000000238418579]}, {
+                    "name": "Toledo",
+                    "value": [10.80000002682209, 0.3375000008381903]
+                }, {"name": "Torrance", "value": [0.6000000089406967, 0.15000000223517418]}, {
+                    "name": "Trenton",
+                    "value": [0.10000000149011612, 0.007692307806932009]
+                }, {"name": "Troy", "value": [6.600000008940697, 0.22758620720485162]}, {
+                    "name": "Tucson",
+                    "value": [9.700000002980232, 0.30312500009313226]
+                }, {"name": "Tulsa", "value": [0, 0]}, {"name": "Tuscaloosa", "value": [0, 0]}, {
+                    "name": "Twin Falls",
+                    "value": [0.20000000298023224, 0.10000000149011612]
+                }, {"name": "Tyler", "value": [3.200000062584877, 0.6400000125169754]}, {
+                    "name": "Urbandale",
+                    "value": [0, 0]
+                }, {"name": "Utica", "value": [0.4000000059604645, 0.05000000074505806]}, {
+                    "name": "Vacaville",
+                    "value": [0, 0]
+                }, {"name": "Vallejo", "value": [0.6000000089406967, 0.10000000149011612]}, {
+                    "name": "Vancouver",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {"name": "Vineland", "value": [0.30000001192092896, 0.03750000149011612]}, {
+                    "name": "Virginia Beach",
+                    "value": [0, 0]
+                }, {"name": "Visalia", "value": [0, 0]}, {
+                    "name": "Waco",
+                    "value": [3.120000034570694, 0.5200000057617823]
+                }, {"name": "Warner Robins", "value": [0, 0]}, {
+                    "name": "Warwick",
+                    "value": [0, 0]
+                }, {"name": "Washington", "value": [0, 0]}, {"name": "Waterbury", "value": [0, 0]}, {
+                    "name": "Waterloo",
+                    "value": [0, 0]
+                }, {"name": "Watertown", "value": [0.800000011920929, 0.0800000011920929]}, {
+                    "name": "Waukesha",
+                    "value": [0, 0]
+                }, {"name": "Wausau", "value": [0, 0]}, {"name": "Waynesboro", "value": [0, 0]}, {
+                    "name": "West Allis",
+                    "value": [0, 0]
+                }, {
+                    "name": "West Jordan",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {
+                    "name": "West Palm Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Westfield", "value": [0, 0]}, {
+                    "name": "Westland",
+                    "value": [0.10000000149011612, 0.007692307806932009]
+                }, {"name": "Westminster", "value": [1.4000000208616257, 0.08235294240362503]}, {
+                    "name": "Wheeling",
+                    "value": [1.600000038743019, 0.22857143410614558]
+                }, {"name": "Whittier", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Wichita",
+                    "value": [0, 0]
+                }, {"name": "Wilmington", "value": [2.900000035762787, 0.0805555565489663]}, {
+                    "name": "Wilson",
+                    "value": [2.199999988079071, 0.36666666467984516]
+                }, {"name": "Woodbury", "value": [0, 0]}, {
+                    "name": "Woodland",
+                    "value": [0.4000000059604645, 0.13333333532015482]
+                }, {"name": "Woodstock", "value": [1.3000000268220901, 0.26000000536441803]}, {
+                    "name": "Woonsocket",
+                    "value": [0, 0]
+                }, {"name": "Yonkers", "value": [1.0000000149011612, 0.06666666766007741]}, {
+                    "name": "York",
+                    "value": [2.0999999940395355, 0.4199999988079071]
+                }, {"name": "Yucaipa", "value": [0, 0]}, {
+                    "name": "Yuma",
+                    "value": [1.7999999821186066, 0.44999999552965164]
+                }],
+                "symbolSize": 15,
+                "symbol": "circle",
+                "itemStyle": {"normal": {"opacity": 1}, "emphasis": {}},
+                "label": {"normal": {"show": false, "position": "top"}},
+                "originData": [{"name": "Aberdeen", "value": [0, 0]}, {
+                    "name": "Abilene",
+                    "value": [0.800000011920929, 0.800000011920929]
+                }, {"name": "Akron", "value": [7.5, 0.35714285714285715]}, {
+                    "name": "Albuquerque",
+                    "value": [0.800000011920929, 0.05714285799435207]
+                }, {"name": "Alexandria", "value": [0, 0]}, {
+                    "name": "Allen",
+                    "value": [1.5000000298023224, 0.3750000074505806]
+                }, {"name": "Allentown", "value": [1.9000000059604645, 0.27142857228006634]}, {
+                    "name": "Altoona",
+                    "value": [0.8999999910593033, 0.44999999552965164]
+                }, {"name": "Amarillo", "value": [2.720000058412552, 0.27200000584125517]}, {
+                    "name": "Anaheim",
+                    "value": [2.2000000327825546, 0.08148148269565017]
+                }, {"name": "Andover", "value": [0, 0]}, {
+                    "name": "Ann Arbor",
+                    "value": [0.10000000149011612, 0.020000000298023225]
+                }, {"name": "Antioch", "value": [0, 0]}, {
+                    "name": "Apopka",
+                    "value": [2.899999976158142, 0.4142857108797346]
+                }, {"name": "Apple Valley", "value": [0.550000011920929, 0.061111112435658775]}, {
+                    "name": "Appleton",
+                    "value": [0, 0]
+                }, {
+                    "name": "Arlington",
+                    "value": [10.70000022649765, 0.17833333710829416]
+                }, {
+                    "name": "Arlington Heights",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Arvada", "value": [0.800000011920929, 0.20000000298023224]}, {
+                    "name": "Asheville",
+                    "value": [1.9000000059604645, 0.27142857228006634]
+                }, {"name": "Athens", "value": [0, 0]}, {"name": "Atlanta", "value": [0, 0]}, {
+                    "name": "Atlantic City",
+                    "value": [0, 0]
+                }, {"name": "Auburn", "value": [0.20000000298023224, 0.008333333457509676]}, {
+                    "name": "Aurora",
+                    "value": [24.00000025331974, 0.35294118019587856]
+                }, {"name": "Austin", "value": [13.400000229477882, 0.34358974947379184]}, {
+                    "name": "Avondale",
+                    "value": [1.2000000178813934, 0.20000000298023224]
+                }, {"name": "Bakersfield", "value": [1.5500000268220901, 0.09687500167638063]}, {
+                    "name": "Baltimore",
+                    "value": [0.30000001192092896, 0.006976744463277417]
+                }, {"name": "Bangor", "value": [0, 0]}, {
+                    "name": "Bartlett",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Bayonne", "value": [0, 0]}, {
+                    "name": "Baytown",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Beaumont", "value": [2.0000000447034836, 0.4000000089406967]}, {
+                    "name": "Bedford",
+                    "value": [1.600000023841858, 0.3200000047683716]
+                }, {"name": "Belleville", "value": [0, 0]}, {
+                    "name": "Bellevue",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Bellingham", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Bethlehem",
+                    "value": [1.9000000059604645, 0.3800000011920929]
+                }, {"name": "Beverly", "value": [0, 0]}, {
+                    "name": "Billings",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Bloomington", "value": [2.900000050663948, 0.19333333671092987]}, {
+                    "name": "Boca Raton",
+                    "value": [1.0999999940395355, 0.36666666467984516]
+                }, {"name": "Boise", "value": [0.4000000059604645, 0.10000000149011612]}, {
+                    "name": "Bolingbrook",
+                    "value": [2.400000035762787, 0.4000000059604645]
+                }, {"name": "Bossier City", "value": [0, 0]}, {
+                    "name": "Bowling Green",
+                    "value": [2.500000014901161, 0.25000000149011614]
+                }, {"name": "Boynton Beach", "value": [2.500000014901161, 0.25000000149011614]}, {
+                    "name": "Bozeman",
+                    "value": [0, 0]
+                }, {"name": "Brentwood", "value": [1.0000000149011612, 0.06250000093132257]}, {
+                    "name": "Bridgeton",
+                    "value": [0, 0]
+                }, {"name": "Bristol", "value": [2.7999999821186066, 0.2153846140091236]}, {
+                    "name": "Broken Arrow",
+                    "value": [0, 0]
+                }, {"name": "Broomfield", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Brownsville",
+                    "value": [1.6200000196695328, 0.2314285742385047]
+                }, {"name": "Bryan", "value": [3.700000062584877, 0.6166666770974795]}, {
+                    "name": "Buffalo",
+                    "value": [0.6000000089406967, 0.06000000089406967]
+                }, {
+                    "name": "Buffalo Grove",
+                    "value": [0.7000000029802322, 0.3500000014901161]
+                }, {"name": "Bullhead City", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Burbank",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Burlington", "value": [3.4000000208616257, 0.13600000083446503]}, {
+                    "name": "Caldwell",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Camarillo", "value": [0.550000011920929, 0.1100000023841858]}, {
+                    "name": "Cambridge",
+                    "value": [0, 0]
+                }, {"name": "Canton", "value": [0, 0]}, {
+                    "name": "Carlsbad",
+                    "value": [0.800000011920929, 0.07272727381099355]
+                }, {"name": "Carol Stream", "value": [1.2000000327825546, 0.24000000655651094]}, {
+                    "name": "Carrollton",
+                    "value": [6.200000122189522, 0.41333334147930145]
+                }, {"name": "Cary", "value": [1.2000000178813934, 0.20000000298023224]}, {
+                    "name": "Cedar Hill",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Cedar Rapids", "value": [0, 0]}, {
+                    "name": "Champaign",
+                    "value": [0.6000000238418579, 0.6000000238418579]
+                }, {"name": "Chandler", "value": [1.7000000178813934, 0.24285714541162765]}, {
+                    "name": "Chapel Hill",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {
+                    "name": "Charlotte",
+                    "value": [15.300000041723251, 0.29423077003313947]
+                }, {"name": "Charlottesville", "value": [0, 0]}, {
+                    "name": "Chattanooga",
+                    "value": [3.2999999970197678, 0.3299999997019768]
+                }, {"name": "Chesapeake", "value": [0, 0]}, {
+                    "name": "Chester",
+                    "value": [5.30000002682209, 0.33125000167638063]
+                }, {"name": "Cheyenne", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Chicago",
+                    "value": [120.50000247359276, 0.3837579696611234]
+                }, {"name": "Chico", "value": [0.800000011920929, 0.07272727381099355]}, {
+                    "name": "Chula Vista",
+                    "value": [0, 0]
+                }, {"name": "Cincinnati", "value": [5.5999999940395355, 0.3294117643552668]}, {
+                    "name": "Citrus Heights",
+                    "value": [0, 0]
+                }, {"name": "Clarksville", "value": [1.9000000059604645, 0.27142857228006634]}, {
+                    "name": "Cleveland",
+                    "value": [12.800000071525574, 0.3047619064648946]
+                }, {"name": "Clifton", "value": [0, 0]}, {
+                    "name": "Clinton",
+                    "value": [0.30000001192092896, 0.010344827997273412]
+                }, {"name": "Clovis", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "Coachella",
+                    "value": [0, 0]
+                }, {
+                    "name": "College Station",
+                    "value": [1.3000000268220901, 0.43333334227403003]
+                }, {"name": "Colorado Springs", "value": [8.299999982118607, 0.3319999992847443]}, {
+                    "name": "Columbia",
+                    "value": [4.80000002682209, 0.05925925959039618]
+                }, {"name": "Columbus", "value": [38.500000178813934, 0.1734234242288916]}, {
+                    "name": "Commerce City",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Concord", "value": [2.7500000447034836, 0.0887096788614027]}, {
+                    "name": "Conroe",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Conway", "value": [0, 0]}, {"name": "Coon Rapids", "value": [0, 0]}, {
+                    "name": "Coppell",
+                    "value": [0.800000011920929, 0.20000000298023224]
+                }, {
+                    "name": "Coral Gables",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {
+                    "name": "Coral Springs",
+                    "value": [1.600000023841858, 0.20000000298023224]
+                }, {
+                    "name": "Corpus Christi",
+                    "value": [3.4000000953674316, 0.42500001192092896]
+                }, {
+                    "name": "Costa Mesa",
+                    "value": [0.6000000089406967, 0.054545455358245155]
+                }, {"name": "Cottage Grove", "value": [0, 0]}, {
+                    "name": "Covington",
+                    "value": [0, 0]
+                }, {"name": "Cranston", "value": [0.9000000357627869, 0.05625000223517418]}, {
+                    "name": "Cuyahoga Falls",
+                    "value": [1.5999999791383743, 0.5333333263794581]
+                }, {"name": "Dallas", "value": [56.30000104010105, 0.35859873273949716]}, {
+                    "name": "Danbury",
+                    "value": [0, 0]
+                }, {"name": "Danville", "value": [1.0000000149011612, 0.14285714498588017]}, {
+                    "name": "Davis",
+                    "value": [0, 0]
+                }, {"name": "Daytona Beach", "value": [1.0499999970197678, 0.26249999925494194]}, {
+                    "name": "Dearborn",
+                    "value": [0.10000000149011612, 0.020000000298023225]
+                }, {"name": "Dearborn Heights", "value": [0, 0]}, {
+                    "name": "Decatur",
+                    "value": [6.60000017285347, 0.18857143351009914]
+                }, {"name": "Deer Park", "value": [0.800000011920929, 0.800000011920929]}, {
+                    "name": "Delray Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Deltona", "value": [1.5, 0.3]}, {
+                    "name": "Denver",
+                    "value": [12.100000038743019, 0.2750000008805232]
+                }, {"name": "Des Moines", "value": [0.6000000089406967, 0.03157894783898404]}, {
+                    "name": "Des Plaines",
+                    "value": [2.6000000536441803, 0.43333334227403003]
+                }, {"name": "Detroit", "value": [0.800000011920929, 0.006956521842790686]}, {
+                    "name": "Dover",
+                    "value": [0.30000001192092896, 0.01578947431162784]
+                }, {"name": "Draper", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Dublin",
+                    "value": [4.700000002980232, 0.33571428592715946]
+                }, {"name": "Dubuque", "value": [0, 0]}, {
+                    "name": "Durham",
+                    "value": [2.300000011920929, 0.25555555688010323]
+                }, {"name": "Eagan", "value": [0, 0]}, {"name": "East Orange", "value": [0, 0]}, {
+                    "name": "East Point",
+                    "value": [0, 0]
+                }, {"name": "Eau Claire", "value": [0, 0]}, {
+                    "name": "Edinburg",
+                    "value": [1.2000000178813934, 0.4000000059604645]
+                }, {"name": "Edmond", "value": [0, 0]}, {
+                    "name": "Edmonds",
+                    "value": [0.6000000089406967, 0.04285714349576405]
+                }, {"name": "El Cajon", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "El Paso",
+                    "value": [5.8000001311302185, 0.3052631647963273]
+                }, {"name": "Elkhart", "value": [0, 0]}, {
+                    "name": "Elmhurst",
+                    "value": [0.9000000208616257, 0.22500000521540642]
+                }, {"name": "Elyria", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Encinitas",
+                    "value": [0.7500000149011612, 0.15000000298023225]
+                }, {"name": "Englewood", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Escondido",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Eugene", "value": [1.2000000178813934, 0.20000000298023224]}, {
+                    "name": "Evanston",
+                    "value": [0.9000000208616257, 0.22500000521540642]
+                }, {"name": "Everett", "value": [0.5000000149011612, 0.022727273404598236]}, {
+                    "name": "Fairfield",
+                    "value": [6.400000035762787, 0.1422222230169508]
+                }, {"name": "Fargo", "value": [0, 0]}, {"name": "Farmington", "value": [0, 0]}, {
+                    "name": "Fayetteville",
+                    "value": [6.900000035762787, 0.16829268379909237]
+                }, {"name": "Florence", "value": [0, 0]}, {
+                    "name": "Fort Collins",
+                    "value": [2.3999999910593033, 0.3428571415799005]
+                }, {
+                    "name": "Fort Lauderdale",
+                    "value": [4.499999985098839, 0.29999999900658925]
+                }, {"name": "Fort Worth", "value": [11.340000182390213, 0.42000000675519306]}, {
+                    "name": "Frankfort",
+                    "value": [1.0000000149011612, 0.5000000074505806]
+                }, {"name": "Franklin", "value": [4.300000041723251, 0.11621621734387166]}, {
+                    "name": "Freeport",
+                    "value": [2.1000000461935997, 0.21000000461935997]
+                }, {"name": "Fremont", "value": [0, 0]}, {
+                    "name": "Fresno",
+                    "value": [2.700000047683716, 0.10384615568014291]
+                }, {"name": "Frisco", "value": [0.8000000268220901, 0.4000000134110451]}, {
+                    "name": "Gaithersburg",
+                    "value": [0, 0]
+                }, {"name": "Garden City", "value": [0, 0]}, {
+                    "name": "Garland",
+                    "value": [1.8000000417232513, 0.45000001043081284]
+                }, {"name": "Gastonia", "value": [1.2999999970197678, 0.32499999925494194]}, {
+                    "name": "Georgetown",
+                    "value": [0, 0]
+                }, {"name": "Gilbert", "value": [3.3000000417232513, 0.2200000027815501]}, {
+                    "name": "Gladstone",
+                    "value": [0, 0]
+                }, {"name": "Glendale", "value": [6.100000023841858, 0.2652173923409503]}, {
+                    "name": "Glenview",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Goldsboro", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Grand Island",
+                    "value": [0, 0]
+                }, {
+                    "name": "Grand Prairie",
+                    "value": [4.800000116229057, 0.36923077817146593]
+                }, {"name": "Grand Rapids", "value": [0, 0]}, {
+                    "name": "Grapevine",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Great Falls", "value": [0.4000000059604645, 0.05000000074505806]}, {
+                    "name": "Greeley",
+                    "value": [0.4000000059604645, 0.20000000298023224]
+                }, {"name": "Green Bay", "value": [0, 0]}, {
+                    "name": "Greensboro",
+                    "value": [4.799999982118607, 0.3692307678552774]
+                }, {"name": "Greenville", "value": [2.6000000089406967, 0.28888888988229966]}, {
+                    "name": "Greenwood",
+                    "value": [0, 0]
+                }, {"name": "Gresham", "value": [1.5, 0.3]}, {
+                    "name": "Grove City",
+                    "value": [1.0999999940395355, 0.5499999970197678]
+                }, {"name": "Gulfport", "value": [0, 0]}, {
+                    "name": "Hackensack",
+                    "value": [0, 0]
+                }, {"name": "Hagerstown", "value": [0, 0]}, {
+                    "name": "Haltom City",
+                    "value": [0.800000011920929, 0.20000000298023224]
+                }, {"name": "Hamilton", "value": [0.800000011920929, 0.20000000298023224]}, {
+                    "name": "Hampton",
+                    "value": [0, 0]
+                }, {"name": "Harlingen", "value": [1.1200000047683716, 0.2240000009536743]}, {
+                    "name": "Harrisonburg",
+                    "value": [0, 0]
+                }, {"name": "Hattiesburg", "value": [0, 0]}, {
+                    "name": "Helena",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Hempstead", "value": [1.0000000149011612, 0.09090909226374193]}, {
+                    "name": "Henderson",
+                    "value": [0.20000000298023224, 0.003921568685886907]
+                }, {"name": "Hendersonville", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Hesperia",
+                    "value": [0.550000011920929, 0.13750000298023224]
+                }, {"name": "Hialeah", "value": [5.200000017881393, 0.28888888988229966]}, {
+                    "name": "Hickory",
+                    "value": [0.8999999910593033, 0.44999999552965164]
+                }, {"name": "Highland Park", "value": [2.9000000655651093, 0.4142857236521585]}, {
+                    "name": "Hillsboro",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Holland", "value": [0, 0]}, {
+                    "name": "Hollywood",
+                    "value": [3.2000000029802322, 0.2909090911800211]
+                }, {"name": "Holyoke", "value": [0, 0]}, {
+                    "name": "Homestead",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Hoover", "value": [0, 0]}, {"name": "Hot Springs", "value": [0, 0]}, {
+                    "name": "Houston",
+                    "value": [143.14000275731087, 0.379681704926554]
+                }, {
+                    "name": "Huntington Beach",
+                    "value": [0.20000000298023224, 0.033333333830038704]
+                }, {"name": "Huntsville", "value": [10.62000022828579, 0.29500000634127194]}, {
+                    "name": "Independence",
+                    "value": [0, 0]
+                }, {"name": "Indianapolis", "value": [0, 0]}, {
+                    "name": "Inglewood",
+                    "value": [0.800000011920929, 0.05000000074505806]
+                }, {"name": "Iowa City", "value": [0, 0]}, {
+                    "name": "Irving",
+                    "value": [2.2000000327825546, 0.27500000409781933]
+                }, {"name": "Jackson", "value": [2.500000037252903, 0.030487805332352475]}, {
+                    "name": "Jacksonville",
+                    "value": [35.85000005364418, 0.28680000042915343]
+                }, {"name": "Jamestown", "value": [0, 0]}, {
+                    "name": "Jefferson City",
+                    "value": [0, 0]
+                }, {"name": "Johnson City", "value": [3.8999999910593033, 0.32499999925494194]}, {
+                    "name": "Jonesboro",
+                    "value": [0, 0]
+                }, {"name": "Jupiter", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Keller",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Kenner", "value": [0, 0]}, {"name": "Kenosha", "value": [0, 0]}, {
+                    "name": "Kent",
+                    "value": [1.8000000268220901, 0.13846154052477616]
+                }, {"name": "Kirkwood", "value": [0, 0]}, {
+                    "name": "Kissimmee",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Knoxville", "value": [6.200000047683716, 0.25833333532015484]}, {
+                    "name": "La Crosse",
+                    "value": [0, 0]
+                }, {"name": "La Mesa", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "La Porte",
+                    "value": [1.4000000357627869, 0.14000000357627868]
+                }, {"name": "La Quinta", "value": [0, 0]}, {
+                    "name": "Lafayette",
+                    "value": [0, 0]
+                }, {
+                    "name": "Laguna Niguel",
+                    "value": [0.3500000089406967, 0.08750000223517418]
+                }, {"name": "Lake Charles", "value": [0, 0]}, {
+                    "name": "Lake Elsinore",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Lake Forest", "value": [0.20000000298023224, 0.033333333830038704]}, {
+                    "name": "Lakeland",
+                    "value": [6.1500000059604645, 0.27954545481638476]
+                }, {"name": "Lakeville", "value": [0, 0]}, {
+                    "name": "Lakewood",
+                    "value": [6.750000014901161, 0.13775510234492166]
+                }, {"name": "Lancaster", "value": [14.500000029802322, 0.3152173919522244]}, {
+                    "name": "Lansing",
+                    "value": [0.10000000149011612, 0.012500000186264515]
+                }, {"name": "Laredo", "value": [4.200000077486038, 0.32307692903738755]}, {
+                    "name": "Las Cruces",
+                    "value": [0, 0]
+                }, {"name": "Las Vegas", "value": [1.0000000149011612, 0.0769230780693201]}, {
+                    "name": "Laurel",
+                    "value": [0, 0]
+                }, {"name": "Lawrence", "value": [0.6000000238418579, 0.013636364178224043]}, {
+                    "name": "Lawton",
+                    "value": [0, 0]
+                }, {"name": "Layton", "value": [0, 0]}, {
+                    "name": "League City",
+                    "value": [1.4000000357627869, 0.23333333929379782]
+                }, {"name": "Lebanon", "value": [0.6000000089406967, 0.20000000298023224]}, {
+                    "name": "Lehi",
+                    "value": [0.20000000298023224, 0.10000000149011612]
+                }, {"name": "Leominster", "value": [0, 0]}, {
+                    "name": "Lewiston",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Lincoln Park", "value": [0.10000000149011612, 0.033333333830038704]}, {
+                    "name": "Linden",
+                    "value": [0, 0]
+                }, {"name": "Lindenhurst", "value": [0, 0]}, {
+                    "name": "Little Rock",
+                    "value": [0, 0]
+                }, {"name": "Littleton", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Lodi",
+                    "value": [0, 0]
+                }, {"name": "Logan", "value": [0.4000000059604645, 0.0800000011920929]}, {
+                    "name": "Long Beach",
+                    "value": [3.500000052154064, 0.05737705003531253]
+                }, {"name": "Longmont", "value": [0.6000000089406967, 0.20000000298023224]}, {
+                    "name": "Longview",
+                    "value": [0, 0]
+                }, {"name": "Lorain", "value": [2.7000000178813934, 0.3000000019868215]}, {
+                    "name": "Los Angeles",
+                    "value": [55.50000087916851, 0.07429718993195249]
+                }, {"name": "Louisville", "value": [8.099999979138374, 0.1421052627919013]}, {
+                    "name": "Loveland",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Lowell", "value": [0, 0]}, {
+                    "name": "Lubbock",
+                    "value": [2.8000000566244125, 0.46666667610406876]
+                }, {"name": "Macon", "value": [0, 0]}, {"name": "Madison", "value": [0, 0]}, {
+                    "name": "Malden",
+                    "value": [0, 0]
+                }, {"name": "Manchester", "value": [0, 0]}, {
+                    "name": "Manhattan",
+                    "value": [0, 0]
+                }, {"name": "Mansfield", "value": [0.5000000149011612, 0.2500000074505806]}, {
+                    "name": "Manteca",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Maple Grove", "value": [0, 0]}, {
+                    "name": "Margate",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Marietta", "value": [0, 0]}, {
+                    "name": "Marion",
+                    "value": [3.5000000596046448, 0.17500000298023224]
+                }, {"name": "Marlborough", "value": [0, 0]}, {"name": "Marysville", "value": [0, 0]}, {
+                    "name": "Mason",
+                    "value": [1.5999999791383743, 0.5333333263794581]
+                }, {"name": "Mcallen", "value": [7.5000001192092896, 0.3947368483794363]}, {
+                    "name": "Medford",
+                    "value": [1.2999999970197678, 0.32499999925494194]
+                }, {"name": "Medina", "value": [3.9000000059604645, 0.43333333399560714]}, {
+                    "name": "Melbourne",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Memphis", "value": [8.400000035762787, 0.2800000011920929]}, {
+                    "name": "Mentor",
+                    "value": [1.5000000298023224, 0.2500000049670537]
+                }, {"name": "Meriden", "value": [0, 0]}, {
+                    "name": "Meridian",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Mesa", "value": [9.199999988079071, 0.32857142814568113]}, {
+                    "name": "Mesquite",
+                    "value": [2.6000000536441803, 0.5200000107288361]
+                }, {"name": "Miami", "value": [18.64999994635582, 0.32719298151501436]}, {
+                    "name": "Middletown",
+                    "value": [0, 0]
+                }, {"name": "Midland", "value": [0.10000000149011612, 0.008333333457509676]}, {
+                    "name": "Milford",
+                    "value": [0, 0]
+                }, {"name": "Milwaukee", "value": [0, 0]}, {"name": "Minneapolis", "value": [0, 0]}, {
+                    "name": "Miramar",
+                    "value": [2.1000000089406967, 0.2625000011175871]
+                }, {"name": "Mishawaka", "value": [0, 0]}, {
+                    "name": "Mission Viejo",
+                    "value": [0.15000000596046448, 0.030000001192092896]
+                }, {"name": "Missoula", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Missouri City",
+                    "value": [0.800000011920929, 0.800000011920929]
+                }, {"name": "Mobile", "value": [0, 0]}, {
+                    "name": "Modesto",
+                    "value": [0.4000000059604645, 0.13333333532015482]
+                }, {"name": "Monroe", "value": [1.8000000268220901, 0.0857142869915281]}, {
+                    "name": "Montebello",
+                    "value": [0, 0]
+                }, {"name": "Montgomery", "value": [0, 0]}, {
+                    "name": "Moorhead",
+                    "value": [0, 0]
+                }, {
+                    "name": "Moreno Valley",
+                    "value": [0.20000000298023224, 0.020000000298023225]
+                }, {"name": "Morgan Hill", "value": [0.3500000089406967, 0.08750000223517418]}, {
+                    "name": "Morristown",
+                    "value": [0, 0]
+                }, {"name": "Mount Pleasant", "value": [0, 0]}, {
+                    "name": "Mount Vernon",
+                    "value": [0.20000000298023224, 0.02500000037252903]
+                }, {"name": "Murfreesboro", "value": [3.699999988079071, 0.33636363527991553]}, {
+                    "name": "Murray",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {"name": "Murrieta", "value": [0, 0]}, {"name": "Muskogee", "value": [0, 0]}, {
+                    "name": "Naperville",
+                    "value": [3.5000000596046448, 0.4375000074505806]
+                }, {"name": "Nashua", "value": [0, 0]}, {
+                    "name": "Nashville",
+                    "value": [7.800000041723251, 0.2689655186801121]
+                }, {"name": "New Albany", "value": [0, 0]}, {
+                    "name": "New Bedford",
+                    "value": [0, 0]
+                }, {"name": "New Brunswick", "value": [0, 0]}, {
+                    "name": "New Castle",
+                    "value": [0, 0]
+                }, {
+                    "name": "New Rochelle",
+                    "value": [0.5000000074505806, 0.05555555638339785]
+                }, {"name": "New York City", "value": [51.400000765919685, 0.05617486422504884]}, {
+                    "name": "Newark",
+                    "value": [9.800000071525574, 0.10315789548974288]
+                }, {"name": "Newport News", "value": [0, 0]}, {
+                    "name": "Niagara Falls",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Noblesville", "value": [0, 0]}, {"name": "Norfolk", "value": [0, 0]}, {
+                    "name": "Normal",
+                    "value": [0.30000001192092896, 0.30000001192092896]
+                }, {"name": "Norman", "value": [0, 0]}, {
+                    "name": "North Charleston",
+                    "value": [0, 0]
+                }, {
+                    "name": "North Las Vegas",
+                    "value": [0.6000000089406967, 0.037500000558793545]
+                }, {"name": "North Miami", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Norwich",
+                    "value": [0, 0]
+                }, {"name": "Oak Park", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "Oakland",
+                    "value": [2.0000000298023224, 0.0769230780693201]
+                }, {"name": "Oceanside", "value": [1.8000000268220901, 0.06000000089406967]}, {
+                    "name": "Odessa",
+                    "value": [1.8000000417232513, 0.3600000083446503]
+                }, {"name": "Oklahoma City", "value": [0, 0]}, {"name": "Olathe", "value": [0, 0]}, {
+                    "name": "Olympia",
+                    "value": [0.4000000059604645, 0.0800000011920929]
+                }, {"name": "Omaha", "value": [0, 0]}, {
+                    "name": "Ontario",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Orange", "value": [0, 0]}, {
+                    "name": "Orem",
+                    "value": [0.20000000298023224, 0.022222222553359136]
+                }, {"name": "Orland Park", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Orlando",
+                    "value": [3.2000000029802322, 0.2909090911800211]
+                }, {"name": "Ormond Beach", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Oswego",
+                    "value": [1.8000000268220901, 0.6000000089406967]
+                }, {"name": "Overland Park", "value": [0, 0]}, {
+                    "name": "Owensboro",
+                    "value": [0, 0]
+                }, {"name": "Oxnard", "value": [0.4000000059604645, 0.04444444510671827]}, {
+                    "name": "Palatine",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Palm Coast", "value": [1.9999999850988388, 0.39999999701976774]}, {
+                    "name": "Park Ridge",
+                    "value": [1.0000000298023224, 0.3333333432674408]
+                }, {"name": "Parker", "value": [3.599999964237213, 0.44999999552965164]}, {
+                    "name": "Parma",
+                    "value": [2.4000000655651093, 0.24000000655651094]
+                }, {"name": "Pasadena", "value": [7.400000154972076, 0.17619047988028752]}, {
+                    "name": "Pasco",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Passaic", "value": [0.30000001192092896, 0.050000001986821495]}, {
+                    "name": "Paterson",
+                    "value": [0, 0]
+                }, {"name": "Pearland", "value": [1.2000000178813934, 0.4000000059604645]}, {
+                    "name": "Pembroke Pines",
+                    "value": [4.549999982118607, 0.3249999987227576]
+                }, {"name": "Pensacola", "value": [0.699999988079071, 0.699999988079071]}, {
+                    "name": "Peoria",
+                    "value": [8.900000110268593, 0.38695652653341706]
+                }, {"name": "Perth Amboy", "value": [0, 0]}, {
+                    "name": "Pharr",
+                    "value": [1.3000000417232513, 0.32500001043081284]
+                }, {"name": "Philadelphia", "value": [175.50000068545341, 0.32681564373455013]}, {
+                    "name": "Phoenix",
+                    "value": [22.299999922513962, 0.35396825273831684]
+                }, {"name": "Pico Rivera", "value": [0, 0]}, {
+                    "name": "Pine Bluff",
+                    "value": [0, 0]
+                }, {"name": "Plainfield", "value": [0, 0]}, {
+                    "name": "Plano",
+                    "value": [4.120000064373016, 0.2746666709582011]
+                }, {"name": "Plantation", "value": [3.2000000029802322, 0.2909090911800211]}, {
+                    "name": "Pleasant Grove",
+                    "value": [0.6000000089406967, 0.0857142869915281]
+                }, {"name": "Pocatello", "value": [0.6000000089406967, 0.0857142869915281]}, {
+                    "name": "Pomona",
+                    "value": [0.20000000298023224, 0.028571428997176036]
+                }, {
+                    "name": "Pompano Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Port Arthur", "value": [1.3200000077486038, 0.22000000129143396]}, {
+                    "name": "Port Orange",
+                    "value": [0.20000000298023224, 0.20000000298023224]
+                }, {"name": "Port Saint Lucie", "value": [1.0999999940395355, 0.36666666467984516]}, {
+                    "name": "Portage",
+                    "value": [0, 0]
+                }, {"name": "Portland", "value": [7.299999997019768, 0.3041666665424903]}, {
+                    "name": "Providence",
+                    "value": [0.30000001192092896, 0.009677419739384805]
+                }, {"name": "Provo", "value": [0.6000000089406967, 0.06000000089406967]}, {
+                    "name": "Pueblo",
+                    "value": [4.099999949336052, 0.5124999936670065]
+                }, {"name": "Quincy", "value": [3.9000000655651093, 0.19500000327825545]}, {
+                    "name": "Raleigh",
+                    "value": [5.900000020861626, 0.2681818191300739]
+                }, {
+                    "name": "Rancho Cucamonga",
+                    "value": [0.20000000298023224, 0.05000000074505806]
+                }, {"name": "Rapid City", "value": [0, 0]}, {
+                    "name": "Reading",
+                    "value": [1.300000011920929, 0.2600000023841858]
+                }, {"name": "Redding", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Redlands",
+                    "value": [0.7500000149011612, 0.046875000931322575]
+                }, {"name": "Redmond", "value": [3.0999999940395355, 0.2818181812763214]}, {
+                    "name": "Redondo Beach",
+                    "value": [0.9500000178813934, 0.11875000223517418]
+                }, {"name": "Redwood City", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Reno",
+                    "value": [0.4000000059604645, 0.10000000149011612]
+                }, {"name": "Renton", "value": [0.4000000059604645, 0.13333333532015482]}, {
+                    "name": "Revere",
+                    "value": [0, 0]
+                }, {"name": "Richardson", "value": [0.8000000268220901, 0.4000000134110451]}, {
+                    "name": "Richmond",
+                    "value": [0, 0]
+                }, {"name": "Rio Rancho", "value": [0.4000000059604645, 0.20000000298023224]}, {
+                    "name": "Riverside",
+                    "value": [0.6000000089406967, 0.04285714349576405]
+                }, {
+                    "name": "Rochester",
+                    "value": [2.2000000327825546, 0.04150943458080292]
+                }, {"name": "Rochester Hills", "value": [0, 0]}, {
+                    "name": "Rock Hill",
+                    "value": [0, 0]
+                }, {"name": "Rockford", "value": [5.600000083446503, 0.5090909166769548]}, {
+                    "name": "Rockville",
+                    "value": [0, 0]
+                }, {"name": "Rogers", "value": [0, 0]}, {
+                    "name": "Rome",
+                    "value": [0.10000000149011612, 0.016666666915019352]
+                }, {"name": "Romeoville", "value": [0.800000011920929, 0.800000011920929]}, {
+                    "name": "Roseville",
+                    "value": [0.4000000059604645, 0.015384615613864018]
+                }, {"name": "Roswell", "value": [0, 0]}, {
+                    "name": "Round Rock",
+                    "value": [1.9200000315904617, 0.2742857187986374]
+                }, {"name": "Royal Oak", "value": [0, 0]}, {
+                    "name": "Sacramento",
+                    "value": [1.600000023841858, 0.12307692491091214]
+                }, {"name": "Saginaw", "value": [0, 0]}, {
+                    "name": "Saint Charles",
+                    "value": [2.500000089406967, 0.25000000894069674]
+                }, {"name": "Saint Cloud", "value": [0, 0]}, {
+                    "name": "Saint Louis",
+                    "value": [0, 0]
+                }, {"name": "Saint Paul", "value": [0, 0]}, {
+                    "name": "Saint Peters",
+                    "value": [0, 0]
+                }, {"name": "Saint Petersburg", "value": [3.800000011920929, 0.27142857228006634]}, {
+                    "name": "Salem",
+                    "value": [7.200000032782555, 0.18000000081956385]
+                }, {"name": "Salinas", "value": [0.7500000149011612, 0.09375000186264515]}, {
+                    "name": "Salt Lake City",
+                    "value": [0.6000000089406967, 0.07500000111758709]
+                }, {"name": "San Angelo", "value": [1.7000000476837158, 0.42500001192092896]}, {
+                    "name": "San Antonio",
+                    "value": [22.60000044107437, 0.3830508549334639]
+                }, {
+                    "name": "San Bernardino",
+                    "value": [0.9500000178813934, 0.10555555754237705]
+                }, {"name": "San Clemente", "value": [0.20000000298023224, 0.10000000149011612]}, {
+                    "name": "San Diego",
+                    "value": [13.600000217556953, 0.08000000127974678]
+                }, {
+                    "name": "San Francisco",
+                    "value": [34.000000566244125, 0.06666666777694927]
+                }, {"name": "San Gabriel", "value": [0.20000000298023224, 0.06666666766007741]}, {
+                    "name": "San Jose",
+                    "value": [3.1000000536441803, 0.07380952508676619]
+                }, {"name": "San Luis Obispo", "value": [0, 0]}, {
+                    "name": "San Marcos",
+                    "value": [1.2000000327825546, 0.30000000819563866]
+                }, {"name": "San Mateo", "value": [0, 0]}, {
+                    "name": "Sandy Springs",
+                    "value": [0, 0]
+                }, {"name": "Sanford", "value": [0.8999999910593033, 0.44999999552965164]}, {
+                    "name": "Santa Ana",
+                    "value": [1.0000000149011612, 0.07142857249294009]
+                }, {
+                    "name": "Santa Barbara",
+                    "value": [0.6000000089406967, 0.07500000111758709]
+                }, {"name": "Santa Clara", "value": [0.4000000059604645, 0.06666666766007741]}, {
+                    "name": "Santa Fe",
+                    "value": [0, 0]
+                }, {"name": "Santa Maria", "value": [0, 0]}, {
+                    "name": "Scottsdale",
+                    "value": [3.8999999910593033, 0.32499999925494194]
+                }, {"name": "Seattle", "value": [27.80000041425228, 0.06495327199591655]}, {
+                    "name": "Sheboygan",
+                    "value": [0, 0]
+                }, {"name": "Shelton", "value": [0, 0]}, {
+                    "name": "Sierra Vista",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Sioux Falls", "value": [0, 0]}, {
+                    "name": "Skokie",
+                    "value": [5.200000122189522, 0.47272728383541107]
+                }, {"name": "Smyrna", "value": [2.3999999910593033, 0.09999999962747097]}, {
+                    "name": "South Bend",
+                    "value": [0, 0]
+                }, {"name": "Southaven", "value": [0, 0]}, {
+                    "name": "Sparks",
+                    "value": [0.20000000298023224, 0.06666666766007741]
+                }, {"name": "Spokane", "value": [0.4000000059604645, 0.05714285799435207]}, {
+                    "name": "Springdale",
+                    "value": [0, 0]
+                }, {
+                    "name": "Springfield",
+                    "value": [23.200000062584877, 0.14233128872751458]
+                }, {"name": "Sterling Heights", "value": [0, 0]}, {
+                    "name": "Stockton",
+                    "value": [0.6000000089406967, 0.10000000149011612]
+                }, {"name": "Suffolk", "value": [0, 0]}, {"name": "Summerville", "value": [0, 0]}, {
+                    "name": "Sunnyvale",
+                    "value": [0.4000000059604645, 0.06666666766007741]
+                }, {"name": "Superior", "value": [0, 0]}, {
+                    "name": "Tallahassee",
+                    "value": [4.700000017881393, 0.2764705892871408]
+                }, {"name": "Tamarac", "value": [1.7999999821186066, 0.44999999552965164]}, {
+                    "name": "Tampa",
+                    "value": [11.999999955296516, 0.3333333320915699]
+                }, {"name": "Taylor", "value": [0, 0]}, {
+                    "name": "Temecula",
+                    "value": [0.4000000059604645, 0.10000000149011612]
+                }, {"name": "Tempe", "value": [3.100000023841858, 0.23846154029552752]}, {
+                    "name": "Texarkana",
+                    "value": [0, 0]
+                }, {"name": "Texas City", "value": [0.9000000357627869, 0.30000001192092896]}, {
+                    "name": "The Colony",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Thomasville", "value": [1.0999999940395355, 0.36666666467984516]}, {
+                    "name": "Thornton",
+                    "value": [2.0000000298023224, 0.20000000298023224]
+                }, {"name": "Thousand Oaks", "value": [0.20000000298023224, 0.04000000059604645]}, {
+                    "name": "Tigard",
+                    "value": [2.1000000089406967, 0.2625000011175871]
+                }, {"name": "Tinley Park", "value": [0.6000000238418579, 0.6000000238418579]}, {
+                    "name": "Toledo",
+                    "value": [10.80000002682209, 0.3375000008381903]
+                }, {"name": "Torrance", "value": [0.6000000089406967, 0.15000000223517418]}, {
+                    "name": "Trenton",
+                    "value": [0.10000000149011612, 0.007692307806932009]
+                }, {"name": "Troy", "value": [6.600000008940697, 0.22758620720485162]}, {
+                    "name": "Tucson",
+                    "value": [9.700000002980232, 0.30312500009313226]
+                }, {"name": "Tulsa", "value": [0, 0]}, {"name": "Tuscaloosa", "value": [0, 0]}, {
+                    "name": "Twin Falls",
+                    "value": [0.20000000298023224, 0.10000000149011612]
+                }, {"name": "Tyler", "value": [3.200000062584877, 0.6400000125169754]}, {
+                    "name": "Urbandale",
+                    "value": [0, 0]
+                }, {"name": "Utica", "value": [0.4000000059604645, 0.05000000074505806]}, {
+                    "name": "Vacaville",
+                    "value": [0, 0]
+                }, {"name": "Vallejo", "value": [0.6000000089406967, 0.10000000149011612]}, {
+                    "name": "Vancouver",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {"name": "Vineland", "value": [0.30000001192092896, 0.03750000149011612]}, {
+                    "name": "Virginia Beach",
+                    "value": [0, 0]
+                }, {"name": "Visalia", "value": [0, 0]}, {
+                    "name": "Waco",
+                    "value": [3.120000034570694, 0.5200000057617823]
+                }, {"name": "Warner Robins", "value": [0, 0]}, {
+                    "name": "Warwick",
+                    "value": [0, 0]
+                }, {"name": "Washington", "value": [0, 0]}, {"name": "Waterbury", "value": [0, 0]}, {
+                    "name": "Waterloo",
+                    "value": [0, 0]
+                }, {"name": "Watertown", "value": [0.800000011920929, 0.0800000011920929]}, {
+                    "name": "Waukesha",
+                    "value": [0, 0]
+                }, {"name": "Wausau", "value": [0, 0]}, {"name": "Waynesboro", "value": [0, 0]}, {
+                    "name": "West Allis",
+                    "value": [0, 0]
+                }, {
+                    "name": "West Jordan",
+                    "value": [0.20000000298023224, 0.04000000059604645]
+                }, {
+                    "name": "West Palm Beach",
+                    "value": [0.6000000089406967, 0.20000000298023224]
+                }, {"name": "Westfield", "value": [0, 0]}, {
+                    "name": "Westland",
+                    "value": [0.10000000149011612, 0.007692307806932009]
+                }, {"name": "Westminster", "value": [1.4000000208616257, 0.08235294240362503]}, {
+                    "name": "Wheeling",
+                    "value": [1.600000038743019, 0.22857143410614558]
+                }, {"name": "Whittier", "value": [0.20000000298023224, 0.20000000298023224]}, {
+                    "name": "Wichita",
+                    "value": [0, 0]
+                }, {"name": "Wilmington", "value": [2.900000035762787, 0.0805555565489663]}, {
+                    "name": "Wilson",
+                    "value": [2.199999988079071, 0.36666666467984516]
+                }, {"name": "Woodbury", "value": [0, 0]}, {
+                    "name": "Woodland",
+                    "value": [0.4000000059604645, 0.13333333532015482]
+                }, {"name": "Woodstock", "value": [1.3000000268220901, 0.26000000536441803]}, {
+                    "name": "Woonsocket",
+                    "value": [0, 0]
+                }, {"name": "Yonkers", "value": [1.0000000149011612, 0.06666666766007741]}, {
+                    "name": "York",
+                    "value": [2.0999999940395355, 0.4199999988079071]
+                }, {"name": "Yucaipa", "value": [0, 0]}, {
+                    "name": "Yuma",
+                    "value": [1.7999999821186066, 0.44999999552965164]
+                }]
+            }],
+            "dataInfo": {"minValue": 0, "maxValue": 0.800000011920929},
+            "label": {"normal": {}}
+        }
+    );
+
+</script>
+
+<br>
+
+</html>

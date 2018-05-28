@@ -4,25 +4,27 @@
 <meta charset="UTF-8">
 <title>Custom PreView</title>
 <style>
- html, body  {
-    width : 900px;
-    height: 700px;
-    margin : 0px;
-    padding : 0px;
-}
-#chartArea {
-    height: 400px;
-    margin : 0px;
-    padding : 0px;
-}
+    #chartArea {
+        position : absolute;
+        top : 50px;
+        left : 0;
+        right : 0;
+        bottom : 0;
+    }
 </style>
 </head>
 <body>
 
+<a href="javascript:myChart.setShowDataZoom(true);">Show DataZoom</a> |
+<a href="javascript:myChart.setShowDataZoom(false);">Hide DataZoom</a> |
+<a href="javascript:myChart.setShowLegend(true);">Show Legend</a> |
+<a href="javascript:myChart.setShowLegend(false);">Hide Legend</a> |
+<a href="javascript:myChart.tooltip.hide();">Hide Tooltip</a>
+
 <div id="chartArea" ></div>
 
 </body>
-<script src="./dist/echarts.js"></script>
+<script src="./dist/echarts.min.js"></script>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
@@ -30,7 +32,7 @@ var myChart = echarts.init(document.getElementById('chartArea'));
 $.get('../data/budget_list.json', function (obama_budget_2012) {
 	console.info(obama_budget_2012);
     myChart.setOption(
-    		option = {
+    		{
     			    brush: {
     			        brushLink: 'all',
     			        xAxisIndex: [],
@@ -70,12 +72,6 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
 					    pageItems: 2,
 					    itemHeight: 20
 					},
-    		        grid: {
-    		            top: '15%',
-    		            left: '1%',
-    		            right: '10%',
-    		            containLabel: true
-    		        },
     		        xAxis: [
     		            {
     		                type : 'category',
@@ -97,13 +93,6 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     		            }
     		        ],
     		        dataZoom: [
-    		            {
-    		                show: true,
-    		                start: 94,
-    		                end: 100,
-    						type: 'slider',
-    		                y : 0
-    		            },
     		            {
     		                type: 'inside',
     		                start: 94,
@@ -158,17 +147,6 @@ $.get('../data/budget_list.json', function (obama_budget_2012) {
     
     console.info( myChart.getOption() );
 });
-
-function echartTest(flag){
-	//myChart.resize();
-	
-}
 </script>
 
-<br>
-<a href="javascript:myChart.setShowDataZoom(true);">Show DataZoom</a> | 
-<a href="javascript:myChart.setShowDataZoom(false);">Hide DataZoom</a> |
-<a href="javascript:myChart.setShowLegend(true);">Show Legend</a> |
-<a href="javascript:myChart.setShowLegend(false);">Hide Legend</a> |
-<a href="javascript:myChart.tooltip.hide();">Hide Tooltip</a>
 </html>

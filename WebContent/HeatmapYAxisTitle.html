@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Custom PreView</title>
+    <style>
+        #chartArea {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chartArea"></div>
+
+</body>
+<script src="./dist/echarts.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    var myChart = echarts.init(document.getElementById('chartArea'));
+
+    myChart.setOption(
+        {
+            "type": "heatmap",
+            "grid": [{"top": 40, "bottom": 30, "left": 30, "right": 20, "containLabel": true}],
+            "legend": {
+                "show": false,
+                "seriesSync": false,
+                "left": "left",
+                "symbol": "circle",
+                "width": "100%",
+                "itemGap": 20,
+                "pageItems": 5,
+                "textStyle": {"fontSize": 12, "fontFamily": "SpoqaHanSans"}
+            },
+            "xAxis": [{
+                "nameLocation": "middle",
+                "nameGap": null,
+                "inverse": false,
+                "type": "category",
+                "nameTextStyle": {"fontSize": 12, "fontWeight": "bold", "fontFamily": "SpoqaHanSans"},
+                "axisLabel": {
+                    "show": true,
+                    "inside": false,
+                    "textStyle": {"fontSize": 11, "fontFamily": "SpoqaHanSans"},
+                    "rotate": 45
+                },
+                "axisTick": {"show": true},
+                "axisLine": {"show": true},
+                "show": true,
+                "data": ["Aberdeen", "Abilene", "Akron", "Albuquerque", "Alexandria", "Allen", "Allentown", "Altoona", "Amarillo", "Anaheim", "Andover", "Ann Arbor", "Antioch", "Apopka", "Apple Valley", "Appleton", "Arlington", "Arlington Heights", "Arvada", "Asheville", "Athens", "Atlanta", "Atlantic City", "Auburn", "Aurora", "Austin", "Avondale", "Bakersfield", "Baltimore", "Bangor", "Bartlett", "Bayonne", "Baytown", "Beaumont", "Bedford", "Belleville", "Bellevue", "Bellingham", "Bethlehem", "Beverly", "Billings", "Bloomington", "Boca Raton", "Boise", "Bolingbrook", "Bossier City", "Bowling Green", "Boynton Beach", "Bozeman", "Brentwood", "Bridgeton", "Bristol", "Broken Arrow", "Broomfield", "Brownsville", "Bryan", "Buffalo", "Buffalo Grove", "Bullhead City", "Burbank", "Burlington", "Caldwell", "Camarillo", "Cambridge", "Canton", "Carlsbad", "Carol Stream", "Carrollton", "Cary", "Cedar Hill", "Cedar Rapids", "Champaign", "Chandler", "Chapel Hill", "Charlotte", "Charlottesville", "Chattanooga", "Chesapeake", "Chester", "Cheyenne", "Chicago", "Chico", "Chula Vista", "Cincinnati", "Citrus Heights", "Clarksville", "Cleveland", "Clifton", "Clinton", "Clovis", "Coachella", "College Station", "Colorado Springs", "Columbia", "Columbus", "Commerce City", "Concord", "Conroe", "Conway", "Coon Rapids", "Coppell", "Coral Gables", "Coral Springs", "Corpus Christi", "Costa Mesa", "Cottage Grove", "Covington", "Cranston", "Cuyahoga Falls", "Dallas", "Danbury", "Danville", "Davis", "Daytona Beach", "Dearborn", "Dearborn Heights", "Decatur", "Deer Park", "Delray Beach", "Deltona", "Denver", "Des Moines", "Des Plaines", "Detroit", "Dover", "Draper", "Dublin", "Dubuque", "Durham", "Eagan", "East Orange", "East Point", "Eau Claire", "Edinburg", "Edmond", "Edmonds", "El Cajon", "El Paso", "Elkhart", "Elmhurst", "Elyria", "Encinitas", "Englewood", "Escondido", "Eugene", "Evanston", "Everett", "Fairfield", "Fargo", "Farmington", "Fayetteville", "Florence", "Fort Collins", "Fort Lauderdale", "Fort Worth", "Frankfort", "Franklin", "Freeport", "Fremont", "Fresno", "Frisco", "Gaithersburg", "Garden City", "Garland", "Gastonia", "Georgetown", "Gilbert", "Gladstone", "Glendale", "Glenview", "Goldsboro", "Grand Island", "Grand Prairie", "Grand Rapids", "Grapevine", "Great Falls", "Greeley", "Green Bay", "Greensboro", "Greenville", "Greenwood", "Gresham", "Grove City", "Gulfport", "Hackensack", "Hagerstown", "Haltom City", "Hamilton", "Hampton", "Harlingen", "Harrisonburg", "Hattiesburg", "Helena", "Hempstead", "Henderson", "Hendersonville", "Hesperia", "Hialeah", "Hickory", "Highland Park", "Hillsboro", "Holland", "Hollywood", "Holyoke", "Homestead", "Hoover", "Hot Springs", "Houston", "Huntington Beach", "Huntsville", "Independence", "Indianapolis", "Inglewood", "Iowa City", "Irving", "Jackson", "Jacksonville", "Jamestown", "Jefferson City", "Johnson City", "Jonesboro", "Jupiter", "Keller", "Kenner", "Kenosha", "Kent", "Kirkwood", "Kissimmee", "Knoxville", "La Crosse", "La Mesa", "La Porte", "La Quinta", "Lafayette", "Laguna Niguel", "Lake Charles", "Lake Elsinore", "Lake Forest", "Lakeland", "Lakeville", "Lakewood", "Lancaster", "Lansing", "Laredo", "Las Cruces", "Las Vegas", "Laurel", "Lawrence", "Lawton", "Layton", "League City", "Lebanon", "Lehi", "Leominster", "Lewiston", "Lincoln Park", "Linden", "Lindenhurst", "Little Rock", "Littleton", "Lodi", "Logan", "Long Beach", "Longmont", "Longview", "Lorain", "Los Angeles", "Louisville", "Loveland", "Lowell", "Lubbock", "Macon", "Madison", "Malden", "Manchester", "Manhattan", "Mansfield", "Manteca", "Maple Grove", "Margate", "Marietta", "Marion", "Marlborough", "Marysville", "Mason", "Mcallen", "Medford", "Medina", "Melbourne", "Memphis", "Mentor", "Meriden", "Meridian", "Mesa", "Mesquite", "Miami", "Middletown", "Midland", "Milford", "Milwaukee", "Minneapolis", "Miramar", "Mishawaka", "Mission Viejo", "Missoula", "Missouri City", "Mobile", "Modesto", "Monroe", "Montebello", "Montgomery", "Moorhead", "Moreno Valley", "Morgan Hill", "Morristown", "Mount Pleasant", "Mount Vernon", "Murfreesboro", "Murray", "Murrieta", "Muskogee", "Naperville", "Nashua", "Nashville", "New Albany", "New Bedford", "New Brunswick", "New Castle", "New Rochelle", "New York City", "Newark", "Newport News", "Niagara Falls", "Noblesville", "Norfolk", "Normal", "Norman", "North Charleston", "North Las Vegas", "North Miami", "Norwich", "Oak Park", "Oakland", "Oceanside", "Odessa", "Oklahoma City", "Olathe", "Olympia", "Omaha", "Ontario", "Orange", "Orem", "Orland Park", "Orlando", "Ormond Beach", "Oswego", "Overland Park", "Owensboro", "Oxnard", "Palatine", "Palm Coast", "Park Ridge", "Parker", "Parma", "Pasadena", "Pasco", "Passaic", "Paterson", "Pearland", "Pembroke Pines", "Pensacola", "Peoria", "Perth Amboy", "Pharr", "Philadelphia", "Phoenix", "Pico Rivera", "Pine Bluff", "Plainfield", "Plano", "Plantation", "Pleasant Grove", "Pocatello", "Pomona", "Pompano Beach", "Port Arthur", "Port Orange", "Port Saint Lucie", "Portage", "Portland", "Providence", "Provo", "Pueblo", "Quincy", "Raleigh", "Rancho Cucamonga", "Rapid City", "Reading", "Redding", "Redlands", "Redmond", "Redondo Beach", "Redwood City", "Reno", "Renton", "Revere", "Richardson", "Richmond", "Rio Rancho", "Riverside", "Rochester", "Rochester Hills", "Rock Hill", "Rockford", "Rockville", "Rogers", "Rome", "Romeoville", "Roseville", "Roswell", "Round Rock", "Royal Oak", "Sacramento", "Saginaw", "Saint Charles", "Saint Cloud", "Saint Louis", "Saint Paul", "Saint Peters", "Saint Petersburg", "Salem", "Salinas", "Salt Lake City", "San Angelo", "San Antonio", "San Bernardino", "San Clemente", "San Diego", "San Francisco", "San Gabriel", "San Jose", "San Luis Obispo", "San Marcos", "San Mateo", "Sandy Springs", "Sanford", "Santa Ana", "Santa Barbara", "Santa Clara", "Santa Fe", "Santa Maria", "Scottsdale", "Seattle", "Sheboygan", "Shelton", "Sierra Vista", "Sioux Falls", "Skokie", "Smyrna", "South Bend", "Southaven", "Sparks", "Spokane", "Springdale", "Springfield", "Sterling Heights", "Stockton", "Suffolk", "Summerville", "Sunnyvale", "Superior", "Tallahassee", "Tamarac", "Tampa", "Taylor", "Temecula", "Tempe", "Texarkana", "Texas City", "The Colony", "Thomasville", "Thornton", "Thousand Oaks", "Tigard", "Tinley Park", "Toledo", "Torrance", "Trenton", "Troy", "Tucson", "Tulsa", "Tuscaloosa", "Twin Falls", "Tyler", "Urbandale", "Utica", "Vacaville", "Vallejo", "Vancouver", "Vineland", "Virginia Beach", "Visalia", "Waco", "Warner Robins", "Warwick", "Washington", "Waterbury", "Waterloo", "Watertown", "Waukesha", "Wausau", "Waynesboro", "West Allis", "West Jordan", "West Palm Beach", "Westfield", "Westland", "Westminster", "Wheeling", "Whittier", "Wichita", "Wilmington", "Wilson", "Woodbury", "Woodland", "Woodstock", "Woonsocket", "Yonkers", "York", "Yucaipa", "Yuma"],
+                "name": "City",
+                "axisName": "City"
+            }],
+            "yAxis": [{
+                "nameLocation": "middle",
+                "nameGap": null,
+                "inverse": true,
+                "type": "category",
+                "nameTextStyle": {"fontSize": 12, "fontWeight": "bold", "fontFamily": "SpoqaHanSans"},
+                "axisLabel": {
+                    "show": true,
+                    "inside": false,
+                    "textStyle": {"fontSize": 11, "fontFamily": "SpoqaHanSans"},
+                    "rotate": 45
+                },
+                "axisTick": {"show": true},
+                "axisLine": {"show": true},
+                "show": true,
+                "data": ["SUM(Discount)"],
+                "name": "",
+                "axisName": ""
+            }],
+            "dataZoom": [{
+                "orient": "horizontal",
+                "type": "slider",
+                "bottom": 0,
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 530
+            }, {
+                "orient": "vertical",
+                "type": "slider",
+                "left": 0,
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 0
+            }, {
+                "orient": "vertical",
+                "type": "inside",
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 0
+            }, {
+                "orient": "horizontal",
+                "type": "inside",
+                "show": true,
+                "start": 0,
+                "end": 100,
+                "startValue": 0,
+                "endValue": 530
+            }],
+            "tooltip": {"trigger": "item"},
+            "toolbox": {"show": false, "feature": {"dataZoom": {"show": false}}},
+            "brush": {"transformable": false, "inBrush": {"opacity": 1}, "outOfBrush": {"opacity": 0.2}},
+            "series": [{
+                "name": "SUM(Discount)",
+                "type": "heatmap",
+                "data": [{"name": "Aberdeen―SUM(Discount)", "value": [0, 0, 0]}, {
+                    "name": "Abilene―SUM(Discount)",
+                    "value": [1, 0, 0.800000011920929]
+                }, {"name": "Akron―SUM(Discount)", "value": [2, 0, 7.5]}, {
+                    "name": "Albuquerque―SUM(Discount)",
+                    "value": [3, 0, 0.800000011920929]
+                }, {"name": "Alexandria―SUM(Discount)", "value": [4, 0, 0]}, {
+                    "name": "Allen―SUM(Discount)",
+                    "value": [5, 0, 1.5000000298023224]
+                }, {
+                    "name": "Allentown―SUM(Discount)",
+                    "value": [6, 0, 1.9000000059604645]
+                }, {
+                    "name": "Altoona―SUM(Discount)",
+                    "value": [7, 0, 0.8999999910593033]
+                }, {
+                    "name": "Amarillo―SUM(Discount)",
+                    "value": [8, 0, 2.720000058412552]
+                }, {
+                    "name": "Anaheim―SUM(Discount)",
+                    "value": [9, 0, 2.2000000327825546]
+                }, {"name": "Andover―SUM(Discount)", "value": [10, 0, 0]}, {
+                    "name": "Ann Arbor―SUM(Discount)",
+                    "value": [11, 0, 0.10000000149011612]
+                }, {"name": "Antioch―SUM(Discount)", "value": [12, 0, 0]}, {
+                    "name": "Apopka―SUM(Discount)",
+                    "value": [13, 0, 2.899999976158142]
+                }, {
+                    "name": "Apple Valley―SUM(Discount)",
+                    "value": [14, 0, 0.550000011920929]
+                }, {"name": "Appleton―SUM(Discount)", "value": [15, 0, 0]}, {
+                    "name": "Arlington―SUM(Discount)",
+                    "value": [16, 0, 10.70000022649765]
+                }, {
+                    "name": "Arlington Heights―SUM(Discount)",
+                    "value": [17, 0, 0.20000000298023224]
+                }, {
+                    "name": "Arvada―SUM(Discount)",
+                    "value": [18, 0, 0.800000011920929]
+                }, {
+                    "name": "Asheville―SUM(Discount)",
+                    "value": [19, 0, 1.9000000059604645]
+                }, {"name": "Athens―SUM(Discount)", "value": [20, 0, 0]}, {
+                    "name": "Atlanta―SUM(Discount)",
+                    "value": [21, 0, 0]
+                }, {"name": "Atlantic City―SUM(Discount)", "value": [22, 0, 0]}, {
+                    "name": "Auburn―SUM(Discount)",
+                    "value": [23, 0, 0.20000000298023224]
+                }, {
+                    "name": "Aurora―SUM(Discount)",
+                    "value": [24, 0, 24.00000025331974]
+                }, {
+                    "name": "Austin―SUM(Discount)",
+                    "value": [25, 0, 13.400000229477882]
+                }, {
+                    "name": "Avondale―SUM(Discount)",
+                    "value": [26, 0, 1.2000000178813934]
+                }, {
+                    "name": "Bakersfield―SUM(Discount)",
+                    "value": [27, 0, 1.5500000268220901]
+                }, {
+                    "name": "Baltimore―SUM(Discount)",
+                    "value": [28, 0, 0.30000001192092896]
+                }, {"name": "Bangor―SUM(Discount)", "value": [29, 0, 0]}, {
+                    "name": "Bartlett―SUM(Discount)",
+                    "value": [30, 0, 0.20000000298023224]
+                }, {"name": "Bayonne―SUM(Discount)", "value": [31, 0, 0]}, {
+                    "name": "Baytown―SUM(Discount)",
+                    "value": [32, 0, 0.20000000298023224]
+                }, {
+                    "name": "Beaumont―SUM(Discount)",
+                    "value": [33, 0, 2.0000000447034836]
+                }, {
+                    "name": "Bedford―SUM(Discount)",
+                    "value": [34, 0, 1.600000023841858]
+                }, {"name": "Belleville―SUM(Discount)", "value": [35, 0, 0]}, {
+                    "name": "Bellevue―SUM(Discount)",
+                    "value": [36, 0, 0.4000000059604645]
+                }, {
+                    "name": "Bellingham―SUM(Discount)",
+                    "value": [37, 0, 0.20000000298023224]
+                }, {
+                    "name": "Bethlehem―SUM(Discount)",
+                    "value": [38, 0, 1.9000000059604645]
+                }, {"name": "Beverly―SUM(Discount)", "value": [39, 0, 0]}, {
+                    "name": "Billings―SUM(Discount)",
+                    "value": [40, 0, 0.20000000298023224]
+                }, {
+                    "name": "Bloomington―SUM(Discount)",
+                    "value": [41, 0, 2.900000050663948]
+                }, {
+                    "name": "Boca Raton―SUM(Discount)",
+                    "value": [42, 0, 1.0999999940395355]
+                }, {
+                    "name": "Boise―SUM(Discount)",
+                    "value": [43, 0, 0.4000000059604645]
+                }, {
+                    "name": "Bolingbrook―SUM(Discount)",
+                    "value": [44, 0, 2.400000035762787]
+                }, {"name": "Bossier City―SUM(Discount)", "value": [45, 0, 0]}, {
+                    "name": "Bowling Green―SUM(Discount)",
+                    "value": [46, 0, 2.500000014901161]
+                }, {
+                    "name": "Boynton Beach―SUM(Discount)",
+                    "value": [47, 0, 2.500000014901161]
+                }, {"name": "Bozeman―SUM(Discount)", "value": [48, 0, 0]}, {
+                    "name": "Brentwood―SUM(Discount)",
+                    "value": [49, 0, 1.0000000149011612]
+                }, {"name": "Bridgeton―SUM(Discount)", "value": [50, 0, 0]}, {
+                    "name": "Bristol―SUM(Discount)",
+                    "value": [51, 0, 2.7999999821186066]
+                }, {"name": "Broken Arrow―SUM(Discount)", "value": [52, 0, 0]}, {
+                    "name": "Broomfield―SUM(Discount)",
+                    "value": [53, 0, 1.9999999850988388]
+                }, {
+                    "name": "Brownsville―SUM(Discount)",
+                    "value": [54, 0, 1.6200000196695328]
+                }, {
+                    "name": "Bryan―SUM(Discount)",
+                    "value": [55, 0, 3.700000062584877]
+                }, {
+                    "name": "Buffalo―SUM(Discount)",
+                    "value": [56, 0, 0.6000000089406967]
+                }, {
+                    "name": "Buffalo Grove―SUM(Discount)",
+                    "value": [57, 0, 0.7000000029802322]
+                }, {
+                    "name": "Bullhead City―SUM(Discount)",
+                    "value": [58, 0, 0.4000000059604645]
+                }, {
+                    "name": "Burbank―SUM(Discount)",
+                    "value": [59, 0, 0.20000000298023224]
+                }, {
+                    "name": "Burlington―SUM(Discount)",
+                    "value": [60, 0, 3.4000000208616257]
+                }, {
+                    "name": "Caldwell―SUM(Discount)",
+                    "value": [61, 0, 0.20000000298023224]
+                }, {
+                    "name": "Camarillo―SUM(Discount)",
+                    "value": [62, 0, 0.550000011920929]
+                }, {"name": "Cambridge―SUM(Discount)", "value": [63, 0, 0]}, {
+                    "name": "Canton―SUM(Discount)",
+                    "value": [64, 0, 0]
+                }, {
+                    "name": "Carlsbad―SUM(Discount)",
+                    "value": [65, 0, 0.800000011920929]
+                }, {
+                    "name": "Carol Stream―SUM(Discount)",
+                    "value": [66, 0, 1.2000000327825546]
+                }, {
+                    "name": "Carrollton―SUM(Discount)",
+                    "value": [67, 0, 6.200000122189522]
+                }, {
+                    "name": "Cary―SUM(Discount)",
+                    "value": [68, 0, 1.2000000178813934]
+                }, {
+                    "name": "Cedar Hill―SUM(Discount)",
+                    "value": [69, 0, 0.4000000059604645]
+                }, {"name": "Cedar Rapids―SUM(Discount)", "value": [70, 0, 0]}, {
+                    "name": "Champaign―SUM(Discount)",
+                    "value": [71, 0, 0.6000000238418579]
+                }, {
+                    "name": "Chandler―SUM(Discount)",
+                    "value": [72, 0, 1.7000000178813934]
+                }, {
+                    "name": "Chapel Hill―SUM(Discount)",
+                    "value": [73, 0, 0.20000000298023224]
+                }, {
+                    "name": "Charlotte―SUM(Discount)",
+                    "value": [74, 0, 15.300000041723251]
+                }, {"name": "Charlottesville―SUM(Discount)", "value": [75, 0, 0]}, {
+                    "name": "Chattanooga―SUM(Discount)",
+                    "value": [76, 0, 3.2999999970197678]
+                }, {"name": "Chesapeake―SUM(Discount)", "value": [77, 0, 0]}, {
+                    "name": "Chester―SUM(Discount)",
+                    "value": [78, 0, 5.30000002682209]
+                }, {
+                    "name": "Cheyenne―SUM(Discount)",
+                    "value": [79, 0, 0.20000000298023224]
+                }, {
+                    "name": "Chicago―SUM(Discount)",
+                    "value": [80, 0, 120.50000247359276]
+                }, {
+                    "name": "Chico―SUM(Discount)",
+                    "value": [81, 0, 0.800000011920929]
+                }, {"name": "Chula Vista―SUM(Discount)", "value": [82, 0, 0]}, {
+                    "name": "Cincinnati―SUM(Discount)",
+                    "value": [83, 0, 5.5999999940395355]
+                }, {"name": "Citrus Heights―SUM(Discount)", "value": [84, 0, 0]}, {
+                    "name": "Clarksville―SUM(Discount)",
+                    "value": [85, 0, 1.9000000059604645]
+                }, {
+                    "name": "Cleveland―SUM(Discount)",
+                    "value": [86, 0, 12.800000071525574]
+                }, {"name": "Clifton―SUM(Discount)", "value": [87, 0, 0]}, {
+                    "name": "Clinton―SUM(Discount)",
+                    "value": [88, 0, 0.30000001192092896]
+                }, {
+                    "name": "Clovis―SUM(Discount)",
+                    "value": [89, 0, 0.20000000298023224]
+                }, {"name": "Coachella―SUM(Discount)", "value": [90, 0, 0]}, {
+                    "name": "College Station―SUM(Discount)",
+                    "value": [91, 0, 1.3000000268220901]
+                }, {
+                    "name": "Colorado Springs―SUM(Discount)",
+                    "value": [92, 0, 8.299999982118607]
+                }, {
+                    "name": "Columbia―SUM(Discount)",
+                    "value": [93, 0, 4.80000002682209]
+                }, {
+                    "name": "Columbus―SUM(Discount)",
+                    "value": [94, 0, 38.500000178813934]
+                }, {
+                    "name": "Commerce City―SUM(Discount)",
+                    "value": [95, 0, 0.20000000298023224]
+                }, {
+                    "name": "Concord―SUM(Discount)",
+                    "value": [96, 0, 2.7500000447034836]
+                }, {
+                    "name": "Conroe―SUM(Discount)",
+                    "value": [97, 0, 0.20000000298023224]
+                }, {"name": "Conway―SUM(Discount)", "value": [98, 0, 0]}, {
+                    "name": "Coon Rapids―SUM(Discount)",
+                    "value": [99, 0, 0]
+                }, {
+                    "name": "Coppell―SUM(Discount)",
+                    "value": [100, 0, 0.800000011920929]
+                }, {
+                    "name": "Coral Gables―SUM(Discount)",
+                    "value": [101, 0, 0.4000000059604645]
+                }, {
+                    "name": "Coral Springs―SUM(Discount)",
+                    "value": [102, 0, 1.600000023841858]
+                }, {
+                    "name": "Corpus Christi―SUM(Discount)",
+                    "value": [103, 0, 3.4000000953674316]
+                }, {
+                    "name": "Costa Mesa―SUM(Discount)",
+                    "value": [104, 0, 0.6000000089406967]
+                }, {"name": "Cottage Grove―SUM(Discount)", "value": [105, 0, 0]}, {
+                    "name": "Covington―SUM(Discount)",
+                    "value": [106, 0, 0]
+                }, {
+                    "name": "Cranston―SUM(Discount)",
+                    "value": [107, 0, 0.9000000357627869]
+                }, {
+                    "name": "Cuyahoga Falls―SUM(Discount)",
+                    "value": [108, 0, 1.5999999791383743]
+                }, {
+                    "name": "Dallas―SUM(Discount)",
+                    "value": [109, 0, 56.30000104010105]
+                }, {"name": "Danbury―SUM(Discount)", "value": [110, 0, 0]}, {
+                    "name": "Danville―SUM(Discount)",
+                    "value": [111, 0, 1.0000000149011612]
+                }, {"name": "Davis―SUM(Discount)", "value": [112, 0, 0]}, {
+                    "name": "Daytona Beach―SUM(Discount)",
+                    "value": [113, 0, 1.0499999970197678]
+                }, {
+                    "name": "Dearborn―SUM(Discount)",
+                    "value": [114, 0, 0.10000000149011612]
+                }, {"name": "Dearborn Heights―SUM(Discount)", "value": [115, 0, 0]}, {
+                    "name": "Decatur―SUM(Discount)",
+                    "value": [116, 0, 6.60000017285347]
+                }, {
+                    "name": "Deer Park―SUM(Discount)",
+                    "value": [117, 0, 0.800000011920929]
+                }, {
+                    "name": "Delray Beach―SUM(Discount)",
+                    "value": [118, 0, 0.6000000089406967]
+                }, {"name": "Deltona―SUM(Discount)", "value": [119, 0, 1.5]}, {
+                    "name": "Denver―SUM(Discount)",
+                    "value": [120, 0, 12.100000038743019]
+                }, {
+                    "name": "Des Moines―SUM(Discount)",
+                    "value": [121, 0, 0.6000000089406967]
+                }, {
+                    "name": "Des Plaines―SUM(Discount)",
+                    "value": [122, 0, 2.6000000536441803]
+                }, {
+                    "name": "Detroit―SUM(Discount)",
+                    "value": [123, 0, 0.800000011920929]
+                }, {
+                    "name": "Dover―SUM(Discount)",
+                    "value": [124, 0, 0.30000001192092896]
+                }, {
+                    "name": "Draper―SUM(Discount)",
+                    "value": [125, 0, 0.20000000298023224]
+                }, {
+                    "name": "Dublin―SUM(Discount)",
+                    "value": [126, 0, 4.700000002980232]
+                }, {"name": "Dubuque―SUM(Discount)", "value": [127, 0, 0]}, {
+                    "name": "Durham―SUM(Discount)",
+                    "value": [128, 0, 2.300000011920929]
+                }, {"name": "Eagan―SUM(Discount)", "value": [129, 0, 0]}, {
+                    "name": "East Orange―SUM(Discount)",
+                    "value": [130, 0, 0]
+                }, {"name": "East Point―SUM(Discount)", "value": [131, 0, 0]}, {
+                    "name": "Eau Claire―SUM(Discount)",
+                    "value": [132, 0, 0]
+                }, {
+                    "name": "Edinburg―SUM(Discount)",
+                    "value": [133, 0, 1.2000000178813934]
+                }, {"name": "Edmond―SUM(Discount)", "value": [134, 0, 0]}, {
+                    "name": "Edmonds―SUM(Discount)",
+                    "value": [135, 0, 0.6000000089406967]
+                }, {
+                    "name": "El Cajon―SUM(Discount)",
+                    "value": [136, 0, 0.4000000059604645]
+                }, {
+                    "name": "El Paso―SUM(Discount)",
+                    "value": [137, 0, 5.8000001311302185]
+                }, {"name": "Elkhart―SUM(Discount)", "value": [138, 0, 0]}, {
+                    "name": "Elmhurst―SUM(Discount)",
+                    "value": [139, 0, 0.9000000208616257]
+                }, {
+                    "name": "Elyria―SUM(Discount)",
+                    "value": [140, 0, 0.699999988079071]
+                }, {
+                    "name": "Encinitas―SUM(Discount)",
+                    "value": [141, 0, 0.7500000149011612]
+                }, {
+                    "name": "Englewood―SUM(Discount)",
+                    "value": [142, 0, 0.4000000059604645]
+                }, {
+                    "name": "Escondido―SUM(Discount)",
+                    "value": [143, 0, 0.20000000298023224]
+                }, {
+                    "name": "Eugene―SUM(Discount)",
+                    "value": [144, 0, 1.2000000178813934]
+                }, {
+                    "name": "Evanston―SUM(Discount)",
+                    "value": [145, 0, 0.9000000208616257]
+                }, {
+                    "name": "Everett―SUM(Discount)",
+                    "value": [146, 0, 0.5000000149011612]
+                }, {
+                    "name": "Fairfield―SUM(Discount)",
+                    "value": [147, 0, 6.400000035762787]
+                }, {"name": "Fargo―SUM(Discount)", "value": [148, 0, 0]}, {
+                    "name": "Farmington―SUM(Discount)",
+                    "value": [149, 0, 0]
+                }, {
+                    "name": "Fayetteville―SUM(Discount)",
+                    "value": [150, 0, 6.900000035762787]
+                }, {"name": "Florence―SUM(Discount)", "value": [151, 0, 0]}, {
+                    "name": "Fort Collins―SUM(Discount)",
+                    "value": [152, 0, 2.3999999910593033]
+                }, {
+                    "name": "Fort Lauderdale―SUM(Discount)",
+                    "value": [153, 0, 4.499999985098839]
+                }, {
+                    "name": "Fort Worth―SUM(Discount)",
+                    "value": [154, 0, 11.340000182390213]
+                }, {
+                    "name": "Frankfort―SUM(Discount)",
+                    "value": [155, 0, 1.0000000149011612]
+                }, {
+                    "name": "Franklin―SUM(Discount)",
+                    "value": [156, 0, 4.300000041723251]
+                }, {
+                    "name": "Freeport―SUM(Discount)",
+                    "value": [157, 0, 2.1000000461935997]
+                }, {"name": "Fremont―SUM(Discount)", "value": [158, 0, 0]}, {
+                    "name": "Fresno―SUM(Discount)",
+                    "value": [159, 0, 2.700000047683716]
+                }, {
+                    "name": "Frisco―SUM(Discount)",
+                    "value": [160, 0, 0.8000000268220901]
+                }, {"name": "Gaithersburg―SUM(Discount)", "value": [161, 0, 0]}, {
+                    "name": "Garden City―SUM(Discount)",
+                    "value": [162, 0, 0]
+                }, {
+                    "name": "Garland―SUM(Discount)",
+                    "value": [163, 0, 1.8000000417232513]
+                }, {
+                    "name": "Gastonia―SUM(Discount)",
+                    "value": [164, 0, 1.2999999970197678]
+                }, {"name": "Georgetown―SUM(Discount)", "value": [165, 0, 0]}, {
+                    "name": "Gilbert―SUM(Discount)",
+                    "value": [166, 0, 3.3000000417232513]
+                }, {"name": "Gladstone―SUM(Discount)", "value": [167, 0, 0]}, {
+                    "name": "Glendale―SUM(Discount)",
+                    "value": [168, 0, 6.100000023841858]
+                }, {
+                    "name": "Glenview―SUM(Discount)",
+                    "value": [169, 0, 0.20000000298023224]
+                }, {
+                    "name": "Goldsboro―SUM(Discount)",
+                    "value": [170, 0, 0.20000000298023224]
+                }, {"name": "Grand Island―SUM(Discount)", "value": [171, 0, 0]}, {
+                    "name": "Grand Prairie―SUM(Discount)",
+                    "value": [172, 0, 4.800000116229057]
+                }, {"name": "Grand Rapids―SUM(Discount)", "value": [173, 0, 0]}, {
+                    "name": "Grapevine―SUM(Discount)",
+                    "value": [174, 0, 0.4000000059604645]
+                }, {
+                    "name": "Great Falls―SUM(Discount)",
+                    "value": [175, 0, 0.4000000059604645]
+                }, {
+                    "name": "Greeley―SUM(Discount)",
+                    "value": [176, 0, 0.4000000059604645]
+                }, {"name": "Green Bay―SUM(Discount)", "value": [177, 0, 0]}, {
+                    "name": "Greensboro―SUM(Discount)",
+                    "value": [178, 0, 4.799999982118607]
+                }, {
+                    "name": "Greenville―SUM(Discount)",
+                    "value": [179, 0, 2.6000000089406967]
+                }, {"name": "Greenwood―SUM(Discount)", "value": [180, 0, 0]}, {
+                    "name": "Gresham―SUM(Discount)",
+                    "value": [181, 0, 1.5]
+                }, {
+                    "name": "Grove City―SUM(Discount)",
+                    "value": [182, 0, 1.0999999940395355]
+                }, {"name": "Gulfport―SUM(Discount)", "value": [183, 0, 0]}, {
+                    "name": "Hackensack―SUM(Discount)",
+                    "value": [184, 0, 0]
+                }, {"name": "Hagerstown―SUM(Discount)", "value": [185, 0, 0]}, {
+                    "name": "Haltom City―SUM(Discount)",
+                    "value": [186, 0, 0.800000011920929]
+                }, {
+                    "name": "Hamilton―SUM(Discount)",
+                    "value": [187, 0, 0.800000011920929]
+                }, {"name": "Hampton―SUM(Discount)", "value": [188, 0, 0]}, {
+                    "name": "Harlingen―SUM(Discount)",
+                    "value": [189, 0, 1.1200000047683716]
+                }, {"name": "Harrisonburg―SUM(Discount)", "value": [190, 0, 0]}, {
+                    "name": "Hattiesburg―SUM(Discount)",
+                    "value": [191, 0, 0]
+                }, {
+                    "name": "Helena―SUM(Discount)",
+                    "value": [192, 0, 0.20000000298023224]
+                }, {
+                    "name": "Hempstead―SUM(Discount)",
+                    "value": [193, 0, 1.0000000149011612]
+                }, {
+                    "name": "Henderson―SUM(Discount)",
+                    "value": [194, 0, 0.20000000298023224]
+                }, {
+                    "name": "Hendersonville―SUM(Discount)",
+                    "value": [195, 0, 1.9999999850988388]
+                }, {
+                    "name": "Hesperia―SUM(Discount)",
+                    "value": [196, 0, 0.550000011920929]
+                }, {
+                    "name": "Hialeah―SUM(Discount)",
+                    "value": [197, 0, 5.200000017881393]
+                }, {
+                    "name": "Hickory―SUM(Discount)",
+                    "value": [198, 0, 0.8999999910593033]
+                }, {
+                    "name": "Highland Park―SUM(Discount)",
+                    "value": [199, 0, 2.9000000655651093]
+                }, {
+                    "name": "Hillsboro―SUM(Discount)",
+                    "value": [200, 0, 1.2999999970197678]
+                }, {"name": "Holland―SUM(Discount)", "value": [201, 0, 0]}, {
+                    "name": "Hollywood―SUM(Discount)",
+                    "value": [202, 0, 3.2000000029802322]
+                }, {"name": "Holyoke―SUM(Discount)", "value": [203, 0, 0]}, {
+                    "name": "Homestead―SUM(Discount)",
+                    "value": [204, 0, 0.6000000089406967]
+                }, {"name": "Hoover―SUM(Discount)", "value": [205, 0, 0]}, {
+                    "name": "Hot Springs―SUM(Discount)",
+                    "value": [206, 0, 0]
+                }, {
+                    "name": "Houston―SUM(Discount)",
+                    "value": [207, 0, 143.14000275731087]
+                }, {
+                    "name": "Huntington Beach―SUM(Discount)",
+                    "value": [208, 0, 0.20000000298023224]
+                }, {
+                    "name": "Huntsville―SUM(Discount)",
+                    "value": [209, 0, 10.62000022828579]
+                }, {"name": "Independence―SUM(Discount)", "value": [210, 0, 0]}, {
+                    "name": "Indianapolis―SUM(Discount)",
+                    "value": [211, 0, 0]
+                }, {
+                    "name": "Inglewood―SUM(Discount)",
+                    "value": [212, 0, 0.800000011920929]
+                }, {"name": "Iowa City―SUM(Discount)", "value": [213, 0, 0]}, {
+                    "name": "Irving―SUM(Discount)",
+                    "value": [214, 0, 2.2000000327825546]
+                }, {
+                    "name": "Jackson―SUM(Discount)",
+                    "value": [215, 0, 2.500000037252903]
+                }, {
+                    "name": "Jacksonville―SUM(Discount)",
+                    "value": [216, 0, 35.85000005364418]
+                }, {"name": "Jamestown―SUM(Discount)", "value": [217, 0, 0]}, {
+                    "name": "Jefferson City―SUM(Discount)",
+                    "value": [218, 0, 0]
+                }, {
+                    "name": "Johnson City―SUM(Discount)",
+                    "value": [219, 0, 3.8999999910593033]
+                }, {"name": "Jonesboro―SUM(Discount)", "value": [220, 0, 0]}, {
+                    "name": "Jupiter―SUM(Discount)",
+                    "value": [221, 0, 0.20000000298023224]
+                }, {
+                    "name": "Keller―SUM(Discount)",
+                    "value": [222, 0, 0.20000000298023224]
+                }, {"name": "Kenner―SUM(Discount)", "value": [223, 0, 0]}, {
+                    "name": "Kenosha―SUM(Discount)",
+                    "value": [224, 0, 0]
+                }, {
+                    "name": "Kent―SUM(Discount)",
+                    "value": [225, 0, 1.8000000268220901]
+                }, {"name": "Kirkwood―SUM(Discount)", "value": [226, 0, 0]}, {
+                    "name": "Kissimmee―SUM(Discount)",
+                    "value": [227, 0, 0.20000000298023224]
+                }, {
+                    "name": "Knoxville―SUM(Discount)",
+                    "value": [228, 0, 6.200000047683716]
+                }, {"name": "La Crosse―SUM(Discount)", "value": [229, 0, 0]}, {
+                    "name": "La Mesa―SUM(Discount)",
+                    "value": [230, 0, 0.20000000298023224]
+                }, {
+                    "name": "La Porte―SUM(Discount)",
+                    "value": [231, 0, 1.4000000357627869]
+                }, {"name": "La Quinta―SUM(Discount)", "value": [232, 0, 0]}, {
+                    "name": "Lafayette―SUM(Discount)",
+                    "value": [233, 0, 0]
+                }, {
+                    "name": "Laguna Niguel―SUM(Discount)",
+                    "value": [234, 0, 0.3500000089406967]
+                }, {"name": "Lake Charles―SUM(Discount)", "value": [235, 0, 0]}, {
+                    "name": "Lake Elsinore―SUM(Discount)",
+                    "value": [236, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lake Forest―SUM(Discount)",
+                    "value": [237, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lakeland―SUM(Discount)",
+                    "value": [238, 0, 6.1500000059604645]
+                }, {"name": "Lakeville―SUM(Discount)", "value": [239, 0, 0]}, {
+                    "name": "Lakewood―SUM(Discount)",
+                    "value": [240, 0, 6.750000014901161]
+                }, {
+                    "name": "Lancaster―SUM(Discount)",
+                    "value": [241, 0, 14.500000029802322]
+                }, {
+                    "name": "Lansing―SUM(Discount)",
+                    "value": [242, 0, 0.10000000149011612]
+                }, {
+                    "name": "Laredo―SUM(Discount)",
+                    "value": [243, 0, 4.200000077486038]
+                }, {"name": "Las Cruces―SUM(Discount)", "value": [244, 0, 0]}, {
+                    "name": "Las Vegas―SUM(Discount)",
+                    "value": [245, 0, 1.0000000149011612]
+                }, {"name": "Laurel―SUM(Discount)", "value": [246, 0, 0]}, {
+                    "name": "Lawrence―SUM(Discount)",
+                    "value": [247, 0, 0.6000000238418579]
+                }, {"name": "Lawton―SUM(Discount)", "value": [248, 0, 0]}, {
+                    "name": "Layton―SUM(Discount)",
+                    "value": [249, 0, 0]
+                }, {
+                    "name": "League City―SUM(Discount)",
+                    "value": [250, 0, 1.4000000357627869]
+                }, {
+                    "name": "Lebanon―SUM(Discount)",
+                    "value": [251, 0, 0.6000000089406967]
+                }, {
+                    "name": "Lehi―SUM(Discount)",
+                    "value": [252, 0, 0.20000000298023224]
+                }, {"name": "Leominster―SUM(Discount)", "value": [253, 0, 0]}, {
+                    "name": "Lewiston―SUM(Discount)",
+                    "value": [254, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lincoln Park―SUM(Discount)",
+                    "value": [255, 0, 0.10000000149011612]
+                }, {"name": "Linden―SUM(Discount)", "value": [256, 0, 0]}, {
+                    "name": "Lindenhurst―SUM(Discount)",
+                    "value": [257, 0, 0]
+                }, {"name": "Little Rock―SUM(Discount)", "value": [258, 0, 0]}, {
+                    "name": "Littleton―SUM(Discount)",
+                    "value": [259, 0, 0.699999988079071]
+                }, {"name": "Lodi―SUM(Discount)", "value": [260, 0, 0]}, {
+                    "name": "Logan―SUM(Discount)",
+                    "value": [261, 0, 0.4000000059604645]
+                }, {
+                    "name": "Long Beach―SUM(Discount)",
+                    "value": [262, 0, 3.500000052154064]
+                }, {
+                    "name": "Longmont―SUM(Discount)",
+                    "value": [263, 0, 0.6000000089406967]
+                }, {"name": "Longview―SUM(Discount)", "value": [264, 0, 0]}, {
+                    "name": "Lorain―SUM(Discount)",
+                    "value": [265, 0, 2.7000000178813934]
+                }, {
+                    "name": "Los Angeles―SUM(Discount)",
+                    "value": [266, 0, 55.50000087916851]
+                }, {
+                    "name": "Louisville―SUM(Discount)",
+                    "value": [267, 0, 8.099999979138374]
+                }, {
+                    "name": "Loveland―SUM(Discount)",
+                    "value": [268, 0, 1.2999999970197678]
+                }, {"name": "Lowell―SUM(Discount)", "value": [269, 0, 0]}, {
+                    "name": "Lubbock―SUM(Discount)",
+                    "value": [270, 0, 2.8000000566244125]
+                }, {"name": "Macon―SUM(Discount)", "value": [271, 0, 0]}, {
+                    "name": "Madison―SUM(Discount)",
+                    "value": [272, 0, 0]
+                }, {"name": "Malden―SUM(Discount)", "value": [273, 0, 0]}, {
+                    "name": "Manchester―SUM(Discount)",
+                    "value": [274, 0, 0]
+                }, {"name": "Manhattan―SUM(Discount)", "value": [275, 0, 0]}, {
+                    "name": "Mansfield―SUM(Discount)",
+                    "value": [276, 0, 0.5000000149011612]
+                }, {
+                    "name": "Manteca―SUM(Discount)",
+                    "value": [277, 0, 0.20000000298023224]
+                }, {"name": "Maple Grove―SUM(Discount)", "value": [278, 0, 0]}, {
+                    "name": "Margate―SUM(Discount)",
+                    "value": [279, 0, 0.20000000298023224]
+                }, {"name": "Marietta―SUM(Discount)", "value": [280, 0, 0]}, {
+                    "name": "Marion―SUM(Discount)",
+                    "value": [281, 0, 3.5000000596046448]
+                }, {"name": "Marlborough―SUM(Discount)", "value": [282, 0, 0]}, {
+                    "name": "Marysville―SUM(Discount)",
+                    "value": [283, 0, 0]
+                }, {
+                    "name": "Mason―SUM(Discount)",
+                    "value": [284, 0, 1.5999999791383743]
+                }, {
+                    "name": "Mcallen―SUM(Discount)",
+                    "value": [285, 0, 7.5000001192092896]
+                }, {
+                    "name": "Medford―SUM(Discount)",
+                    "value": [286, 0, 1.2999999970197678]
+                }, {
+                    "name": "Medina―SUM(Discount)",
+                    "value": [287, 0, 3.9000000059604645]
+                }, {
+                    "name": "Melbourne―SUM(Discount)",
+                    "value": [288, 0, 0.20000000298023224]
+                }, {
+                    "name": "Memphis―SUM(Discount)",
+                    "value": [289, 0, 8.400000035762787]
+                }, {
+                    "name": "Mentor―SUM(Discount)",
+                    "value": [290, 0, 1.5000000298023224]
+                }, {"name": "Meriden―SUM(Discount)", "value": [291, 0, 0]}, {
+                    "name": "Meridian―SUM(Discount)",
+                    "value": [292, 0, 0.20000000298023224]
+                }, {
+                    "name": "Mesa―SUM(Discount)",
+                    "value": [293, 0, 9.199999988079071]
+                }, {
+                    "name": "Mesquite―SUM(Discount)",
+                    "value": [294, 0, 2.6000000536441803]
+                }, {
+                    "name": "Miami―SUM(Discount)",
+                    "value": [295, 0, 18.64999994635582]
+                }, {"name": "Middletown―SUM(Discount)", "value": [296, 0, 0]}, {
+                    "name": "Midland―SUM(Discount)",
+                    "value": [297, 0, 0.10000000149011612]
+                }, {"name": "Milford―SUM(Discount)", "value": [298, 0, 0]}, {
+                    "name": "Milwaukee―SUM(Discount)",
+                    "value": [299, 0, 0]
+                }, {"name": "Minneapolis―SUM(Discount)", "value": [300, 0, 0]}, {
+                    "name": "Miramar―SUM(Discount)",
+                    "value": [301, 0, 2.1000000089406967]
+                }, {"name": "Mishawaka―SUM(Discount)", "value": [302, 0, 0]}, {
+                    "name": "Mission Viejo―SUM(Discount)",
+                    "value": [303, 0, 0.15000000596046448]
+                }, {
+                    "name": "Missoula―SUM(Discount)",
+                    "value": [304, 0, 0.20000000298023224]
+                }, {
+                    "name": "Missouri City―SUM(Discount)",
+                    "value": [305, 0, 0.800000011920929]
+                }, {"name": "Mobile―SUM(Discount)", "value": [306, 0, 0]}, {
+                    "name": "Modesto―SUM(Discount)",
+                    "value": [307, 0, 0.4000000059604645]
+                }, {
+                    "name": "Monroe―SUM(Discount)",
+                    "value": [308, 0, 1.8000000268220901]
+                }, {"name": "Montebello―SUM(Discount)", "value": [309, 0, 0]}, {
+                    "name": "Montgomery―SUM(Discount)",
+                    "value": [310, 0, 0]
+                }, {"name": "Moorhead―SUM(Discount)", "value": [311, 0, 0]}, {
+                    "name": "Moreno Valley―SUM(Discount)",
+                    "value": [312, 0, 0.20000000298023224]
+                }, {
+                    "name": "Morgan Hill―SUM(Discount)",
+                    "value": [313, 0, 0.3500000089406967]
+                }, {"name": "Morristown―SUM(Discount)", "value": [314, 0, 0]}, {
+                    "name": "Mount Pleasant―SUM(Discount)",
+                    "value": [315, 0, 0]
+                }, {
+                    "name": "Mount Vernon―SUM(Discount)",
+                    "value": [316, 0, 0.20000000298023224]
+                }, {
+                    "name": "Murfreesboro―SUM(Discount)",
+                    "value": [317, 0, 3.699999988079071]
+                }, {
+                    "name": "Murray―SUM(Discount)",
+                    "value": [318, 0, 0.20000000298023224]
+                }, {"name": "Murrieta―SUM(Discount)", "value": [319, 0, 0]}, {
+                    "name": "Muskogee―SUM(Discount)",
+                    "value": [320, 0, 0]
+                }, {
+                    "name": "Naperville―SUM(Discount)",
+                    "value": [321, 0, 3.5000000596046448]
+                }, {"name": "Nashua―SUM(Discount)", "value": [322, 0, 0]}, {
+                    "name": "Nashville―SUM(Discount)",
+                    "value": [323, 0, 7.800000041723251]
+                }, {"name": "New Albany―SUM(Discount)", "value": [324, 0, 0]}, {
+                    "name": "New Bedford―SUM(Discount)",
+                    "value": [325, 0, 0]
+                }, {"name": "New Brunswick―SUM(Discount)", "value": [326, 0, 0]}, {
+                    "name": "New Castle―SUM(Discount)",
+                    "value": [327, 0, 0]
+                }, {
+                    "name": "New Rochelle―SUM(Discount)",
+                    "value": [328, 0, 0.5000000074505806]
+                }, {
+                    "name": "New York City―SUM(Discount)",
+                    "value": [329, 0, 51.400000765919685]
+                }, {
+                    "name": "Newark―SUM(Discount)",
+                    "value": [330, 0, 9.800000071525574]
+                }, {"name": "Newport News―SUM(Discount)", "value": [331, 0, 0]}, {
+                    "name": "Niagara Falls―SUM(Discount)",
+                    "value": [332, 0, 0.20000000298023224]
+                }, {"name": "Noblesville―SUM(Discount)", "value": [333, 0, 0]}, {
+                    "name": "Norfolk―SUM(Discount)",
+                    "value": [334, 0, 0]
+                }, {
+                    "name": "Normal―SUM(Discount)",
+                    "value": [335, 0, 0.30000001192092896]
+                }, {"name": "Norman―SUM(Discount)", "value": [336, 0, 0]}, {
+                    "name": "North Charleston―SUM(Discount)",
+                    "value": [337, 0, 0]
+                }, {
+                    "name": "North Las Vegas―SUM(Discount)",
+                    "value": [338, 0, 0.6000000089406967]
+                }, {
+                    "name": "North Miami―SUM(Discount)",
+                    "value": [339, 0, 0.4000000059604645]
+                }, {"name": "Norwich―SUM(Discount)", "value": [340, 0, 0]}, {
+                    "name": "Oak Park―SUM(Discount)",
+                    "value": [341, 0, 0.20000000298023224]
+                }, {
+                    "name": "Oakland―SUM(Discount)",
+                    "value": [342, 0, 2.0000000298023224]
+                }, {
+                    "name": "Oceanside―SUM(Discount)",
+                    "value": [343, 0, 1.8000000268220901]
+                }, {
+                    "name": "Odessa―SUM(Discount)",
+                    "value": [344, 0, 1.8000000417232513]
+                }, {"name": "Oklahoma City―SUM(Discount)", "value": [345, 0, 0]}, {
+                    "name": "Olathe―SUM(Discount)",
+                    "value": [346, 0, 0]
+                }, {
+                    "name": "Olympia―SUM(Discount)",
+                    "value": [347, 0, 0.4000000059604645]
+                }, {"name": "Omaha―SUM(Discount)", "value": [348, 0, 0]}, {
+                    "name": "Ontario―SUM(Discount)",
+                    "value": [349, 0, 0.20000000298023224]
+                }, {"name": "Orange―SUM(Discount)", "value": [350, 0, 0]}, {
+                    "name": "Orem―SUM(Discount)",
+                    "value": [351, 0, 0.20000000298023224]
+                }, {
+                    "name": "Orland Park―SUM(Discount)",
+                    "value": [352, 0, 0.20000000298023224]
+                }, {
+                    "name": "Orlando―SUM(Discount)",
+                    "value": [353, 0, 3.2000000029802322]
+                }, {
+                    "name": "Ormond Beach―SUM(Discount)",
+                    "value": [354, 0, 0.699999988079071]
+                }, {
+                    "name": "Oswego―SUM(Discount)",
+                    "value": [355, 0, 1.8000000268220901]
+                }, {"name": "Overland Park―SUM(Discount)", "value": [356, 0, 0]}, {
+                    "name": "Owensboro―SUM(Discount)",
+                    "value": [357, 0, 0]
+                }, {
+                    "name": "Oxnard―SUM(Discount)",
+                    "value": [358, 0, 0.4000000059604645]
+                }, {
+                    "name": "Palatine―SUM(Discount)",
+                    "value": [359, 0, 0.20000000298023224]
+                }, {
+                    "name": "Palm Coast―SUM(Discount)",
+                    "value": [360, 0, 1.9999999850988388]
+                }, {
+                    "name": "Park Ridge―SUM(Discount)",
+                    "value": [361, 0, 1.0000000298023224]
+                }, {
+                    "name": "Parker―SUM(Discount)",
+                    "value": [362, 0, 3.599999964237213]
+                }, {
+                    "name": "Parma―SUM(Discount)",
+                    "value": [363, 0, 2.4000000655651093]
+                }, {
+                    "name": "Pasadena―SUM(Discount)",
+                    "value": [364, 0, 7.400000154972076]
+                }, {
+                    "name": "Pasco―SUM(Discount)",
+                    "value": [365, 0, 0.4000000059604645]
+                }, {
+                    "name": "Passaic―SUM(Discount)",
+                    "value": [366, 0, 0.30000001192092896]
+                }, {"name": "Paterson―SUM(Discount)", "value": [367, 0, 0]}, {
+                    "name": "Pearland―SUM(Discount)",
+                    "value": [368, 0, 1.2000000178813934]
+                }, {
+                    "name": "Pembroke Pines―SUM(Discount)",
+                    "value": [369, 0, 4.549999982118607]
+                }, {
+                    "name": "Pensacola―SUM(Discount)",
+                    "value": [370, 0, 0.699999988079071]
+                }, {
+                    "name": "Peoria―SUM(Discount)",
+                    "value": [371, 0, 8.900000110268593]
+                }, {"name": "Perth Amboy―SUM(Discount)", "value": [372, 0, 0]}, {
+                    "name": "Pharr―SUM(Discount)",
+                    "value": [373, 0, 1.3000000417232513]
+                }, {
+                    "name": "Philadelphia―SUM(Discount)",
+                    "value": [374, 0, 175.50000068545341]
+                }, {
+                    "name": "Phoenix―SUM(Discount)",
+                    "value": [375, 0, 22.299999922513962]
+                }, {"name": "Pico Rivera―SUM(Discount)", "value": [376, 0, 0]}, {
+                    "name": "Pine Bluff―SUM(Discount)",
+                    "value": [377, 0, 0]
+                }, {"name": "Plainfield―SUM(Discount)", "value": [378, 0, 0]}, {
+                    "name": "Plano―SUM(Discount)",
+                    "value": [379, 0, 4.120000064373016]
+                }, {
+                    "name": "Plantation―SUM(Discount)",
+                    "value": [380, 0, 3.2000000029802322]
+                }, {
+                    "name": "Pleasant Grove―SUM(Discount)",
+                    "value": [381, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pocatello―SUM(Discount)",
+                    "value": [382, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pomona―SUM(Discount)",
+                    "value": [383, 0, 0.20000000298023224]
+                }, {
+                    "name": "Pompano Beach―SUM(Discount)",
+                    "value": [384, 0, 0.6000000089406967]
+                }, {
+                    "name": "Port Arthur―SUM(Discount)",
+                    "value": [385, 0, 1.3200000077486038]
+                }, {
+                    "name": "Port Orange―SUM(Discount)",
+                    "value": [386, 0, 0.20000000298023224]
+                }, {
+                    "name": "Port Saint Lucie―SUM(Discount)",
+                    "value": [387, 0, 1.0999999940395355]
+                }, {"name": "Portage―SUM(Discount)", "value": [388, 0, 0]}, {
+                    "name": "Portland―SUM(Discount)",
+                    "value": [389, 0, 7.299999997019768]
+                }, {
+                    "name": "Providence―SUM(Discount)",
+                    "value": [390, 0, 0.30000001192092896]
+                }, {
+                    "name": "Provo―SUM(Discount)",
+                    "value": [391, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pueblo―SUM(Discount)",
+                    "value": [392, 0, 4.099999949336052]
+                }, {
+                    "name": "Quincy―SUM(Discount)",
+                    "value": [393, 0, 3.9000000655651093]
+                }, {
+                    "name": "Raleigh―SUM(Discount)",
+                    "value": [394, 0, 5.900000020861626]
+                }, {
+                    "name": "Rancho Cucamonga―SUM(Discount)",
+                    "value": [395, 0, 0.20000000298023224]
+                }, {"name": "Rapid City―SUM(Discount)", "value": [396, 0, 0]}, {
+                    "name": "Reading―SUM(Discount)",
+                    "value": [397, 0, 1.300000011920929]
+                }, {
+                    "name": "Redding―SUM(Discount)",
+                    "value": [398, 0, 0.20000000298023224]
+                }, {
+                    "name": "Redlands―SUM(Discount)",
+                    "value": [399, 0, 0.7500000149011612]
+                }, {
+                    "name": "Redmond―SUM(Discount)",
+                    "value": [400, 0, 3.0999999940395355]
+                }, {
+                    "name": "Redondo Beach―SUM(Discount)",
+                    "value": [401, 0, 0.9500000178813934]
+                }, {
+                    "name": "Redwood City―SUM(Discount)",
+                    "value": [402, 0, 0.20000000298023224]
+                }, {
+                    "name": "Reno―SUM(Discount)",
+                    "value": [403, 0, 0.4000000059604645]
+                }, {
+                    "name": "Renton―SUM(Discount)",
+                    "value": [404, 0, 0.4000000059604645]
+                }, {"name": "Revere―SUM(Discount)", "value": [405, 0, 0]}, {
+                    "name": "Richardson―SUM(Discount)",
+                    "value": [406, 0, 0.8000000268220901]
+                }, {"name": "Richmond―SUM(Discount)", "value": [407, 0, 0]}, {
+                    "name": "Rio Rancho―SUM(Discount)",
+                    "value": [408, 0, 0.4000000059604645]
+                }, {
+                    "name": "Riverside―SUM(Discount)",
+                    "value": [409, 0, 0.6000000089406967]
+                }, {
+                    "name": "Rochester―SUM(Discount)",
+                    "value": [410, 0, 2.2000000327825546]
+                }, {"name": "Rochester Hills―SUM(Discount)", "value": [411, 0, 0]}, {
+                    "name": "Rock Hill―SUM(Discount)",
+                    "value": [412, 0, 0]
+                }, {
+                    "name": "Rockford―SUM(Discount)",
+                    "value": [413, 0, 5.600000083446503]
+                }, {"name": "Rockville―SUM(Discount)", "value": [414, 0, 0]}, {
+                    "name": "Rogers―SUM(Discount)",
+                    "value": [415, 0, 0]
+                }, {
+                    "name": "Rome―SUM(Discount)",
+                    "value": [416, 0, 0.10000000149011612]
+                }, {
+                    "name": "Romeoville―SUM(Discount)",
+                    "value": [417, 0, 0.800000011920929]
+                }, {
+                    "name": "Roseville―SUM(Discount)",
+                    "value": [418, 0, 0.4000000059604645]
+                }, {"name": "Roswell―SUM(Discount)", "value": [419, 0, 0]}, {
+                    "name": "Round Rock―SUM(Discount)",
+                    "value": [420, 0, 1.9200000315904617]
+                }, {"name": "Royal Oak―SUM(Discount)", "value": [421, 0, 0]}, {
+                    "name": "Sacramento―SUM(Discount)",
+                    "value": [422, 0, 1.600000023841858]
+                }, {"name": "Saginaw―SUM(Discount)", "value": [423, 0, 0]}, {
+                    "name": "Saint Charles―SUM(Discount)",
+                    "value": [424, 0, 2.500000089406967]
+                }, {"name": "Saint Cloud―SUM(Discount)", "value": [425, 0, 0]}, {
+                    "name": "Saint Louis―SUM(Discount)",
+                    "value": [426, 0, 0]
+                }, {"name": "Saint Paul―SUM(Discount)", "value": [427, 0, 0]}, {
+                    "name": "Saint Peters―SUM(Discount)",
+                    "value": [428, 0, 0]
+                }, {
+                    "name": "Saint Petersburg―SUM(Discount)",
+                    "value": [429, 0, 3.800000011920929]
+                }, {
+                    "name": "Salem―SUM(Discount)",
+                    "value": [430, 0, 7.200000032782555]
+                }, {
+                    "name": "Salinas―SUM(Discount)",
+                    "value": [431, 0, 0.7500000149011612]
+                }, {
+                    "name": "Salt Lake City―SUM(Discount)",
+                    "value": [432, 0, 0.6000000089406967]
+                }, {
+                    "name": "San Angelo―SUM(Discount)",
+                    "value": [433, 0, 1.7000000476837158]
+                }, {
+                    "name": "San Antonio―SUM(Discount)",
+                    "value": [434, 0, 22.60000044107437]
+                }, {
+                    "name": "San Bernardino―SUM(Discount)",
+                    "value": [435, 0, 0.9500000178813934]
+                }, {
+                    "name": "San Clemente―SUM(Discount)",
+                    "value": [436, 0, 0.20000000298023224]
+                }, {
+                    "name": "San Diego―SUM(Discount)",
+                    "value": [437, 0, 13.600000217556953]
+                }, {
+                    "name": "San Francisco―SUM(Discount)",
+                    "value": [438, 0, 34.000000566244125]
+                }, {
+                    "name": "San Gabriel―SUM(Discount)",
+                    "value": [439, 0, 0.20000000298023224]
+                }, {
+                    "name": "San Jose―SUM(Discount)",
+                    "value": [440, 0, 3.1000000536441803]
+                }, {"name": "San Luis Obispo―SUM(Discount)", "value": [441, 0, 0]}, {
+                    "name": "San Marcos―SUM(Discount)",
+                    "value": [442, 0, 1.2000000327825546]
+                }, {"name": "San Mateo―SUM(Discount)", "value": [443, 0, 0]}, {
+                    "name": "Sandy Springs―SUM(Discount)",
+                    "value": [444, 0, 0]
+                }, {
+                    "name": "Sanford―SUM(Discount)",
+                    "value": [445, 0, 0.8999999910593033]
+                }, {
+                    "name": "Santa Ana―SUM(Discount)",
+                    "value": [446, 0, 1.0000000149011612]
+                }, {
+                    "name": "Santa Barbara―SUM(Discount)",
+                    "value": [447, 0, 0.6000000089406967]
+                }, {
+                    "name": "Santa Clara―SUM(Discount)",
+                    "value": [448, 0, 0.4000000059604645]
+                }, {"name": "Santa Fe―SUM(Discount)", "value": [449, 0, 0]}, {
+                    "name": "Santa Maria―SUM(Discount)",
+                    "value": [450, 0, 0]
+                }, {
+                    "name": "Scottsdale―SUM(Discount)",
+                    "value": [451, 0, 3.8999999910593033]
+                }, {
+                    "name": "Seattle―SUM(Discount)",
+                    "value": [452, 0, 27.80000041425228]
+                }, {"name": "Sheboygan―SUM(Discount)", "value": [453, 0, 0]}, {
+                    "name": "Shelton―SUM(Discount)",
+                    "value": [454, 0, 0]
+                }, {
+                    "name": "Sierra Vista―SUM(Discount)",
+                    "value": [455, 0, 0.6000000089406967]
+                }, {"name": "Sioux Falls―SUM(Discount)", "value": [456, 0, 0]}, {
+                    "name": "Skokie―SUM(Discount)",
+                    "value": [457, 0, 5.200000122189522]
+                }, {
+                    "name": "Smyrna―SUM(Discount)",
+                    "value": [458, 0, 2.3999999910593033]
+                }, {"name": "South Bend―SUM(Discount)", "value": [459, 0, 0]}, {
+                    "name": "Southaven―SUM(Discount)",
+                    "value": [460, 0, 0]
+                }, {
+                    "name": "Sparks―SUM(Discount)",
+                    "value": [461, 0, 0.20000000298023224]
+                }, {
+                    "name": "Spokane―SUM(Discount)",
+                    "value": [462, 0, 0.4000000059604645]
+                }, {"name": "Springdale―SUM(Discount)", "value": [463, 0, 0]}, {
+                    "name": "Springfield―SUM(Discount)",
+                    "value": [464, 0, 23.200000062584877]
+                }, {"name": "Sterling Heights―SUM(Discount)", "value": [465, 0, 0]}, {
+                    "name": "Stockton―SUM(Discount)",
+                    "value": [466, 0, 0.6000000089406967]
+                }, {"name": "Suffolk―SUM(Discount)", "value": [467, 0, 0]}, {
+                    "name": "Summerville―SUM(Discount)",
+                    "value": [468, 0, 0]
+                }, {
+                    "name": "Sunnyvale―SUM(Discount)",
+                    "value": [469, 0, 0.4000000059604645]
+                }, {"name": "Superior―SUM(Discount)", "value": [470, 0, 0]}, {
+                    "name": "Tallahassee―SUM(Discount)",
+                    "value": [471, 0, 4.700000017881393]
+                }, {
+                    "name": "Tamarac―SUM(Discount)",
+                    "value": [472, 0, 1.7999999821186066]
+                }, {
+                    "name": "Tampa―SUM(Discount)",
+                    "value": [473, 0, 11.999999955296516]
+                }, {"name": "Taylor―SUM(Discount)", "value": [474, 0, 0]}, {
+                    "name": "Temecula―SUM(Discount)",
+                    "value": [475, 0, 0.4000000059604645]
+                }, {
+                    "name": "Tempe―SUM(Discount)",
+                    "value": [476, 0, 3.100000023841858]
+                }, {"name": "Texarkana―SUM(Discount)", "value": [477, 0, 0]}, {
+                    "name": "Texas City―SUM(Discount)",
+                    "value": [478, 0, 0.9000000357627869]
+                }, {
+                    "name": "The Colony―SUM(Discount)",
+                    "value": [479, 0, 0.6000000089406967]
+                }, {
+                    "name": "Thomasville―SUM(Discount)",
+                    "value": [480, 0, 1.0999999940395355]
+                }, {
+                    "name": "Thornton―SUM(Discount)",
+                    "value": [481, 0, 2.0000000298023224]
+                }, {
+                    "name": "Thousand Oaks―SUM(Discount)",
+                    "value": [482, 0, 0.20000000298023224]
+                }, {
+                    "name": "Tigard―SUM(Discount)",
+                    "value": [483, 0, 2.1000000089406967]
+                }, {
+                    "name": "Tinley Park―SUM(Discount)",
+                    "value": [484, 0, 0.6000000238418579]
+                }, {
+                    "name": "Toledo―SUM(Discount)",
+                    "value": [485, 0, 10.80000002682209]
+                }, {
+                    "name": "Torrance―SUM(Discount)",
+                    "value": [486, 0, 0.6000000089406967]
+                }, {
+                    "name": "Trenton―SUM(Discount)",
+                    "value": [487, 0, 0.10000000149011612]
+                }, {
+                    "name": "Troy―SUM(Discount)",
+                    "value": [488, 0, 6.600000008940697]
+                }, {
+                    "name": "Tucson―SUM(Discount)",
+                    "value": [489, 0, 9.700000002980232]
+                }, {"name": "Tulsa―SUM(Discount)", "value": [490, 0, 0]}, {
+                    "name": "Tuscaloosa―SUM(Discount)",
+                    "value": [491, 0, 0]
+                }, {
+                    "name": "Twin Falls―SUM(Discount)",
+                    "value": [492, 0, 0.20000000298023224]
+                }, {
+                    "name": "Tyler―SUM(Discount)",
+                    "value": [493, 0, 3.200000062584877]
+                }, {"name": "Urbandale―SUM(Discount)", "value": [494, 0, 0]}, {
+                    "name": "Utica―SUM(Discount)",
+                    "value": [495, 0, 0.4000000059604645]
+                }, {"name": "Vacaville―SUM(Discount)", "value": [496, 0, 0]}, {
+                    "name": "Vallejo―SUM(Discount)",
+                    "value": [497, 0, 0.6000000089406967]
+                }, {
+                    "name": "Vancouver―SUM(Discount)",
+                    "value": [498, 0, 0.20000000298023224]
+                }, {
+                    "name": "Vineland―SUM(Discount)",
+                    "value": [499, 0, 0.30000001192092896]
+                }, {"name": "Virginia Beach―SUM(Discount)", "value": [500, 0, 0]}, {
+                    "name": "Visalia―SUM(Discount)",
+                    "value": [501, 0, 0]
+                }, {
+                    "name": "Waco―SUM(Discount)",
+                    "value": [502, 0, 3.120000034570694]
+                }, {"name": "Warner Robins―SUM(Discount)", "value": [503, 0, 0]}, {
+                    "name": "Warwick―SUM(Discount)",
+                    "value": [504, 0, 0]
+                }, {"name": "Washington―SUM(Discount)", "value": [505, 0, 0]}, {
+                    "name": "Waterbury―SUM(Discount)",
+                    "value": [506, 0, 0]
+                }, {"name": "Waterloo―SUM(Discount)", "value": [507, 0, 0]}, {
+                    "name": "Watertown―SUM(Discount)",
+                    "value": [508, 0, 0.800000011920929]
+                }, {"name": "Waukesha―SUM(Discount)", "value": [509, 0, 0]}, {
+                    "name": "Wausau―SUM(Discount)",
+                    "value": [510, 0, 0]
+                }, {"name": "Waynesboro―SUM(Discount)", "value": [511, 0, 0]}, {
+                    "name": "West Allis―SUM(Discount)",
+                    "value": [512, 0, 0]
+                }, {
+                    "name": "West Jordan―SUM(Discount)",
+                    "value": [513, 0, 0.20000000298023224]
+                }, {
+                    "name": "West Palm Beach―SUM(Discount)",
+                    "value": [514, 0, 0.6000000089406967]
+                }, {"name": "Westfield―SUM(Discount)", "value": [515, 0, 0]}, {
+                    "name": "Westland―SUM(Discount)",
+                    "value": [516, 0, 0.10000000149011612]
+                }, {
+                    "name": "Westminster―SUM(Discount)",
+                    "value": [517, 0, 1.4000000208616257]
+                }, {
+                    "name": "Wheeling―SUM(Discount)",
+                    "value": [518, 0, 1.600000038743019]
+                }, {
+                    "name": "Whittier―SUM(Discount)",
+                    "value": [519, 0, 0.20000000298023224]
+                }, {"name": "Wichita―SUM(Discount)", "value": [520, 0, 0]}, {
+                    "name": "Wilmington―SUM(Discount)",
+                    "value": [521, 0, 2.900000035762787]
+                }, {
+                    "name": "Wilson―SUM(Discount)",
+                    "value": [522, 0, 2.199999988079071]
+                }, {"name": "Woodbury―SUM(Discount)", "value": [523, 0, 0]}, {
+                    "name": "Woodland―SUM(Discount)",
+                    "value": [524, 0, 0.4000000059604645]
+                }, {
+                    "name": "Woodstock―SUM(Discount)",
+                    "value": [525, 0, 1.3000000268220901]
+                }, {"name": "Woonsocket―SUM(Discount)", "value": [526, 0, 0]}, {
+                    "name": "Yonkers―SUM(Discount)",
+                    "value": [527, 0, 1.0000000149011612]
+                }, {
+                    "name": "York―SUM(Discount)",
+                    "value": [528, 0, 2.0999999940395355]
+                }, {"name": "Yucaipa―SUM(Discount)", "value": [529, 0, 0]}, {
+                    "name": "Yuma―SUM(Discount)",
+                    "value": [530, 0, 1.7999999821186066]
+                }],
+                "itemStyle": {"normal": {}, "emphasis": {}},
+                "label": {"normal": {"show": false}},
+                "originData": [{"name": "Aberdeen―SUM(Discount)", "value": [0, 0, 0]}, {
+                    "name": "Abilene―SUM(Discount)",
+                    "value": [1, 0, 0.800000011920929]
+                }, {"name": "Akron―SUM(Discount)", "value": [2, 0, 7.5]}, {
+                    "name": "Albuquerque―SUM(Discount)",
+                    "value": [3, 0, 0.800000011920929]
+                }, {"name": "Alexandria―SUM(Discount)", "value": [4, 0, 0]}, {
+                    "name": "Allen―SUM(Discount)",
+                    "value": [5, 0, 1.5000000298023224]
+                }, {
+                    "name": "Allentown―SUM(Discount)",
+                    "value": [6, 0, 1.9000000059604645]
+                }, {
+                    "name": "Altoona―SUM(Discount)",
+                    "value": [7, 0, 0.8999999910593033]
+                }, {
+                    "name": "Amarillo―SUM(Discount)",
+                    "value": [8, 0, 2.720000058412552]
+                }, {
+                    "name": "Anaheim―SUM(Discount)",
+                    "value": [9, 0, 2.2000000327825546]
+                }, {"name": "Andover―SUM(Discount)", "value": [10, 0, 0]}, {
+                    "name": "Ann Arbor―SUM(Discount)",
+                    "value": [11, 0, 0.10000000149011612]
+                }, {"name": "Antioch―SUM(Discount)", "value": [12, 0, 0]}, {
+                    "name": "Apopka―SUM(Discount)",
+                    "value": [13, 0, 2.899999976158142]
+                }, {
+                    "name": "Apple Valley―SUM(Discount)",
+                    "value": [14, 0, 0.550000011920929]
+                }, {"name": "Appleton―SUM(Discount)", "value": [15, 0, 0]}, {
+                    "name": "Arlington―SUM(Discount)",
+                    "value": [16, 0, 10.70000022649765]
+                }, {
+                    "name": "Arlington Heights―SUM(Discount)",
+                    "value": [17, 0, 0.20000000298023224]
+                }, {
+                    "name": "Arvada―SUM(Discount)",
+                    "value": [18, 0, 0.800000011920929]
+                }, {
+                    "name": "Asheville―SUM(Discount)",
+                    "value": [19, 0, 1.9000000059604645]
+                }, {"name": "Athens―SUM(Discount)", "value": [20, 0, 0]}, {
+                    "name": "Atlanta―SUM(Discount)",
+                    "value": [21, 0, 0]
+                }, {"name": "Atlantic City―SUM(Discount)", "value": [22, 0, 0]}, {
+                    "name": "Auburn―SUM(Discount)",
+                    "value": [23, 0, 0.20000000298023224]
+                }, {
+                    "name": "Aurora―SUM(Discount)",
+                    "value": [24, 0, 24.00000025331974]
+                }, {
+                    "name": "Austin―SUM(Discount)",
+                    "value": [25, 0, 13.400000229477882]
+                }, {
+                    "name": "Avondale―SUM(Discount)",
+                    "value": [26, 0, 1.2000000178813934]
+                }, {
+                    "name": "Bakersfield―SUM(Discount)",
+                    "value": [27, 0, 1.5500000268220901]
+                }, {
+                    "name": "Baltimore―SUM(Discount)",
+                    "value": [28, 0, 0.30000001192092896]
+                }, {"name": "Bangor―SUM(Discount)", "value": [29, 0, 0]}, {
+                    "name": "Bartlett―SUM(Discount)",
+                    "value": [30, 0, 0.20000000298023224]
+                }, {"name": "Bayonne―SUM(Discount)", "value": [31, 0, 0]}, {
+                    "name": "Baytown―SUM(Discount)",
+                    "value": [32, 0, 0.20000000298023224]
+                }, {
+                    "name": "Beaumont―SUM(Discount)",
+                    "value": [33, 0, 2.0000000447034836]
+                }, {
+                    "name": "Bedford―SUM(Discount)",
+                    "value": [34, 0, 1.600000023841858]
+                }, {"name": "Belleville―SUM(Discount)", "value": [35, 0, 0]}, {
+                    "name": "Bellevue―SUM(Discount)",
+                    "value": [36, 0, 0.4000000059604645]
+                }, {
+                    "name": "Bellingham―SUM(Discount)",
+                    "value": [37, 0, 0.20000000298023224]
+                }, {
+                    "name": "Bethlehem―SUM(Discount)",
+                    "value": [38, 0, 1.9000000059604645]
+                }, {"name": "Beverly―SUM(Discount)", "value": [39, 0, 0]}, {
+                    "name": "Billings―SUM(Discount)",
+                    "value": [40, 0, 0.20000000298023224]
+                }, {
+                    "name": "Bloomington―SUM(Discount)",
+                    "value": [41, 0, 2.900000050663948]
+                }, {
+                    "name": "Boca Raton―SUM(Discount)",
+                    "value": [42, 0, 1.0999999940395355]
+                }, {
+                    "name": "Boise―SUM(Discount)",
+                    "value": [43, 0, 0.4000000059604645]
+                }, {
+                    "name": "Bolingbrook―SUM(Discount)",
+                    "value": [44, 0, 2.400000035762787]
+                }, {"name": "Bossier City―SUM(Discount)", "value": [45, 0, 0]}, {
+                    "name": "Bowling Green―SUM(Discount)",
+                    "value": [46, 0, 2.500000014901161]
+                }, {
+                    "name": "Boynton Beach―SUM(Discount)",
+                    "value": [47, 0, 2.500000014901161]
+                }, {"name": "Bozeman―SUM(Discount)", "value": [48, 0, 0]}, {
+                    "name": "Brentwood―SUM(Discount)",
+                    "value": [49, 0, 1.0000000149011612]
+                }, {"name": "Bridgeton―SUM(Discount)", "value": [50, 0, 0]}, {
+                    "name": "Bristol―SUM(Discount)",
+                    "value": [51, 0, 2.7999999821186066]
+                }, {"name": "Broken Arrow―SUM(Discount)", "value": [52, 0, 0]}, {
+                    "name": "Broomfield―SUM(Discount)",
+                    "value": [53, 0, 1.9999999850988388]
+                }, {
+                    "name": "Brownsville―SUM(Discount)",
+                    "value": [54, 0, 1.6200000196695328]
+                }, {
+                    "name": "Bryan―SUM(Discount)",
+                    "value": [55, 0, 3.700000062584877]
+                }, {
+                    "name": "Buffalo―SUM(Discount)",
+                    "value": [56, 0, 0.6000000089406967]
+                }, {
+                    "name": "Buffalo Grove―SUM(Discount)",
+                    "value": [57, 0, 0.7000000029802322]
+                }, {
+                    "name": "Bullhead City―SUM(Discount)",
+                    "value": [58, 0, 0.4000000059604645]
+                }, {
+                    "name": "Burbank―SUM(Discount)",
+                    "value": [59, 0, 0.20000000298023224]
+                }, {
+                    "name": "Burlington―SUM(Discount)",
+                    "value": [60, 0, 3.4000000208616257]
+                }, {
+                    "name": "Caldwell―SUM(Discount)",
+                    "value": [61, 0, 0.20000000298023224]
+                }, {
+                    "name": "Camarillo―SUM(Discount)",
+                    "value": [62, 0, 0.550000011920929]
+                }, {"name": "Cambridge―SUM(Discount)", "value": [63, 0, 0]}, {
+                    "name": "Canton―SUM(Discount)",
+                    "value": [64, 0, 0]
+                }, {
+                    "name": "Carlsbad―SUM(Discount)",
+                    "value": [65, 0, 0.800000011920929]
+                }, {
+                    "name": "Carol Stream―SUM(Discount)",
+                    "value": [66, 0, 1.2000000327825546]
+                }, {
+                    "name": "Carrollton―SUM(Discount)",
+                    "value": [67, 0, 6.200000122189522]
+                }, {
+                    "name": "Cary―SUM(Discount)",
+                    "value": [68, 0, 1.2000000178813934]
+                }, {
+                    "name": "Cedar Hill―SUM(Discount)",
+                    "value": [69, 0, 0.4000000059604645]
+                }, {"name": "Cedar Rapids―SUM(Discount)", "value": [70, 0, 0]}, {
+                    "name": "Champaign―SUM(Discount)",
+                    "value": [71, 0, 0.6000000238418579]
+                }, {
+                    "name": "Chandler―SUM(Discount)",
+                    "value": [72, 0, 1.7000000178813934]
+                }, {
+                    "name": "Chapel Hill―SUM(Discount)",
+                    "value": [73, 0, 0.20000000298023224]
+                }, {
+                    "name": "Charlotte―SUM(Discount)",
+                    "value": [74, 0, 15.300000041723251]
+                }, {"name": "Charlottesville―SUM(Discount)", "value": [75, 0, 0]}, {
+                    "name": "Chattanooga―SUM(Discount)",
+                    "value": [76, 0, 3.2999999970197678]
+                }, {"name": "Chesapeake―SUM(Discount)", "value": [77, 0, 0]}, {
+                    "name": "Chester―SUM(Discount)",
+                    "value": [78, 0, 5.30000002682209]
+                }, {
+                    "name": "Cheyenne―SUM(Discount)",
+                    "value": [79, 0, 0.20000000298023224]
+                }, {
+                    "name": "Chicago―SUM(Discount)",
+                    "value": [80, 0, 120.50000247359276]
+                }, {
+                    "name": "Chico―SUM(Discount)",
+                    "value": [81, 0, 0.800000011920929]
+                }, {"name": "Chula Vista―SUM(Discount)", "value": [82, 0, 0]}, {
+                    "name": "Cincinnati―SUM(Discount)",
+                    "value": [83, 0, 5.5999999940395355]
+                }, {"name": "Citrus Heights―SUM(Discount)", "value": [84, 0, 0]}, {
+                    "name": "Clarksville―SUM(Discount)",
+                    "value": [85, 0, 1.9000000059604645]
+                }, {
+                    "name": "Cleveland―SUM(Discount)",
+                    "value": [86, 0, 12.800000071525574]
+                }, {"name": "Clifton―SUM(Discount)", "value": [87, 0, 0]}, {
+                    "name": "Clinton―SUM(Discount)",
+                    "value": [88, 0, 0.30000001192092896]
+                }, {
+                    "name": "Clovis―SUM(Discount)",
+                    "value": [89, 0, 0.20000000298023224]
+                }, {"name": "Coachella―SUM(Discount)", "value": [90, 0, 0]}, {
+                    "name": "College Station―SUM(Discount)",
+                    "value": [91, 0, 1.3000000268220901]
+                }, {
+                    "name": "Colorado Springs―SUM(Discount)",
+                    "value": [92, 0, 8.299999982118607]
+                }, {
+                    "name": "Columbia―SUM(Discount)",
+                    "value": [93, 0, 4.80000002682209]
+                }, {
+                    "name": "Columbus―SUM(Discount)",
+                    "value": [94, 0, 38.500000178813934]
+                }, {
+                    "name": "Commerce City―SUM(Discount)",
+                    "value": [95, 0, 0.20000000298023224]
+                }, {
+                    "name": "Concord―SUM(Discount)",
+                    "value": [96, 0, 2.7500000447034836]
+                }, {
+                    "name": "Conroe―SUM(Discount)",
+                    "value": [97, 0, 0.20000000298023224]
+                }, {"name": "Conway―SUM(Discount)", "value": [98, 0, 0]}, {
+                    "name": "Coon Rapids―SUM(Discount)",
+                    "value": [99, 0, 0]
+                }, {
+                    "name": "Coppell―SUM(Discount)",
+                    "value": [100, 0, 0.800000011920929]
+                }, {
+                    "name": "Coral Gables―SUM(Discount)",
+                    "value": [101, 0, 0.4000000059604645]
+                }, {
+                    "name": "Coral Springs―SUM(Discount)",
+                    "value": [102, 0, 1.600000023841858]
+                }, {
+                    "name": "Corpus Christi―SUM(Discount)",
+                    "value": [103, 0, 3.4000000953674316]
+                }, {
+                    "name": "Costa Mesa―SUM(Discount)",
+                    "value": [104, 0, 0.6000000089406967]
+                }, {"name": "Cottage Grove―SUM(Discount)", "value": [105, 0, 0]}, {
+                    "name": "Covington―SUM(Discount)",
+                    "value": [106, 0, 0]
+                }, {
+                    "name": "Cranston―SUM(Discount)",
+                    "value": [107, 0, 0.9000000357627869]
+                }, {
+                    "name": "Cuyahoga Falls―SUM(Discount)",
+                    "value": [108, 0, 1.5999999791383743]
+                }, {
+                    "name": "Dallas―SUM(Discount)",
+                    "value": [109, 0, 56.30000104010105]
+                }, {"name": "Danbury―SUM(Discount)", "value": [110, 0, 0]}, {
+                    "name": "Danville―SUM(Discount)",
+                    "value": [111, 0, 1.0000000149011612]
+                }, {"name": "Davis―SUM(Discount)", "value": [112, 0, 0]}, {
+                    "name": "Daytona Beach―SUM(Discount)",
+                    "value": [113, 0, 1.0499999970197678]
+                }, {
+                    "name": "Dearborn―SUM(Discount)",
+                    "value": [114, 0, 0.10000000149011612]
+                }, {"name": "Dearborn Heights―SUM(Discount)", "value": [115, 0, 0]}, {
+                    "name": "Decatur―SUM(Discount)",
+                    "value": [116, 0, 6.60000017285347]
+                }, {
+                    "name": "Deer Park―SUM(Discount)",
+                    "value": [117, 0, 0.800000011920929]
+                }, {
+                    "name": "Delray Beach―SUM(Discount)",
+                    "value": [118, 0, 0.6000000089406967]
+                }, {"name": "Deltona―SUM(Discount)", "value": [119, 0, 1.5]}, {
+                    "name": "Denver―SUM(Discount)",
+                    "value": [120, 0, 12.100000038743019]
+                }, {
+                    "name": "Des Moines―SUM(Discount)",
+                    "value": [121, 0, 0.6000000089406967]
+                }, {
+                    "name": "Des Plaines―SUM(Discount)",
+                    "value": [122, 0, 2.6000000536441803]
+                }, {
+                    "name": "Detroit―SUM(Discount)",
+                    "value": [123, 0, 0.800000011920929]
+                }, {
+                    "name": "Dover―SUM(Discount)",
+                    "value": [124, 0, 0.30000001192092896]
+                }, {
+                    "name": "Draper―SUM(Discount)",
+                    "value": [125, 0, 0.20000000298023224]
+                }, {
+                    "name": "Dublin―SUM(Discount)",
+                    "value": [126, 0, 4.700000002980232]
+                }, {"name": "Dubuque―SUM(Discount)", "value": [127, 0, 0]}, {
+                    "name": "Durham―SUM(Discount)",
+                    "value": [128, 0, 2.300000011920929]
+                }, {"name": "Eagan―SUM(Discount)", "value": [129, 0, 0]}, {
+                    "name": "East Orange―SUM(Discount)",
+                    "value": [130, 0, 0]
+                }, {"name": "East Point―SUM(Discount)", "value": [131, 0, 0]}, {
+                    "name": "Eau Claire―SUM(Discount)",
+                    "value": [132, 0, 0]
+                }, {
+                    "name": "Edinburg―SUM(Discount)",
+                    "value": [133, 0, 1.2000000178813934]
+                }, {"name": "Edmond―SUM(Discount)", "value": [134, 0, 0]}, {
+                    "name": "Edmonds―SUM(Discount)",
+                    "value": [135, 0, 0.6000000089406967]
+                }, {
+                    "name": "El Cajon―SUM(Discount)",
+                    "value": [136, 0, 0.4000000059604645]
+                }, {
+                    "name": "El Paso―SUM(Discount)",
+                    "value": [137, 0, 5.8000001311302185]
+                }, {"name": "Elkhart―SUM(Discount)", "value": [138, 0, 0]}, {
+                    "name": "Elmhurst―SUM(Discount)",
+                    "value": [139, 0, 0.9000000208616257]
+                }, {
+                    "name": "Elyria―SUM(Discount)",
+                    "value": [140, 0, 0.699999988079071]
+                }, {
+                    "name": "Encinitas―SUM(Discount)",
+                    "value": [141, 0, 0.7500000149011612]
+                }, {
+                    "name": "Englewood―SUM(Discount)",
+                    "value": [142, 0, 0.4000000059604645]
+                }, {
+                    "name": "Escondido―SUM(Discount)",
+                    "value": [143, 0, 0.20000000298023224]
+                }, {
+                    "name": "Eugene―SUM(Discount)",
+                    "value": [144, 0, 1.2000000178813934]
+                }, {
+                    "name": "Evanston―SUM(Discount)",
+                    "value": [145, 0, 0.9000000208616257]
+                }, {
+                    "name": "Everett―SUM(Discount)",
+                    "value": [146, 0, 0.5000000149011612]
+                }, {
+                    "name": "Fairfield―SUM(Discount)",
+                    "value": [147, 0, 6.400000035762787]
+                }, {"name": "Fargo―SUM(Discount)", "value": [148, 0, 0]}, {
+                    "name": "Farmington―SUM(Discount)",
+                    "value": [149, 0, 0]
+                }, {
+                    "name": "Fayetteville―SUM(Discount)",
+                    "value": [150, 0, 6.900000035762787]
+                }, {"name": "Florence―SUM(Discount)", "value": [151, 0, 0]}, {
+                    "name": "Fort Collins―SUM(Discount)",
+                    "value": [152, 0, 2.3999999910593033]
+                }, {
+                    "name": "Fort Lauderdale―SUM(Discount)",
+                    "value": [153, 0, 4.499999985098839]
+                }, {
+                    "name": "Fort Worth―SUM(Discount)",
+                    "value": [154, 0, 11.340000182390213]
+                }, {
+                    "name": "Frankfort―SUM(Discount)",
+                    "value": [155, 0, 1.0000000149011612]
+                }, {
+                    "name": "Franklin―SUM(Discount)",
+                    "value": [156, 0, 4.300000041723251]
+                }, {
+                    "name": "Freeport―SUM(Discount)",
+                    "value": [157, 0, 2.1000000461935997]
+                }, {"name": "Fremont―SUM(Discount)", "value": [158, 0, 0]}, {
+                    "name": "Fresno―SUM(Discount)",
+                    "value": [159, 0, 2.700000047683716]
+                }, {
+                    "name": "Frisco―SUM(Discount)",
+                    "value": [160, 0, 0.8000000268220901]
+                }, {"name": "Gaithersburg―SUM(Discount)", "value": [161, 0, 0]}, {
+                    "name": "Garden City―SUM(Discount)",
+                    "value": [162, 0, 0]
+                }, {
+                    "name": "Garland―SUM(Discount)",
+                    "value": [163, 0, 1.8000000417232513]
+                }, {
+                    "name": "Gastonia―SUM(Discount)",
+                    "value": [164, 0, 1.2999999970197678]
+                }, {"name": "Georgetown―SUM(Discount)", "value": [165, 0, 0]}, {
+                    "name": "Gilbert―SUM(Discount)",
+                    "value": [166, 0, 3.3000000417232513]
+                }, {"name": "Gladstone―SUM(Discount)", "value": [167, 0, 0]}, {
+                    "name": "Glendale―SUM(Discount)",
+                    "value": [168, 0, 6.100000023841858]
+                }, {
+                    "name": "Glenview―SUM(Discount)",
+                    "value": [169, 0, 0.20000000298023224]
+                }, {
+                    "name": "Goldsboro―SUM(Discount)",
+                    "value": [170, 0, 0.20000000298023224]
+                }, {"name": "Grand Island―SUM(Discount)", "value": [171, 0, 0]}, {
+                    "name": "Grand Prairie―SUM(Discount)",
+                    "value": [172, 0, 4.800000116229057]
+                }, {"name": "Grand Rapids―SUM(Discount)", "value": [173, 0, 0]}, {
+                    "name": "Grapevine―SUM(Discount)",
+                    "value": [174, 0, 0.4000000059604645]
+                }, {
+                    "name": "Great Falls―SUM(Discount)",
+                    "value": [175, 0, 0.4000000059604645]
+                }, {
+                    "name": "Greeley―SUM(Discount)",
+                    "value": [176, 0, 0.4000000059604645]
+                }, {"name": "Green Bay―SUM(Discount)", "value": [177, 0, 0]}, {
+                    "name": "Greensboro―SUM(Discount)",
+                    "value": [178, 0, 4.799999982118607]
+                }, {
+                    "name": "Greenville―SUM(Discount)",
+                    "value": [179, 0, 2.6000000089406967]
+                }, {"name": "Greenwood―SUM(Discount)", "value": [180, 0, 0]}, {
+                    "name": "Gresham―SUM(Discount)",
+                    "value": [181, 0, 1.5]
+                }, {
+                    "name": "Grove City―SUM(Discount)",
+                    "value": [182, 0, 1.0999999940395355]
+                }, {"name": "Gulfport―SUM(Discount)", "value": [183, 0, 0]}, {
+                    "name": "Hackensack―SUM(Discount)",
+                    "value": [184, 0, 0]
+                }, {"name": "Hagerstown―SUM(Discount)", "value": [185, 0, 0]}, {
+                    "name": "Haltom City―SUM(Discount)",
+                    "value": [186, 0, 0.800000011920929]
+                }, {
+                    "name": "Hamilton―SUM(Discount)",
+                    "value": [187, 0, 0.800000011920929]
+                }, {"name": "Hampton―SUM(Discount)", "value": [188, 0, 0]}, {
+                    "name": "Harlingen―SUM(Discount)",
+                    "value": [189, 0, 1.1200000047683716]
+                }, {"name": "Harrisonburg―SUM(Discount)", "value": [190, 0, 0]}, {
+                    "name": "Hattiesburg―SUM(Discount)",
+                    "value": [191, 0, 0]
+                }, {
+                    "name": "Helena―SUM(Discount)",
+                    "value": [192, 0, 0.20000000298023224]
+                }, {
+                    "name": "Hempstead―SUM(Discount)",
+                    "value": [193, 0, 1.0000000149011612]
+                }, {
+                    "name": "Henderson―SUM(Discount)",
+                    "value": [194, 0, 0.20000000298023224]
+                }, {
+                    "name": "Hendersonville―SUM(Discount)",
+                    "value": [195, 0, 1.9999999850988388]
+                }, {
+                    "name": "Hesperia―SUM(Discount)",
+                    "value": [196, 0, 0.550000011920929]
+                }, {
+                    "name": "Hialeah―SUM(Discount)",
+                    "value": [197, 0, 5.200000017881393]
+                }, {
+                    "name": "Hickory―SUM(Discount)",
+                    "value": [198, 0, 0.8999999910593033]
+                }, {
+                    "name": "Highland Park―SUM(Discount)",
+                    "value": [199, 0, 2.9000000655651093]
+                }, {
+                    "name": "Hillsboro―SUM(Discount)",
+                    "value": [200, 0, 1.2999999970197678]
+                }, {"name": "Holland―SUM(Discount)", "value": [201, 0, 0]}, {
+                    "name": "Hollywood―SUM(Discount)",
+                    "value": [202, 0, 3.2000000029802322]
+                }, {"name": "Holyoke―SUM(Discount)", "value": [203, 0, 0]}, {
+                    "name": "Homestead―SUM(Discount)",
+                    "value": [204, 0, 0.6000000089406967]
+                }, {"name": "Hoover―SUM(Discount)", "value": [205, 0, 0]}, {
+                    "name": "Hot Springs―SUM(Discount)",
+                    "value": [206, 0, 0]
+                }, {
+                    "name": "Houston―SUM(Discount)",
+                    "value": [207, 0, 143.14000275731087]
+                }, {
+                    "name": "Huntington Beach―SUM(Discount)",
+                    "value": [208, 0, 0.20000000298023224]
+                }, {
+                    "name": "Huntsville―SUM(Discount)",
+                    "value": [209, 0, 10.62000022828579]
+                }, {"name": "Independence―SUM(Discount)", "value": [210, 0, 0]}, {
+                    "name": "Indianapolis―SUM(Discount)",
+                    "value": [211, 0, 0]
+                }, {
+                    "name": "Inglewood―SUM(Discount)",
+                    "value": [212, 0, 0.800000011920929]
+                }, {"name": "Iowa City―SUM(Discount)", "value": [213, 0, 0]}, {
+                    "name": "Irving―SUM(Discount)",
+                    "value": [214, 0, 2.2000000327825546]
+                }, {
+                    "name": "Jackson―SUM(Discount)",
+                    "value": [215, 0, 2.500000037252903]
+                }, {
+                    "name": "Jacksonville―SUM(Discount)",
+                    "value": [216, 0, 35.85000005364418]
+                }, {"name": "Jamestown―SUM(Discount)", "value": [217, 0, 0]}, {
+                    "name": "Jefferson City―SUM(Discount)",
+                    "value": [218, 0, 0]
+                }, {
+                    "name": "Johnson City―SUM(Discount)",
+                    "value": [219, 0, 3.8999999910593033]
+                }, {"name": "Jonesboro―SUM(Discount)", "value": [220, 0, 0]}, {
+                    "name": "Jupiter―SUM(Discount)",
+                    "value": [221, 0, 0.20000000298023224]
+                }, {
+                    "name": "Keller―SUM(Discount)",
+                    "value": [222, 0, 0.20000000298023224]
+                }, {"name": "Kenner―SUM(Discount)", "value": [223, 0, 0]}, {
+                    "name": "Kenosha―SUM(Discount)",
+                    "value": [224, 0, 0]
+                }, {
+                    "name": "Kent―SUM(Discount)",
+                    "value": [225, 0, 1.8000000268220901]
+                }, {"name": "Kirkwood―SUM(Discount)", "value": [226, 0, 0]}, {
+                    "name": "Kissimmee―SUM(Discount)",
+                    "value": [227, 0, 0.20000000298023224]
+                }, {
+                    "name": "Knoxville―SUM(Discount)",
+                    "value": [228, 0, 6.200000047683716]
+                }, {"name": "La Crosse―SUM(Discount)", "value": [229, 0, 0]}, {
+                    "name": "La Mesa―SUM(Discount)",
+                    "value": [230, 0, 0.20000000298023224]
+                }, {
+                    "name": "La Porte―SUM(Discount)",
+                    "value": [231, 0, 1.4000000357627869]
+                }, {"name": "La Quinta―SUM(Discount)", "value": [232, 0, 0]}, {
+                    "name": "Lafayette―SUM(Discount)",
+                    "value": [233, 0, 0]
+                }, {
+                    "name": "Laguna Niguel―SUM(Discount)",
+                    "value": [234, 0, 0.3500000089406967]
+                }, {"name": "Lake Charles―SUM(Discount)", "value": [235, 0, 0]}, {
+                    "name": "Lake Elsinore―SUM(Discount)",
+                    "value": [236, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lake Forest―SUM(Discount)",
+                    "value": [237, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lakeland―SUM(Discount)",
+                    "value": [238, 0, 6.1500000059604645]
+                }, {"name": "Lakeville―SUM(Discount)", "value": [239, 0, 0]}, {
+                    "name": "Lakewood―SUM(Discount)",
+                    "value": [240, 0, 6.750000014901161]
+                }, {
+                    "name": "Lancaster―SUM(Discount)",
+                    "value": [241, 0, 14.500000029802322]
+                }, {
+                    "name": "Lansing―SUM(Discount)",
+                    "value": [242, 0, 0.10000000149011612]
+                }, {
+                    "name": "Laredo―SUM(Discount)",
+                    "value": [243, 0, 4.200000077486038]
+                }, {"name": "Las Cruces―SUM(Discount)", "value": [244, 0, 0]}, {
+                    "name": "Las Vegas―SUM(Discount)",
+                    "value": [245, 0, 1.0000000149011612]
+                }, {"name": "Laurel―SUM(Discount)", "value": [246, 0, 0]}, {
+                    "name": "Lawrence―SUM(Discount)",
+                    "value": [247, 0, 0.6000000238418579]
+                }, {"name": "Lawton―SUM(Discount)", "value": [248, 0, 0]}, {
+                    "name": "Layton―SUM(Discount)",
+                    "value": [249, 0, 0]
+                }, {
+                    "name": "League City―SUM(Discount)",
+                    "value": [250, 0, 1.4000000357627869]
+                }, {
+                    "name": "Lebanon―SUM(Discount)",
+                    "value": [251, 0, 0.6000000089406967]
+                }, {
+                    "name": "Lehi―SUM(Discount)",
+                    "value": [252, 0, 0.20000000298023224]
+                }, {"name": "Leominster―SUM(Discount)", "value": [253, 0, 0]}, {
+                    "name": "Lewiston―SUM(Discount)",
+                    "value": [254, 0, 0.20000000298023224]
+                }, {
+                    "name": "Lincoln Park―SUM(Discount)",
+                    "value": [255, 0, 0.10000000149011612]
+                }, {"name": "Linden―SUM(Discount)", "value": [256, 0, 0]}, {
+                    "name": "Lindenhurst―SUM(Discount)",
+                    "value": [257, 0, 0]
+                }, {"name": "Little Rock―SUM(Discount)", "value": [258, 0, 0]}, {
+                    "name": "Littleton―SUM(Discount)",
+                    "value": [259, 0, 0.699999988079071]
+                }, {"name": "Lodi―SUM(Discount)", "value": [260, 0, 0]}, {
+                    "name": "Logan―SUM(Discount)",
+                    "value": [261, 0, 0.4000000059604645]
+                }, {
+                    "name": "Long Beach―SUM(Discount)",
+                    "value": [262, 0, 3.500000052154064]
+                }, {
+                    "name": "Longmont―SUM(Discount)",
+                    "value": [263, 0, 0.6000000089406967]
+                }, {"name": "Longview―SUM(Discount)", "value": [264, 0, 0]}, {
+                    "name": "Lorain―SUM(Discount)",
+                    "value": [265, 0, 2.7000000178813934]
+                }, {
+                    "name": "Los Angeles―SUM(Discount)",
+                    "value": [266, 0, 55.50000087916851]
+                }, {
+                    "name": "Louisville―SUM(Discount)",
+                    "value": [267, 0, 8.099999979138374]
+                }, {
+                    "name": "Loveland―SUM(Discount)",
+                    "value": [268, 0, 1.2999999970197678]
+                }, {"name": "Lowell―SUM(Discount)", "value": [269, 0, 0]}, {
+                    "name": "Lubbock―SUM(Discount)",
+                    "value": [270, 0, 2.8000000566244125]
+                }, {"name": "Macon―SUM(Discount)", "value": [271, 0, 0]}, {
+                    "name": "Madison―SUM(Discount)",
+                    "value": [272, 0, 0]
+                }, {"name": "Malden―SUM(Discount)", "value": [273, 0, 0]}, {
+                    "name": "Manchester―SUM(Discount)",
+                    "value": [274, 0, 0]
+                }, {"name": "Manhattan―SUM(Discount)", "value": [275, 0, 0]}, {
+                    "name": "Mansfield―SUM(Discount)",
+                    "value": [276, 0, 0.5000000149011612]
+                }, {
+                    "name": "Manteca―SUM(Discount)",
+                    "value": [277, 0, 0.20000000298023224]
+                }, {"name": "Maple Grove―SUM(Discount)", "value": [278, 0, 0]}, {
+                    "name": "Margate―SUM(Discount)",
+                    "value": [279, 0, 0.20000000298023224]
+                }, {"name": "Marietta―SUM(Discount)", "value": [280, 0, 0]}, {
+                    "name": "Marion―SUM(Discount)",
+                    "value": [281, 0, 3.5000000596046448]
+                }, {"name": "Marlborough―SUM(Discount)", "value": [282, 0, 0]}, {
+                    "name": "Marysville―SUM(Discount)",
+                    "value": [283, 0, 0]
+                }, {
+                    "name": "Mason―SUM(Discount)",
+                    "value": [284, 0, 1.5999999791383743]
+                }, {
+                    "name": "Mcallen―SUM(Discount)",
+                    "value": [285, 0, 7.5000001192092896]
+                }, {
+                    "name": "Medford―SUM(Discount)",
+                    "value": [286, 0, 1.2999999970197678]
+                }, {
+                    "name": "Medina―SUM(Discount)",
+                    "value": [287, 0, 3.9000000059604645]
+                }, {
+                    "name": "Melbourne―SUM(Discount)",
+                    "value": [288, 0, 0.20000000298023224]
+                }, {
+                    "name": "Memphis―SUM(Discount)",
+                    "value": [289, 0, 8.400000035762787]
+                }, {
+                    "name": "Mentor―SUM(Discount)",
+                    "value": [290, 0, 1.5000000298023224]
+                }, {"name": "Meriden―SUM(Discount)", "value": [291, 0, 0]}, {
+                    "name": "Meridian―SUM(Discount)",
+                    "value": [292, 0, 0.20000000298023224]
+                }, {
+                    "name": "Mesa―SUM(Discount)",
+                    "value": [293, 0, 9.199999988079071]
+                }, {
+                    "name": "Mesquite―SUM(Discount)",
+                    "value": [294, 0, 2.6000000536441803]
+                }, {
+                    "name": "Miami―SUM(Discount)",
+                    "value": [295, 0, 18.64999994635582]
+                }, {"name": "Middletown―SUM(Discount)", "value": [296, 0, 0]}, {
+                    "name": "Midland―SUM(Discount)",
+                    "value": [297, 0, 0.10000000149011612]
+                }, {"name": "Milford―SUM(Discount)", "value": [298, 0, 0]}, {
+                    "name": "Milwaukee―SUM(Discount)",
+                    "value": [299, 0, 0]
+                }, {"name": "Minneapolis―SUM(Discount)", "value": [300, 0, 0]}, {
+                    "name": "Miramar―SUM(Discount)",
+                    "value": [301, 0, 2.1000000089406967]
+                }, {"name": "Mishawaka―SUM(Discount)", "value": [302, 0, 0]}, {
+                    "name": "Mission Viejo―SUM(Discount)",
+                    "value": [303, 0, 0.15000000596046448]
+                }, {
+                    "name": "Missoula―SUM(Discount)",
+                    "value": [304, 0, 0.20000000298023224]
+                }, {
+                    "name": "Missouri City―SUM(Discount)",
+                    "value": [305, 0, 0.800000011920929]
+                }, {"name": "Mobile―SUM(Discount)", "value": [306, 0, 0]}, {
+                    "name": "Modesto―SUM(Discount)",
+                    "value": [307, 0, 0.4000000059604645]
+                }, {
+                    "name": "Monroe―SUM(Discount)",
+                    "value": [308, 0, 1.8000000268220901]
+                }, {"name": "Montebello―SUM(Discount)", "value": [309, 0, 0]}, {
+                    "name": "Montgomery―SUM(Discount)",
+                    "value": [310, 0, 0]
+                }, {"name": "Moorhead―SUM(Discount)", "value": [311, 0, 0]}, {
+                    "name": "Moreno Valley―SUM(Discount)",
+                    "value": [312, 0, 0.20000000298023224]
+                }, {
+                    "name": "Morgan Hill―SUM(Discount)",
+                    "value": [313, 0, 0.3500000089406967]
+                }, {"name": "Morristown―SUM(Discount)", "value": [314, 0, 0]}, {
+                    "name": "Mount Pleasant―SUM(Discount)",
+                    "value": [315, 0, 0]
+                }, {
+                    "name": "Mount Vernon―SUM(Discount)",
+                    "value": [316, 0, 0.20000000298023224]
+                }, {
+                    "name": "Murfreesboro―SUM(Discount)",
+                    "value": [317, 0, 3.699999988079071]
+                }, {
+                    "name": "Murray―SUM(Discount)",
+                    "value": [318, 0, 0.20000000298023224]
+                }, {"name": "Murrieta―SUM(Discount)", "value": [319, 0, 0]}, {
+                    "name": "Muskogee―SUM(Discount)",
+                    "value": [320, 0, 0]
+                }, {
+                    "name": "Naperville―SUM(Discount)",
+                    "value": [321, 0, 3.5000000596046448]
+                }, {"name": "Nashua―SUM(Discount)", "value": [322, 0, 0]}, {
+                    "name": "Nashville―SUM(Discount)",
+                    "value": [323, 0, 7.800000041723251]
+                }, {"name": "New Albany―SUM(Discount)", "value": [324, 0, 0]}, {
+                    "name": "New Bedford―SUM(Discount)",
+                    "value": [325, 0, 0]
+                }, {"name": "New Brunswick―SUM(Discount)", "value": [326, 0, 0]}, {
+                    "name": "New Castle―SUM(Discount)",
+                    "value": [327, 0, 0]
+                }, {
+                    "name": "New Rochelle―SUM(Discount)",
+                    "value": [328, 0, 0.5000000074505806]
+                }, {
+                    "name": "New York City―SUM(Discount)",
+                    "value": [329, 0, 51.400000765919685]
+                }, {
+                    "name": "Newark―SUM(Discount)",
+                    "value": [330, 0, 9.800000071525574]
+                }, {"name": "Newport News―SUM(Discount)", "value": [331, 0, 0]}, {
+                    "name": "Niagara Falls―SUM(Discount)",
+                    "value": [332, 0, 0.20000000298023224]
+                }, {"name": "Noblesville―SUM(Discount)", "value": [333, 0, 0]}, {
+                    "name": "Norfolk―SUM(Discount)",
+                    "value": [334, 0, 0]
+                }, {
+                    "name": "Normal―SUM(Discount)",
+                    "value": [335, 0, 0.30000001192092896]
+                }, {"name": "Norman―SUM(Discount)", "value": [336, 0, 0]}, {
+                    "name": "North Charleston―SUM(Discount)",
+                    "value": [337, 0, 0]
+                }, {
+                    "name": "North Las Vegas―SUM(Discount)",
+                    "value": [338, 0, 0.6000000089406967]
+                }, {
+                    "name": "North Miami―SUM(Discount)",
+                    "value": [339, 0, 0.4000000059604645]
+                }, {"name": "Norwich―SUM(Discount)", "value": [340, 0, 0]}, {
+                    "name": "Oak Park―SUM(Discount)",
+                    "value": [341, 0, 0.20000000298023224]
+                }, {
+                    "name": "Oakland―SUM(Discount)",
+                    "value": [342, 0, 2.0000000298023224]
+                }, {
+                    "name": "Oceanside―SUM(Discount)",
+                    "value": [343, 0, 1.8000000268220901]
+                }, {
+                    "name": "Odessa―SUM(Discount)",
+                    "value": [344, 0, 1.8000000417232513]
+                }, {"name": "Oklahoma City―SUM(Discount)", "value": [345, 0, 0]}, {
+                    "name": "Olathe―SUM(Discount)",
+                    "value": [346, 0, 0]
+                }, {
+                    "name": "Olympia―SUM(Discount)",
+                    "value": [347, 0, 0.4000000059604645]
+                }, {"name": "Omaha―SUM(Discount)", "value": [348, 0, 0]}, {
+                    "name": "Ontario―SUM(Discount)",
+                    "value": [349, 0, 0.20000000298023224]
+                }, {"name": "Orange―SUM(Discount)", "value": [350, 0, 0]}, {
+                    "name": "Orem―SUM(Discount)",
+                    "value": [351, 0, 0.20000000298023224]
+                }, {
+                    "name": "Orland Park―SUM(Discount)",
+                    "value": [352, 0, 0.20000000298023224]
+                }, {
+                    "name": "Orlando―SUM(Discount)",
+                    "value": [353, 0, 3.2000000029802322]
+                }, {
+                    "name": "Ormond Beach―SUM(Discount)",
+                    "value": [354, 0, 0.699999988079071]
+                }, {
+                    "name": "Oswego―SUM(Discount)",
+                    "value": [355, 0, 1.8000000268220901]
+                }, {"name": "Overland Park―SUM(Discount)", "value": [356, 0, 0]}, {
+                    "name": "Owensboro―SUM(Discount)",
+                    "value": [357, 0, 0]
+                }, {
+                    "name": "Oxnard―SUM(Discount)",
+                    "value": [358, 0, 0.4000000059604645]
+                }, {
+                    "name": "Palatine―SUM(Discount)",
+                    "value": [359, 0, 0.20000000298023224]
+                }, {
+                    "name": "Palm Coast―SUM(Discount)",
+                    "value": [360, 0, 1.9999999850988388]
+                }, {
+                    "name": "Park Ridge―SUM(Discount)",
+                    "value": [361, 0, 1.0000000298023224]
+                }, {
+                    "name": "Parker―SUM(Discount)",
+                    "value": [362, 0, 3.599999964237213]
+                }, {
+                    "name": "Parma―SUM(Discount)",
+                    "value": [363, 0, 2.4000000655651093]
+                }, {
+                    "name": "Pasadena―SUM(Discount)",
+                    "value": [364, 0, 7.400000154972076]
+                }, {
+                    "name": "Pasco―SUM(Discount)",
+                    "value": [365, 0, 0.4000000059604645]
+                }, {
+                    "name": "Passaic―SUM(Discount)",
+                    "value": [366, 0, 0.30000001192092896]
+                }, {"name": "Paterson―SUM(Discount)", "value": [367, 0, 0]}, {
+                    "name": "Pearland―SUM(Discount)",
+                    "value": [368, 0, 1.2000000178813934]
+                }, {
+                    "name": "Pembroke Pines―SUM(Discount)",
+                    "value": [369, 0, 4.549999982118607]
+                }, {
+                    "name": "Pensacola―SUM(Discount)",
+                    "value": [370, 0, 0.699999988079071]
+                }, {
+                    "name": "Peoria―SUM(Discount)",
+                    "value": [371, 0, 8.900000110268593]
+                }, {"name": "Perth Amboy―SUM(Discount)", "value": [372, 0, 0]}, {
+                    "name": "Pharr―SUM(Discount)",
+                    "value": [373, 0, 1.3000000417232513]
+                }, {
+                    "name": "Philadelphia―SUM(Discount)",
+                    "value": [374, 0, 175.50000068545341]
+                }, {
+                    "name": "Phoenix―SUM(Discount)",
+                    "value": [375, 0, 22.299999922513962]
+                }, {"name": "Pico Rivera―SUM(Discount)", "value": [376, 0, 0]}, {
+                    "name": "Pine Bluff―SUM(Discount)",
+                    "value": [377, 0, 0]
+                }, {"name": "Plainfield―SUM(Discount)", "value": [378, 0, 0]}, {
+                    "name": "Plano―SUM(Discount)",
+                    "value": [379, 0, 4.120000064373016]
+                }, {
+                    "name": "Plantation―SUM(Discount)",
+                    "value": [380, 0, 3.2000000029802322]
+                }, {
+                    "name": "Pleasant Grove―SUM(Discount)",
+                    "value": [381, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pocatello―SUM(Discount)",
+                    "value": [382, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pomona―SUM(Discount)",
+                    "value": [383, 0, 0.20000000298023224]
+                }, {
+                    "name": "Pompano Beach―SUM(Discount)",
+                    "value": [384, 0, 0.6000000089406967]
+                }, {
+                    "name": "Port Arthur―SUM(Discount)",
+                    "value": [385, 0, 1.3200000077486038]
+                }, {
+                    "name": "Port Orange―SUM(Discount)",
+                    "value": [386, 0, 0.20000000298023224]
+                }, {
+                    "name": "Port Saint Lucie―SUM(Discount)",
+                    "value": [387, 0, 1.0999999940395355]
+                }, {"name": "Portage―SUM(Discount)", "value": [388, 0, 0]}, {
+                    "name": "Portland―SUM(Discount)",
+                    "value": [389, 0, 7.299999997019768]
+                }, {
+                    "name": "Providence―SUM(Discount)",
+                    "value": [390, 0, 0.30000001192092896]
+                }, {
+                    "name": "Provo―SUM(Discount)",
+                    "value": [391, 0, 0.6000000089406967]
+                }, {
+                    "name": "Pueblo―SUM(Discount)",
+                    "value": [392, 0, 4.099999949336052]
+                }, {
+                    "name": "Quincy―SUM(Discount)",
+                    "value": [393, 0, 3.9000000655651093]
+                }, {
+                    "name": "Raleigh―SUM(Discount)",
+                    "value": [394, 0, 5.900000020861626]
+                }, {
+                    "name": "Rancho Cucamonga―SUM(Discount)",
+                    "value": [395, 0, 0.20000000298023224]
+                }, {"name": "Rapid City―SUM(Discount)", "value": [396, 0, 0]}, {
+                    "name": "Reading―SUM(Discount)",
+                    "value": [397, 0, 1.300000011920929]
+                }, {
+                    "name": "Redding―SUM(Discount)",
+                    "value": [398, 0, 0.20000000298023224]
+                }, {
+                    "name": "Redlands―SUM(Discount)",
+                    "value": [399, 0, 0.7500000149011612]
+                }, {
+                    "name": "Redmond―SUM(Discount)",
+                    "value": [400, 0, 3.0999999940395355]
+                }, {
+                    "name": "Redondo Beach―SUM(Discount)",
+                    "value": [401, 0, 0.9500000178813934]
+                }, {
+                    "name": "Redwood City―SUM(Discount)",
+                    "value": [402, 0, 0.20000000298023224]
+                }, {
+                    "name": "Reno―SUM(Discount)",
+                    "value": [403, 0, 0.4000000059604645]
+                }, {
+                    "name": "Renton―SUM(Discount)",
+                    "value": [404, 0, 0.4000000059604645]
+                }, {"name": "Revere―SUM(Discount)", "value": [405, 0, 0]}, {
+                    "name": "Richardson―SUM(Discount)",
+                    "value": [406, 0, 0.8000000268220901]
+                }, {"name": "Richmond―SUM(Discount)", "value": [407, 0, 0]}, {
+                    "name": "Rio Rancho―SUM(Discount)",
+                    "value": [408, 0, 0.4000000059604645]
+                }, {
+                    "name": "Riverside―SUM(Discount)",
+                    "value": [409, 0, 0.6000000089406967]
+                }, {
+                    "name": "Rochester―SUM(Discount)",
+                    "value": [410, 0, 2.2000000327825546]
+                }, {"name": "Rochester Hills―SUM(Discount)", "value": [411, 0, 0]}, {
+                    "name": "Rock Hill―SUM(Discount)",
+                    "value": [412, 0, 0]
+                }, {
+                    "name": "Rockford―SUM(Discount)",
+                    "value": [413, 0, 5.600000083446503]
+                }, {"name": "Rockville―SUM(Discount)", "value": [414, 0, 0]}, {
+                    "name": "Rogers―SUM(Discount)",
+                    "value": [415, 0, 0]
+                }, {
+                    "name": "Rome―SUM(Discount)",
+                    "value": [416, 0, 0.10000000149011612]
+                }, {
+                    "name": "Romeoville―SUM(Discount)",
+                    "value": [417, 0, 0.800000011920929]
+                }, {
+                    "name": "Roseville―SUM(Discount)",
+                    "value": [418, 0, 0.4000000059604645]
+                }, {"name": "Roswell―SUM(Discount)", "value": [419, 0, 0]}, {
+                    "name": "Round Rock―SUM(Discount)",
+                    "value": [420, 0, 1.9200000315904617]
+                }, {"name": "Royal Oak―SUM(Discount)", "value": [421, 0, 0]}, {
+                    "name": "Sacramento―SUM(Discount)",
+                    "value": [422, 0, 1.600000023841858]
+                }, {"name": "Saginaw―SUM(Discount)", "value": [423, 0, 0]}, {
+                    "name": "Saint Charles―SUM(Discount)",
+                    "value": [424, 0, 2.500000089406967]
+                }, {"name": "Saint Cloud―SUM(Discount)", "value": [425, 0, 0]}, {
+                    "name": "Saint Louis―SUM(Discount)",
+                    "value": [426, 0, 0]
+                }, {"name": "Saint Paul―SUM(Discount)", "value": [427, 0, 0]}, {
+                    "name": "Saint Peters―SUM(Discount)",
+                    "value": [428, 0, 0]
+                }, {
+                    "name": "Saint Petersburg―SUM(Discount)",
+                    "value": [429, 0, 3.800000011920929]
+                }, {
+                    "name": "Salem―SUM(Discount)",
+                    "value": [430, 0, 7.200000032782555]
+                }, {
+                    "name": "Salinas―SUM(Discount)",
+                    "value": [431, 0, 0.7500000149011612]
+                }, {
+                    "name": "Salt Lake City―SUM(Discount)",
+                    "value": [432, 0, 0.6000000089406967]
+                }, {
+                    "name": "San Angelo―SUM(Discount)",
+                    "value": [433, 0, 1.7000000476837158]
+                }, {
+                    "name": "San Antonio―SUM(Discount)",
+                    "value": [434, 0, 22.60000044107437]
+                }, {
+                    "name": "San Bernardino―SUM(Discount)",
+                    "value": [435, 0, 0.9500000178813934]
+                }, {
+                    "name": "San Clemente―SUM(Discount)",
+                    "value": [436, 0, 0.20000000298023224]
+                }, {
+                    "name": "San Diego―SUM(Discount)",
+                    "value": [437, 0, 13.600000217556953]
+                }, {
+                    "name": "San Francisco―SUM(Discount)",
+                    "value": [438, 0, 34.000000566244125]
+                }, {
+                    "name": "San Gabriel―SUM(Discount)",
+                    "value": [439, 0, 0.20000000298023224]
+                }, {
+                    "name": "San Jose―SUM(Discount)",
+                    "value": [440, 0, 3.1000000536441803]
+                }, {"name": "San Luis Obispo―SUM(Discount)", "value": [441, 0, 0]}, {
+                    "name": "San Marcos―SUM(Discount)",
+                    "value": [442, 0, 1.2000000327825546]
+                }, {"name": "San Mateo―SUM(Discount)", "value": [443, 0, 0]}, {
+                    "name": "Sandy Springs―SUM(Discount)",
+                    "value": [444, 0, 0]
+                }, {
+                    "name": "Sanford―SUM(Discount)",
+                    "value": [445, 0, 0.8999999910593033]
+                }, {
+                    "name": "Santa Ana―SUM(Discount)",
+                    "value": [446, 0, 1.0000000149011612]
+                }, {
+                    "name": "Santa Barbara―SUM(Discount)",
+                    "value": [447, 0, 0.6000000089406967]
+                }, {
+                    "name": "Santa Clara―SUM(Discount)",
+                    "value": [448, 0, 0.4000000059604645]
+                }, {"name": "Santa Fe―SUM(Discount)", "value": [449, 0, 0]}, {
+                    "name": "Santa Maria―SUM(Discount)",
+                    "value": [450, 0, 0]
+                }, {
+                    "name": "Scottsdale―SUM(Discount)",
+                    "value": [451, 0, 3.8999999910593033]
+                }, {
+                    "name": "Seattle―SUM(Discount)",
+                    "value": [452, 0, 27.80000041425228]
+                }, {"name": "Sheboygan―SUM(Discount)", "value": [453, 0, 0]}, {
+                    "name": "Shelton―SUM(Discount)",
+                    "value": [454, 0, 0]
+                }, {
+                    "name": "Sierra Vista―SUM(Discount)",
+                    "value": [455, 0, 0.6000000089406967]
+                }, {"name": "Sioux Falls―SUM(Discount)", "value": [456, 0, 0]}, {
+                    "name": "Skokie―SUM(Discount)",
+                    "value": [457, 0, 5.200000122189522]
+                }, {
+                    "name": "Smyrna―SUM(Discount)",
+                    "value": [458, 0, 2.3999999910593033]
+                }, {"name": "South Bend―SUM(Discount)", "value": [459, 0, 0]}, {
+                    "name": "Southaven―SUM(Discount)",
+                    "value": [460, 0, 0]
+                }, {
+                    "name": "Sparks―SUM(Discount)",
+                    "value": [461, 0, 0.20000000298023224]
+                }, {
+                    "name": "Spokane―SUM(Discount)",
+                    "value": [462, 0, 0.4000000059604645]
+                }, {"name": "Springdale―SUM(Discount)", "value": [463, 0, 0]}, {
+                    "name": "Springfield―SUM(Discount)",
+                    "value": [464, 0, 23.200000062584877]
+                }, {"name": "Sterling Heights―SUM(Discount)", "value": [465, 0, 0]}, {
+                    "name": "Stockton―SUM(Discount)",
+                    "value": [466, 0, 0.6000000089406967]
+                }, {"name": "Suffolk―SUM(Discount)", "value": [467, 0, 0]}, {
+                    "name": "Summerville―SUM(Discount)",
+                    "value": [468, 0, 0]
+                }, {
+                    "name": "Sunnyvale―SUM(Discount)",
+                    "value": [469, 0, 0.4000000059604645]
+                }, {"name": "Superior―SUM(Discount)", "value": [470, 0, 0]}, {
+                    "name": "Tallahassee―SUM(Discount)",
+                    "value": [471, 0, 4.700000017881393]
+                }, {
+                    "name": "Tamarac―SUM(Discount)",
+                    "value": [472, 0, 1.7999999821186066]
+                }, {
+                    "name": "Tampa―SUM(Discount)",
+                    "value": [473, 0, 11.999999955296516]
+                }, {"name": "Taylor―SUM(Discount)", "value": [474, 0, 0]}, {
+                    "name": "Temecula―SUM(Discount)",
+                    "value": [475, 0, 0.4000000059604645]
+                }, {
+                    "name": "Tempe―SUM(Discount)",
+                    "value": [476, 0, 3.100000023841858]
+                }, {"name": "Texarkana―SUM(Discount)", "value": [477, 0, 0]}, {
+                    "name": "Texas City―SUM(Discount)",
+                    "value": [478, 0, 0.9000000357627869]
+                }, {
+                    "name": "The Colony―SUM(Discount)",
+                    "value": [479, 0, 0.6000000089406967]
+                }, {
+                    "name": "Thomasville―SUM(Discount)",
+                    "value": [480, 0, 1.0999999940395355]
+                }, {
+                    "name": "Thornton―SUM(Discount)",
+                    "value": [481, 0, 2.0000000298023224]
+                }, {
+                    "name": "Thousand Oaks―SUM(Discount)",
+                    "value": [482, 0, 0.20000000298023224]
+                }, {
+                    "name": "Tigard―SUM(Discount)",
+                    "value": [483, 0, 2.1000000089406967]
+                }, {
+                    "name": "Tinley Park―SUM(Discount)",
+                    "value": [484, 0, 0.6000000238418579]
+                }, {
+                    "name": "Toledo―SUM(Discount)",
+                    "value": [485, 0, 10.80000002682209]
+                }, {
+                    "name": "Torrance―SUM(Discount)",
+                    "value": [486, 0, 0.6000000089406967]
+                }, {
+                    "name": "Trenton―SUM(Discount)",
+                    "value": [487, 0, 0.10000000149011612]
+                }, {
+                    "name": "Troy―SUM(Discount)",
+                    "value": [488, 0, 6.600000008940697]
+                }, {
+                    "name": "Tucson―SUM(Discount)",
+                    "value": [489, 0, 9.700000002980232]
+                }, {"name": "Tulsa―SUM(Discount)", "value": [490, 0, 0]}, {
+                    "name": "Tuscaloosa―SUM(Discount)",
+                    "value": [491, 0, 0]
+                }, {
+                    "name": "Twin Falls―SUM(Discount)",
+                    "value": [492, 0, 0.20000000298023224]
+                }, {
+                    "name": "Tyler―SUM(Discount)",
+                    "value": [493, 0, 3.200000062584877]
+                }, {"name": "Urbandale―SUM(Discount)", "value": [494, 0, 0]}, {
+                    "name": "Utica―SUM(Discount)",
+                    "value": [495, 0, 0.4000000059604645]
+                }, {"name": "Vacaville―SUM(Discount)", "value": [496, 0, 0]}, {
+                    "name": "Vallejo―SUM(Discount)",
+                    "value": [497, 0, 0.6000000089406967]
+                }, {
+                    "name": "Vancouver―SUM(Discount)",
+                    "value": [498, 0, 0.20000000298023224]
+                }, {
+                    "name": "Vineland―SUM(Discount)",
+                    "value": [499, 0, 0.30000001192092896]
+                }, {"name": "Virginia Beach―SUM(Discount)", "value": [500, 0, 0]}, {
+                    "name": "Visalia―SUM(Discount)",
+                    "value": [501, 0, 0]
+                }, {
+                    "name": "Waco―SUM(Discount)",
+                    "value": [502, 0, 3.120000034570694]
+                }, {"name": "Warner Robins―SUM(Discount)", "value": [503, 0, 0]}, {
+                    "name": "Warwick―SUM(Discount)",
+                    "value": [504, 0, 0]
+                }, {"name": "Washington―SUM(Discount)", "value": [505, 0, 0]}, {
+                    "name": "Waterbury―SUM(Discount)",
+                    "value": [506, 0, 0]
+                }, {"name": "Waterloo―SUM(Discount)", "value": [507, 0, 0]}, {
+                    "name": "Watertown―SUM(Discount)",
+                    "value": [508, 0, 0.800000011920929]
+                }, {"name": "Waukesha―SUM(Discount)", "value": [509, 0, 0]}, {
+                    "name": "Wausau―SUM(Discount)",
+                    "value": [510, 0, 0]
+                }, {"name": "Waynesboro―SUM(Discount)", "value": [511, 0, 0]}, {
+                    "name": "West Allis―SUM(Discount)",
+                    "value": [512, 0, 0]
+                }, {
+                    "name": "West Jordan―SUM(Discount)",
+                    "value": [513, 0, 0.20000000298023224]
+                }, {
+                    "name": "West Palm Beach―SUM(Discount)",
+                    "value": [514, 0, 0.6000000089406967]
+                }, {"name": "Westfield―SUM(Discount)", "value": [515, 0, 0]}, {
+                    "name": "Westland―SUM(Discount)",
+                    "value": [516, 0, 0.10000000149011612]
+                }, {
+                    "name": "Westminster―SUM(Discount)",
+                    "value": [517, 0, 1.4000000208616257]
+                }, {
+                    "name": "Wheeling―SUM(Discount)",
+                    "value": [518, 0, 1.600000038743019]
+                }, {
+                    "name": "Whittier―SUM(Discount)",
+                    "value": [519, 0, 0.20000000298023224]
+                }, {"name": "Wichita―SUM(Discount)", "value": [520, 0, 0]}, {
+                    "name": "Wilmington―SUM(Discount)",
+                    "value": [521, 0, 2.900000035762787]
+                }, {
+                    "name": "Wilson―SUM(Discount)",
+                    "value": [522, 0, 2.199999988079071]
+                }, {"name": "Woodbury―SUM(Discount)", "value": [523, 0, 0]}, {
+                    "name": "Woodland―SUM(Discount)",
+                    "value": [524, 0, 0.4000000059604645]
+                }, {
+                    "name": "Woodstock―SUM(Discount)",
+                    "value": [525, 0, 1.3000000268220901]
+                }, {"name": "Woonsocket―SUM(Discount)", "value": [526, 0, 0]}, {
+                    "name": "Yonkers―SUM(Discount)",
+                    "value": [527, 0, 1.0000000149011612]
+                }, {
+                    "name": "York―SUM(Discount)",
+                    "value": [528, 0, 2.0999999940395355]
+                }, {"name": "Yucaipa―SUM(Discount)", "value": [529, 0, 0]}, {
+                    "name": "Yuma―SUM(Discount)",
+                    "value": [530, 0, 1.7999999821186066]
+                }]
+            }],
+            "dataInfo": {"minValue": 0, "maxValue": 530},
+            "visualMap": {
+                "type": "continuous",
+                "calculable": true,
+                "show": true,
+                "orient": "horizontal",
+                "hoverLink": true,
+                "top": "top",
+                "left": "center",
+                "itemHeight": "300%",
+                "itemWidth": 15,
+                "color": ["#5881ce", "#97d1cf", "#e5eae2"],
+                "min": 0,
+                "max": 530
+            },
+            "label": {"normal": {}}
+        }
+    );
+
+</script>
+
+<br>
+
+</html>

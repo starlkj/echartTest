@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Custom PreView</title>
+    <style>
+        #chartArea {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chartArea"></div>
+
+</body>
+<script src="./dist/echarts.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    var myChart = echarts.init(document.getElementById('chartArea'));
+    $.get('../data/budget_list.json', function (obama_budget_2012) {
+
+        myChart.setOption(
+            {
+                "type": "radar",
+                "radar": {
+                    "indicator": [{"max": 159971.9, "name": "Furniture"}, {
+                        "max": 159971.9,
+                        "name": "Office Supplies"
+                    }, {"max": 159971.9, "name": "Technology"}]
+                },
+                "legend": {
+                    "show": true,
+                    "seriesSync": true,
+                    "left": "left",
+                    "symbol": "circle",
+                    "width": "100%",
+                    "itemGap": 20,
+                    "pageItems": 5,
+                    "textStyle": {"fontSize": 12, "fontFamily": "SpoqaHanSans"},
+                    "data": ["SUM(Discount)", "SUM(Profit)"],
+                    "color": ["#ca4819", "#007e79", "#00936f", "#4c95ce", "#9578bb", "#899bd2", "#d7d0a2", "#ffff99", "#66ccff", "#1e6191", "#ff0066", "#cccccc"]
+                },
+                "tooltip": {"trigger": "item"},
+                "series": [{
+                    "type": "radar",
+                    "name": "radar",
+                    "data": [{
+                        "name": "SUM(Discount)",
+                        "value": [368.89000813663006, 947.8000056296587, 244.40000307559967],
+                        "itemStyle": {"normal": {"color": "#ca4819"}, "emphasis": {}}
+                    }, {
+                        "name": "SUM(Profit)",
+                        "value": [18444, 122474, 145429],
+                        "itemStyle": {"normal": {"color": "#007e79"}, "emphasis": {}}
+                    }]
+                }],
+                "dataInfo": {"minValue": 244.40000307559967, "maxValue": 145429}
+            }
+        );
+
+
+        console.info(myChart.getOption());
+    });
+</script>
+
+</html>
