@@ -28,136 +28,136 @@ var myChart = echarts.init(document.getElementById('chartArea'));
 $.get('../data/budget_list.json', function (obama_budget_2012) {
 	// console.info(obama_budget_2012);
 
-    myChart.setOption(
-        option = {
-            brush: {
-                xAxisIndex: [],
-                yAxisIndex: [],
-                transformable : false,
-                inBrush: {
-                    opacity: 1
-                },
-                outOfBrush: {
-                    opacity: 0.2
-                }
-            },
-            tooltip : {
-                trigger: 'item'
-            },
-            toolbox: {
-                show : false,
-                feature : {
-                    mark : {show: true},
-                    dataView : {show: true, readOnly: false},
-                    magicType: {show: true, type: ['line', 'bar']},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
-                }
-            },
-            calculable : true,
-            legend: {
-                //data:['Growth', 'emptyLegend', 'State', 'City', 'Budget 2011', 'Budget 2012'],
-                data:['Budget 2011', 'Budget 2012'],
-                itemGap: 5,
-                //seriesSync : true,
-                //color: ["#ff8a00", "#217bbf", "#dd3c04", "#1ca093", "#af1010", "#1fb65c", "#0b3148", "#88ce2b", "#12496f", "#fcd208", "#1a6398", "#ffad03"]
-            },
-            grid: {
-                top: '12%',
-                left: '1%',
-                right: '10%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type : 'category',
-                    data : obama_budget_2012.names,
-                    name : 'Category',
-                    nameGap : 10,
-                    nameLocation : 'center',
-                    axisLabel : {
-                        rotate : 90
+        myChart.setOption(
+            option = {
+                brush: {
+                    xAxisIndex: [],
+                    yAxisIndex: [],
+                    transformable : false,
+                    inBrush: {
+                        opacity: 1
+                    },
+                    outOfBrush: {
+                        opacity: 0.2
                     }
-                }
-            ],
-            yAxis: [
-                {
-                    type : 'value',
-                    name : 'Budget (million USD)',
-                    axisLabel: {
-                        formatter: function (a) {
-                            a = +a;
-                            return isFinite(a)
-                                ? echarts.format.addCommas(+a / 1000)
-                                : '';
+                },
+                tooltip : {
+                    trigger: 'item'
+                },
+                toolbox: {
+                    show : false,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType: {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                legend: {
+                    //data:['Growth', 'emptyLegend', 'State', 'City', 'Budget 2011', 'Budget 2012'],
+                    data:['Budget 2011', 'Budget 2012'],
+                    itemGap: 5,
+                    //seriesSync : true,
+                    //color: ["#ff8a00", "#217bbf", "#dd3c04", "#1ca093", "#af1010", "#1fb65c", "#0b3148", "#88ce2b", "#12496f", "#fcd208", "#1a6398", "#ffad03"]
+                },
+                grid: {
+                    top: '12%',
+                    left: '1%',
+                    right: '10%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type : 'category',
+                        data : obama_budget_2012.names,
+                        name : 'Category',
+                        nameGap : 10,
+                        nameLocation : 'center',
+                        axisLabel : {
+                            rotate : 90
                         }
                     }
-                }
-            ],
-            dataZoom: [
-                {
-                    show: true,
-                    start: 94,
-                    end: 100,
-                },
-                {
-                    show: true,
-                    yAxisIndex: 0,
-                    filterMode: 'empty',
-                    width: 30,
-                    height: '80%',
-                    showDataShadow: false,
-                    left: '93%'
-                }
-            ],
-            label	: {
-                normal : {
-                    show : true,
-                    position : 'top',
-                    textStyle: {
-                        color: '#00f',
-                        fontStyle: 'normal',
-                        fontWeight: 'normal',
-                        fontFamily: 'sans-serif',
-                        fontSize: 10,
-
-                    },
-                    formatter : function( label ) {
-                        return 'test_' + label.name;
-                    }
-                }
-            },
-            series : [
-                {
-                    name: 'Budget 2011',
-                    type: 'bar',
-                    data: obama_budget_2012.budget2011List
-                },
-                {
-                    name: 'Budget 2012',
-                    type: 'bar',
-                    data: obama_budget_2012.budget2012List,
-                    label	: {
-                        normal : {
-                            show : true,
-                            position : 'top',
-                            textStyle: {
-                                color: '#f00',
-                                fontStyle: 'normal',
-                                fontWeight: 'normal',
-                                fontFamily: 'sans-serif',
-                                fontSize: 10,
-
-                            },
-                            formatter : function( label ) {
-                                return 'aaa_' + label.name;
+                ],
+                yAxis: [
+                    {
+                        type : 'value',
+                        name : 'Budget (million USD)',
+                        axisLabel: {
+                            formatter: function (a) {
+                                a = +a;
+                                return isFinite(a)
+                                    ? echarts.format.addCommas(+a / 1000)
+                                    : '';
                             }
                         }
                     }
-                }
-            ]
-        }
-    );
+                ],
+                dataZoom: [
+                    {
+                        show: true,
+                        start: 94,
+                        end: 100,
+                    },
+                    {
+                        show: true,
+                        yAxisIndex: 0,
+                        filterMode: 'empty',
+                        width: 30,
+                        height: '80%',
+                        showDataShadow: false,
+                        left: '93%'
+                    }
+                ],
+                label	: {
+                    normal : {
+                        show : true,
+                        position : 'top',
+                        textStyle: {
+                            color: '#00f',
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            fontFamily: 'sans-serif',
+                            fontSize: 10,
+
+                        },
+                        formatter : function( label ) {
+                            return 'test_' + label.name;
+                        }
+                    }
+                },
+                series : [
+                    {
+                        name: 'Budget 2011',
+                        type: 'bar',
+                        data: obama_budget_2012.budget2011List
+                    },
+                    {
+                        name: 'Budget 2012',
+                        type: 'bar',
+                        data: obama_budget_2012.budget2012List,
+                        label	: {
+                            normal : {
+                                show : true,
+                                position : 'top',
+                                textStyle: {
+                                    color: '#f00',
+                                    fontStyle: 'normal',
+                                    fontWeight: 'normal',
+                                    fontFamily: 'sans-serif',
+                                    fontSize: 10,
+
+                                },
+                                formatter : function( label ) {
+                                    return 'aaa_' + label.name;
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        );
     
 });
 
